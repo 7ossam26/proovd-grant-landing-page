@@ -6,9 +6,9 @@ test.describe("Phase 1 — Foundation", () => {
     expect(response.status()).toBe(200);
   });
 
-  test('h1 contains "Proovd"', async ({ page }) => {
+  test("page title contains 'Proovd'", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator("h1")).toContainText("Proovd");
+    await expect(page).toHaveTitle(/Proovd/);
   });
 
   test("h1 computed color is brand-lime rgb(188, 252, 161)", async ({ page }) => {

@@ -7,7 +7,7 @@ User will provide these before launch. All current placeholders reference this f
 
 ## Needed before launch
 - [ ] Favicon (placeholder: solid #3BED97 square, Phase 1)
-- [ ] Hero panel image (Phase 2)
+- [ ] Hero panel image (Phase 2) — ~1555×657px, rounded rect, replaces `bg-[#D9D9D9]` placeholder in `src/components/sections/Hero.js`
 - [ ] Feature Pitch visual (Phase 3)
 - [ ] Feature Match visual (Phase 3)
 - [ ] Feature Proof visual (Phase 3)
