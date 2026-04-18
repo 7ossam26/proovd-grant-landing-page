@@ -14,8 +14,8 @@ export default function Hero() {
       <h1
         className="text-brand-lime font-black leading-none mt-auto pt-8"
         style={{
-          fontSize: "clamp(3.5rem, 7vw, 6.875rem)",
-          letterSpacing: "-0.05em",
+          fontSize: "clamp(4rem, 6vw, 6.5rem)",
+          letterSpacing: "-0.04em",
         }}
       >
         Sell out before the product exists
