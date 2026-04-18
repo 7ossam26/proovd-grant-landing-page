@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+docs
+tests
+*.md
+.env*
+.env.local
+test-results
+playwright-report
+blob-report
+playwright/.cache
+.DS_Store
+AGENTS.md

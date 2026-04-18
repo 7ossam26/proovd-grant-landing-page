@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+/*
+ * Satoshi — self-hosted from Fontshare (https://www.fontshare.com/fonts/satoshi)
+ * License: Free for personal & commercial use (Fontshare Standard License)
+ *          https://www.fontshare.com/licenses/fsl
+ */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi/satoshi-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi/satoshi-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi/satoshi-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi/satoshi-black.woff2') format('woff2');
+  font-weight: 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+@theme {
+  /* Reset all default Tailwind colors — only the 9 brand colors exist */
+  --color-*: initial;
+
+  --color-surface:       #FAFAFA;
+  --color-ink:           #09110C;
+  --color-brand-forest:  #1E4D2F;
+  --color-brand-lime:    #BCFCA1;
+  --color-brand-sage:    #5AAA77;
+  --color-text-whisper:  #DCE8CA;
+  --color-brand-primary: #3BED97;
+  --color-brand-citrus:  #EAFF72;
+  --color-brand-sky:     #C8FCFF;
+
+  /* Typography — Satoshi only */
+  --font-sans: "Satoshi", sans-serif;
+  --font-mono: "Satoshi", sans-serif;
+}
+
+body {
+  background-color: #09110C;
+  color: #DCE8CA;
+  font-family: "Satoshi", sans-serif;
+}
