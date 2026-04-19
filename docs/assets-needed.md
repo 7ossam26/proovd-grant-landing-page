@@ -17,6 +17,6 @@ User will provide these before launch. All current placeholders reference this f
 - [ ] Ecosystem illustration 3 (Phase 4) — 210×210 SVG, replaces `EcosystemPlaceholder` in block 3 ("72 hours") → `/public/assets/ecosystem-3.svg`
 - [ ] Ecosystem illustration 4 (Phase 4) — 210×210 SVG, replaces `EcosystemPlaceholder` in block 4 ("Your friends lied") → `/public/assets/ecosystem-4.svg`
 - [ ] Ecosystem illustration 5 (Phase 4) — 210×210 SVG, replaces `EcosystemPlaceholder` in block 5 ("Show the shape") → `/public/assets/ecosystem-5.svg`
-- [ ] CTA strip left graphic (Phase 5)
-- [ ] CTA strip right graphic (Phase 5)
+- [ ] CTA strip left graphic (Phase 5) — ~386×399px, positioned absolute left of centered content in `src/components/sections/CtaStrip.js`, hidden on mobile
+- [ ] CTA strip right graphic (Phase 5) — ~386×399px, positioned absolute right of centered content in `src/components/sections/CtaStrip.js`, hidden on mobile
 - [ ] OG image (Phase 7 — dynamic generator used by default)

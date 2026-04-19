@@ -34,10 +34,9 @@ export default function Nav() {
             >
               Contact
             </a>
-            {/* Sign up — brand-primary text (2nd of 2 allowed uses on the page) */}
             <a
               href={signupUrl}
-              className="text-brand-primary hover:text-brand-lime transition-colors text-base font-medium"
+              className="bg-surface text-ink hover:bg-text-whisper transition-colors text-base font-medium px-4 py-2"
               onClick={() => trackEvent("nav_click", { target: "signup" })}
             >
               Sign up
@@ -120,7 +119,7 @@ export default function Nav() {
             </a>
             <a
               href={signupUrl}
-              className="text-brand-primary text-2xl font-medium"
+              className="bg-surface text-ink hover:bg-text-whisper transition-colors text-2xl font-medium px-6 py-3"
               onClick={() => {
                 setMenuOpen(false);
                 trackEvent("nav_click", { target: "signup" });
