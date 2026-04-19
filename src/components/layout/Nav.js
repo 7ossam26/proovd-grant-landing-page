@@ -15,7 +15,7 @@ export default function Nav() {
         <div className="px-5 sm:px-8 md:px-12 lg:px-20 flex items-center justify-between">
           {/* Logo — brand-primary dot (1 of 2 allowed uses on the page) */}
           <a href="/" aria-label="Proovd home">
-            <Image src="/logo.svg" alt="Proovd" width={36} height={36} priority />
+            <Image src="/logo.svg" alt="Proovd" width={30} height={30} priority />
           </a>
 
           {/* Desktop links */}
@@ -51,8 +51,8 @@ export default function Nav() {
             onClick={() => setMenuOpen(true)}
           >
             <svg
-              width="24"
-              height="24"
+              width="33"
+              height="33"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
