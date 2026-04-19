@@ -8,6 +8,7 @@ export default function Hero() {
     <section
       ref={ref}
       id="hero"
+      aria-labelledby="hero-heading"
       className="bg-ink lg:min-h-[90vh] flex flex-col px-5 sm:px-8 md:px-12 lg:px-20 pt-10 pb-12"
     >
       {/*
@@ -20,6 +21,7 @@ export default function Hero() {
       />
 
       <h1
+        id="hero-heading"
         className="text-brand-lime font-black leading-none lg:mt-auto pt-6 sm:pt-8"
         style={{
           fontSize: "clamp(2.5rem, 6vw, 6.5rem)",

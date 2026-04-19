@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test.describe("Phase 2 — Nav + Hero", () => {
   test("nav visible, logo rendered, 3 nav items present", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator("nav")).toBeVisible();
+    await expect(page.locator('nav[aria-label="Main"]')).toBeVisible();
     await expect(page.locator('img[alt="Proovd"]')).toBeVisible();
     await expect(page.getByText("Features").first()).toBeVisible();
     await expect(page.getByText("Contact").first()).toBeVisible();

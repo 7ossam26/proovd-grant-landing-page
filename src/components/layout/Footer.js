@@ -38,7 +38,10 @@ export default function Footer() {
     <footer className="bg-brand-forest pt-32 pb-16">
       <div className="max-w-6xl mx-auto px-6">
         {/* 4-column link grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-16">
+        <nav
+          aria-label="Footer"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-16"
+        >
           {footerColumns.map((col) => (
             <div key={col.title}>
               <p className="text-brand-lime text-sm font-bold uppercase tracking-widest mb-4">
@@ -67,11 +70,11 @@ export default function Footer() {
               </ul>
             </div>
           ))}
-        </div>
+        </nav>
 
         {/* Bottom row */}
         <div className="flex items-center gap-3 border-t border-brand-forest pt-8">
-          <Image src="/logo.svg" alt="" aria-hidden="true" width={24} height={24} />
+          <Image src="/logo.svg" alt="Proovd logo" width={24} height={24} />
           <p className="text-text-whisper text-sm">
             &copy; 2026 Proovd. All rights reserved.
           </p>

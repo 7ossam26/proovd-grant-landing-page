@@ -5,12 +5,12 @@ User will provide these before launch. All current placeholders reference this f
 ## Already provided
 - [x] Logo SVG → /public/logo.svg
 
-## Needed before launch
-- [ ] Favicon (placeholder: solid #3BED97 square, Phase 1)
+## Still needed before launch
+- [ ] Favicon (placeholder: solid #3BED97 square at `src/app/icon.js`, Phase 1)
 - [ ] Hero panel image (Phase 2) — ~1555×657px, rounded rect, replaces `bg-[#D9D9D9]` placeholder in `src/components/sections/Hero.js`
-- [ ] Feature Pitch visual (Phase 3)
-- [ ] Feature Match visual (Phase 3)
-- [ ] Feature Proof visual (Phase 3)
+- [ ] Feature Pitch visual (Phase 3) — ~786×1117 portrait, replaces `bg-[#D9D9D9]` placeholder in `src/components/sections/FeaturePitch.js`
+- [ ] Feature Match visual (Phase 3) — ~786×1117 portrait, replaces `bg-[#D9D9D9]` placeholder in `src/components/sections/FeatureMatch.js`
+- [ ] Feature Proof visual (Phase 3) — ~786×1117 portrait, replaces `bg-[#D9D9D9]` placeholder in `src/components/sections/FeatureProof.js`
 - [ ] Envelope / top graphic for long-scroll section (Phase 4) — centered, ~800–1000px wide, aspect-square, replaces `bg-[#D9D9D9]` placeholder in `src/components/sections/LongScroll.js`
 - [ ] Ecosystem illustration 1 (Phase 4) — 210×210 SVG, replaces `EcosystemPlaceholder` in block 1 ("Ramble at us") → `/public/assets/ecosystem-1.svg`
 - [ ] Ecosystem illustration 2 (Phase 4) — 210×210 SVG, replaces `EcosystemPlaceholder` in block 2 ("Every pledge") → `/public/assets/ecosystem-2.svg`
@@ -19,4 +19,4 @@ User will provide these before launch. All current placeholders reference this f
 - [ ] Ecosystem illustration 5 (Phase 4) — 210×210 SVG, replaces `EcosystemPlaceholder` in block 5 ("Show the shape") → `/public/assets/ecosystem-5.svg`
 - [ ] CTA strip left graphic (Phase 5) — ~386×399px, positioned absolute left of centered content in `src/components/sections/CtaStrip.js`, hidden on mobile
 - [ ] CTA strip right graphic (Phase 5) — ~386×399px, positioned absolute right of centered content in `src/components/sections/CtaStrip.js`, hidden on mobile
-- [ ] OG image (Phase 7 — dynamic generator used by default)
+- [ ] Optional static OG image at `/public/og.png` (Phase 7 — dynamic generator at `src/app/opengraph-image.js` is used by default; drop in a static PNG here and repoint `openGraph.images` in `src/app/layout.js` if a hand-designed card is preferred)

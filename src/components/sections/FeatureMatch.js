@@ -9,7 +9,12 @@ const ctaUrl = process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#";
 export default function FeatureMatch() {
   const ref = useSectionInView("features-match");
   return (
-    <section ref={ref} id="features-match" className="bg-surface scroll-mt-20">
+    <section
+      ref={ref}
+      id="features-match"
+      aria-labelledby="features-match-heading"
+      className="bg-surface scroll-mt-20"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-screen">
         {/*
          * TODO(assets): Feature Match visual (~786×1117, portrait) — see /docs/assets-needed.md
@@ -34,6 +39,7 @@ export default function FeatureMatch() {
           </p>
 
           <h2
+            id="features-match-heading"
             className="text-ink font-black leading-tight mb-8"
             style={{ fontSize: "clamp(1.875rem, 3vw, 2.625rem)" }}
           >

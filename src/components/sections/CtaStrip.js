@@ -12,7 +12,13 @@ const isExternal = (h) => /^https?:\/\//i.test(h);
 export default function CtaStrip() {
   const ref = useSectionInView("cta-strip");
   return (
-    <Section id="contact" tone="forest" width="fullbleed" className="relative overflow-hidden min-h-[400px] flex items-center py-24">
+    <Section
+      id="contact"
+      tone="forest"
+      width="fullbleed"
+      aria-labelledby="cta-strip-heading"
+      className="relative overflow-hidden min-h-[400px] flex items-center py-24"
+    >
       {/* TODO(assets): CTA strip left graphic — see /docs/assets-needed.md */}
       {/* Left placeholder ~386×399px, hidden on mobile */}
       <div
@@ -31,7 +37,10 @@ export default function CtaStrip() {
         <p className="text-brand-lime uppercase tracking-widest text-sm font-bold mb-4">
           PROOVD
         </p>
-        <h2 className="text-surface text-4xl md:text-5xl font-black mb-4">
+        <h2
+          id="cta-strip-heading"
+          className="text-surface text-4xl md:text-5xl font-black mb-4"
+        >
           Start shipping today.
         </h2>
         <p className="text-text-whisper text-lg mb-10 max-w-lg">

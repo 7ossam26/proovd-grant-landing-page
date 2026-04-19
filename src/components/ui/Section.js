@@ -28,6 +28,7 @@ export default function Section({
   spacing = "normal",
   children,
   className = "",
+  ...rest
 }) {
   const bg = tones[tone] ?? tones.paper;
   const py = spacings[spacing] ?? spacings.normal;
@@ -35,14 +36,14 @@ export default function Section({
 
   if (inner === null) {
     return (
-      <section id={id} className={`${bg} ${py} ${className}`}>
+      <section id={id} className={`${bg} ${py} ${className}`} {...rest}>
         {children}
       </section>
     );
   }
 
   return (
-    <section id={id} className={`${bg} ${py} ${className}`}>
+    <section id={id} className={`${bg} ${py} ${className}`} {...rest}>
       <div className={inner}>{children}</div>
     </section>
   );

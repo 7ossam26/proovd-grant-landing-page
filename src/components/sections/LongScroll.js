@@ -34,9 +34,13 @@ export default function LongScroll() {
     <section
       id="how-it-works"
       ref={sectionRef}
+      aria-labelledby="how-it-works-heading"
       className="bg-ink"
       style={{ paddingTop: "clamp(4rem, 8vw, 8rem)", paddingBottom: "clamp(4rem, 8vw, 8rem)" }}
     >
+      <h2 id="how-it-works-heading" className="sr-only">
+        How Proovd works
+      </h2>
       <div className="max-w-6xl mx-auto px-6">
         {/* Envelope / top graphic placeholder */}
         <div className="flex justify-center mb-24 lg:mb-32">
