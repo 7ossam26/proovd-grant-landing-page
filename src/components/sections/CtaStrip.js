@@ -3,8 +3,14 @@
 import Section from "@/components/ui/Section";
 import Button from "@/components/ui/Button";
 import { trackEvent } from "@/lib/analytics";
+import { useSectionInView } from "@/lib/useSectionInView";
+
+const PRIMARY = process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#";
+const SECONDARY = process.env.NEXT_PUBLIC_CTA_SECONDARY_URL || "#";
+const isExternal = (h) => /^https?:\/\//i.test(h);
 
 export default function CtaStrip() {
+  const ref = useSectionInView("cta-strip");
   return (
     <Section id="contact" tone="forest" width="fullbleed" className="relative overflow-hidden min-h-[400px] flex items-center py-24">
       {/* TODO(assets): CTA strip left graphic — see /docs/assets-needed.md */}
@@ -21,7 +27,7 @@ export default function CtaStrip() {
         className="absolute right-0 top-1/2 -translate-y-1/2 w-[386px] h-[399px] bg-[#D9D9D9] hidden md:block"
       />
 
-      <div className="relative z-10 w-full flex flex-col items-center text-center px-6">
+      <div ref={ref} className="relative z-10 w-full flex flex-col items-center text-center px-6">
         <p className="text-brand-lime uppercase tracking-widest text-sm font-bold mb-4">
           PROOVD
         </p>
@@ -35,15 +41,25 @@ export default function CtaStrip() {
           {/* Mint CTA — brand-primary (#3BED97) — 2nd of 2 allowed uses on the entire page */}
           <Button
             variant="mint"
-            href={process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#"}
-            onClick={() => trackEvent("cta_primary_click", { location: "cta_strip" })}
+            href={PRIMARY}
+            onClick={() => {
+              trackEvent("cta_primary_click", { location: "cta_strip" });
+              if (isExternal(PRIMARY)) {
+                trackEvent("outbound_cta_redirect", { destination: PRIMARY });
+              }
+            }}
           >
             Create account
           </Button>
           <Button
             variant="outline"
-            href={process.env.NEXT_PUBLIC_CTA_SECONDARY_URL || "#"}
-            onClick={() => trackEvent("cta_secondary_click", { location: "cta_strip" })}
+            href={SECONDARY}
+            onClick={() => {
+              trackEvent("cta_secondary_click", { location: "cta_strip" });
+              if (isExternal(SECONDARY)) {
+                trackEvent("outbound_cta_redirect", { destination: SECONDARY });
+              }
+            }}
           >
             Contact sales
           </Button>

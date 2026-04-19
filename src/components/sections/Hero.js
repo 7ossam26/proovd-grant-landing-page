@@ -1,6 +1,15 @@
+"use client";
+
+import { useSectionInView } from "@/lib/useSectionInView";
+
 export default function Hero() {
+  const ref = useSectionInView("hero");
   return (
-    <section className="bg-ink lg:min-h-[90vh] flex flex-col px-5 sm:px-8 md:px-12 lg:px-20 pt-10 pb-12">
+    <section
+      ref={ref}
+      id="hero"
+      className="bg-ink lg:min-h-[90vh] flex flex-col px-5 sm:px-8 md:px-12 lg:px-20 pt-10 pb-12"
+    >
       {/*
        * TODO(assets): hero panel image (~1555×657, rounded rect) — see /docs/assets-needed.md
        * Replace this placeholder div with the actual hero visual once delivered.

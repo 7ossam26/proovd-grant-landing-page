@@ -1,13 +1,15 @@
 "use client";
 
 import { trackEvent } from "@/lib/analytics";
+import { useSectionInView } from "@/lib/useSectionInView";
 import Button from "@/components/ui/Button";
 
 const ctaUrl = process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#";
 
 export default function FeaturePitch() {
+  const ref = useSectionInView("features-pitch");
   return (
-    <section id="features-pitch" className="bg-brand-lime scroll-mt-20">
+    <section ref={ref} id="features-pitch" className="bg-brand-lime scroll-mt-20">
       <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-screen">
         {/*
          * TODO(assets): Feature Pitch visual (~786×1117, portrait) — see /docs/assets-needed.md

@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import EcosystemPlaceholder from "@/components/ui/EcosystemPlaceholder";
-import { trackEvent } from "@/lib/analytics";
+import { useSectionInView } from "@/lib/useSectionInView";
 
 const BLOCKS = [
   {
@@ -29,23 +28,7 @@ const BLOCKS = [
 ];
 
 export default function LongScroll() {
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          trackEvent("section_scroll_reached", { section_id: "how-it-works" });
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const sectionRef = useSectionInView("how-it-works");
 
   return (
     <section

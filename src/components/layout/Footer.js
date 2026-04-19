@@ -50,12 +50,15 @@ export default function Footer() {
                     <a
                       href={link.href}
                       className="text-text-whisper text-sm hover:text-brand-lime transition-colors"
-                      onClick={() =>
+                      onClick={() => {
                         trackEvent("footer_link_click", {
                           column: col.title,
                           label: link.label,
-                        })
-                      }
+                        });
+                        if (/^https?:\/\//i.test(link.href)) {
+                          trackEvent("external_link_click", { href: link.href });
+                        }
+                      }}
                     >
                       {link.label}
                     </a>

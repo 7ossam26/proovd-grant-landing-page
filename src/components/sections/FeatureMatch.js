@@ -1,13 +1,15 @@
 "use client";
 
 import { trackEvent } from "@/lib/analytics";
+import { useSectionInView } from "@/lib/useSectionInView";
 import Button from "@/components/ui/Button";
 
 const ctaUrl = process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#";
 
 export default function FeatureMatch() {
+  const ref = useSectionInView("features-match");
   return (
-    <section id="features-match" className="bg-surface scroll-mt-20">
+    <section ref={ref} id="features-match" className="bg-surface scroll-mt-20">
       <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-screen">
         {/*
          * TODO(assets): Feature Match visual (~786×1117, portrait) — see /docs/assets-needed.md
