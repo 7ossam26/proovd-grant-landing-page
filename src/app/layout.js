@@ -48,6 +48,7 @@ export const metadata = {
   robots: { index: true, follow: true },
 };
 
+const IS_PROD = process.env.NODE_ENV === "production";
 const UMAMI_SRC = process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL;
 const UMAMI_ID = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
 
@@ -79,7 +80,7 @@ export default function RootLayout({ children }) {
           <AnalyticsLifecycle />
           <ClarityScript />
         </ConsentProvider>
-        {UMAMI_SRC && UMAMI_ID && (
+        {IS_PROD && UMAMI_SRC && UMAMI_ID && (
           <Script
             src={UMAMI_SRC}
             data-website-id={UMAMI_ID}

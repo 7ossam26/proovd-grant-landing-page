@@ -10,6 +10,7 @@ export default function ClarityScript() {
   const consent = ctx?.consent;
 
   useEffect(() => {
+    if (process.env.NODE_ENV !== "production") return;
     if (!PROJECT_ID) return;
     if (consent !== "accepted") return;
     if (typeof window === "undefined") return;
