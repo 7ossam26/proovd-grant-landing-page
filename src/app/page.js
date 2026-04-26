@@ -10,15 +10,17 @@ import CtaStrip from "@/components/sections/CtaStrip";
 export default function Home() {
   return (
     <>
-      <Nav />
-      <main id="main">
-        <Hero />
-        <FeaturePitch />
-        <FeatureMatch />
-        <FeatureProof />
-        <LongScroll />
-        <CtaStrip />
-      </main>
+      <div className="relative" style={{ containerType: "inline-size" }}>
+        <Nav />
+        <main id="main">
+          <Hero />
+          <FeaturePitch />
+          <FeatureMatch />
+          <FeatureProof />
+          <LongScroll />
+          <CtaStrip />
+        </main>
+      </div>
       <Footer />
     </>
   );

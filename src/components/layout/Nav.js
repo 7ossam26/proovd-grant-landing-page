@@ -11,33 +11,44 @@ export default function Nav() {
 
   return (
     <>
-      <nav aria-label="Main"
-        className="absolute left-0 right-0 top-3 md:top-5 z-50 bg-ink py-2">
-        <div className="px-5 sm:px-8 md:px-12 lg:px-20 flex items-center justify-between">
+      <nav
+        aria-label="Main"
+        className="absolute left-0 right-0 top-3 md:top-[2.6cqi] z-50 bg-ink py-2 md:py-[0.7cqi]"
+      >
+        <div className="px-5 sm:px-8 md:px-[4.6cqi] flex items-center justify-between">
           {/* Logo — brand-primary dot (1 of 2 allowed uses on the page) */}
           <a href="/" aria-label="Proovd home">
-            <Image src="/logo.svg" alt="Proovd" width={30} height={30} priority />
+            <Image
+              src="/logo.svg"
+              alt="Proovd"
+              width={30}
+              height={30}
+              priority
+              className="h-[30px] w-[30px] md:h-[1.7cqi] md:w-[1.7cqi]"
+            />
           </a>
 
           {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-10">
+          <div
+            className="hidden md:flex items-center md:gap-[3.1cqi]"
+          >
             <a
               href="#features-pitch"
-              className="text-text-whisper hover:text-surface transition-colors text-base"
+              className="text-text-whisper hover:text-surface transition-colors md:text-[1.18cqi]"
               onClick={() => trackEvent("nav_click", { target: "features" })}
             >
               Features
             </a>
             <a
               href="#contact"
-              className="text-text-whisper hover:text-surface transition-colors text-base"
+              className="text-text-whisper hover:text-surface transition-colors md:text-[1.18cqi]"
               onClick={() => trackEvent("nav_click", { target: "contact" })}
             >
               Contact
             </a>
             <a
               href={signupUrl}
-              className="text-brand-primary hover:text-brand-lime transition-colors text-base font-bold"
+              className="text-brand-primary hover:text-brand-lime transition-colors font-bold md:text-[1.18cqi]"
               onClick={() => trackEvent("nav_click", { target: "signup" })}
             >
               Sign up
