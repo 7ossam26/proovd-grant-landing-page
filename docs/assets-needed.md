@@ -7,7 +7,9 @@ User will provide these before launch. All current placeholders reference this f
 
 ## Still needed before launch
 - [ ] Favicon (placeholder: solid #3BED97 square at `src/app/icon.js`, Phase 1)
-- [ ] Hero panel image (Phase 2) — ~1555×657px, rounded rect, replaces `bg-[#D9D9D9]` placeholder in `src/components/sections/Hero.js`
+- [x] Hero background photo → `/public/assets/hero-bg.jpg` (full-bleed, behind phone marquee)
+- [x] Hero founder PNG cutout → `/public/assets/hero-founder.png` (transparent background, centered, foreground layer)
+- [x] Hero phone marquee videos → `/public/assets/videos/hero-phone-{1..5}.mp4` (with `.webm` variants where available; phone-1 has both, phones 2–5 currently mp4 only — provide `.webm` for phones 2, 3, 4, 5 to improve loading)
 - [ ] Feature Pitch visual (Phase 3) — ~786×1117 portrait, replaces `bg-[#D9D9D9]` placeholder in `src/components/sections/FeaturePitch.js`
 - [ ] Feature Match visual (Phase 3) — ~786×1117 portrait, replaces `bg-[#D9D9D9]` placeholder in `src/components/sections/FeatureMatch.js`
 - [ ] Feature Proof visual (Phase 3) — ~786×1117 portrait, replaces `bg-[#D9D9D9]` placeholder in `src/components/sections/FeatureProof.js`
