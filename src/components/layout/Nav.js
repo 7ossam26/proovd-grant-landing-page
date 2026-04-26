@@ -11,8 +11,9 @@ export default function Nav() {
 
   return (
     <>
-      <nav aria-label="Main" className="bg-ink sticky top-0 z-50 py-5">
-        <div className="px-2 sm:px-8 md:px-12 lg:px-20 flex items-center justify-between">
+      <nav aria-label="Main"
+        className="absolute left-0 right-0 top-3 md:top-5 z-50 bg-ink py-2">
+        <div className="px-5 sm:px-8 md:px-12 lg:px-20 flex items-center justify-between">
           {/* Logo — brand-primary dot (1 of 2 allowed uses on the page) */}
           <a href="/" aria-label="Proovd home">
             <Image src="/logo.svg" alt="Proovd" width={30} height={30} priority />
@@ -36,7 +37,7 @@ export default function Nav() {
             </a>
             <a
               href={signupUrl}
-              className="bg-surface text-ink hover:bg-text-whisper transition-colors text-base font-medium px-4 py-2"
+              className="text-brand-primary hover:text-brand-lime transition-colors text-base font-bold"
               onClick={() => trackEvent("nav_click", { target: "signup" })}
             >
               Sign up
@@ -122,7 +123,7 @@ export default function Nav() {
           </a>
           <a
             href={signupUrl}
-            className="bg-surface text-ink hover:bg-text-whisper transition-colors text-2xl font-medium px-6 py-3"
+            className="text-brand-primary hover:text-brand-lime transition-colors text-2xl font-medium"
             onClick={() => {
               setMenuOpen(false);
               trackEvent("nav_click", { target: "signup" });
