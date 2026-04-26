@@ -25,6 +25,28 @@ test.describe("Phase 2 — Nav + Hero", () => {
     expect(color).toBe("rgb(188, 252, 161)");
   });
 
+  test("hero phone videos render without decorative frames", async ({ page }) => {
+    await page.goto("/");
+    const frames = await page.locator("#hero video").evaluateAll((videos) =>
+      videos.map((video) => {
+        const wrapper = video.parentElement;
+        const styles = getComputedStyle(wrapper);
+        return {
+          borderTopWidth: styles.borderTopWidth,
+          borderRadius: styles.borderTopLeftRadius,
+          overflow: styles.overflow,
+        };
+      })
+    );
+
+    expect(frames.length).toBeGreaterThan(0);
+    for (const frame of frames) {
+      expect(frame.borderTopWidth).toBe("0px");
+      expect(frame.borderRadius).toBe("0px");
+      expect(frame.overflow).toBe("visible");
+    }
+  });
+
   test("mobile viewport: hamburger visible, clicking opens overlay menu", async ({
     page,
   }) => {

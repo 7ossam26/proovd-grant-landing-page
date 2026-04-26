@@ -83,12 +83,12 @@ export default function Hero() {
         <div className="absolute inset-0 overflow-hidden">
           <div
             className="proovd-marquee-track flex flex-row items-end"
-            style={{ width: "max-content", gap: "1.2cqi" }}
+            style={{ width: "max-content", gap: "2.4cqi" }}
           >
             {PHONE_LOOP.map((phone, i) => (
               <div
                 key={`${phone.src}-${i}`}
-                className="relative shrink-0 overflow-hidden rounded-[28px] border-2 border-ink"
+                className="relative shrink-0"
                 style={{
                   width: "13cqi",
                   aspectRatio: "9 / 19.5",
