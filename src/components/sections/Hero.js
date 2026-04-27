@@ -10,9 +10,19 @@ const PHONES = [
   { src: "hero-phone-3", topCqi: -6, rotate: -1 },
   { src: "hero-phone-4", topCqi: -1.5, rotate: 4 },
   { src: "hero-phone-5", topCqi: -4.5, rotate: -2 },
+  { src: "hero-phone-6", topCqi: -2, rotate: 3 },
+  { src: "hero-phone-7", topCqi: -5, rotate: -3 },
+  { src: "hero-phone-8", topCqi: -1, rotate: 2 },
+  { src: "hero-phone-9", topCqi: -3.5, rotate: -4 },
+  { src: "hero-phone-10", topCqi: -0.5, rotate: 1 },
+  { src: "hero-phone-11", topCqi: -4, rotate: -2 },
+  { src: "hero-phone-12", topCqi: -2.5, rotate: 3 },
+  { src: "hero-phone-13", topCqi: -6, rotate: -1 },
+  { src: "hero-phone-14", topCqi: -1, rotate: 4 },
 ];
 
 const PHONE_LOOP = [...PHONES, ...PHONES];
+const MARQUEE_DURATION_S = 60; // increase to slow down, decrease to speed up
 const PHONE_WIDTH_MOBILE = "31cqi";
 const PHONE_WIDTH = "11cqi";
 const PHONE_MARQUEE_TOP_OFFSET_MOBILE = "40cqi";
@@ -153,7 +163,7 @@ export default function Hero() {
           to { transform: translateX(-50%); }
         }
         .proovd-marquee-track {
-          animation: proovd-marquee 28s linear infinite;
+          animation: proovd-marquee ${MARQUEE_DURATION_S}s linear infinite;
           margin-top: ${PHONE_MARQUEE_TOP_OFFSET_MOBILE};
         }
         .proovd-phone {
@@ -227,6 +237,7 @@ export default function Hero() {
                   muted
                   loop
                   playsInline
+                  preload="none"
                   className="h-full w-full object-cover"
                 >
                   <source
