@@ -116,8 +116,8 @@ const MOBILE_PLEDGES = [
 const PLEDGE_SCALE = 0.6;
 const MOBILE_PLEDGE_SCALE = 0.72;
 const PLEDGE_LIMIT = 16;
-const PLEDGE_REVEAL_DELAY_MS = 100;
-const PLEDGE_REVEAL_INTERVAL_MS = 550;
+const PLEDGE_REVEAL_DELAY_MS = 300;
+const PLEDGE_REVEAL_INTERVAL_MS = 750;
 
 export default function Hero() {
   const ref = useSectionInView("hero");
@@ -352,7 +352,7 @@ export default function Hero() {
           className="text-brand-lime font-black leading-none text-4xl md:text-6xl xl:text-7xl"
           style={{ letterSpacing: "-0.04em" }}
         >
-          Sell out before the product exists
+          Sell Out Before The Product Exists
         </h1>
       </div>
     </section>
