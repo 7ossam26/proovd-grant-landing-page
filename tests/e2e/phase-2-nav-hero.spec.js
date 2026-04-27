@@ -60,6 +60,23 @@ test.describe("Phase 2 — Nav + Hero", () => {
     ).toBeVisible();
   });
 
+  test("mobile hero matches portrait menu and single pledge stack", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 393, height: 852 });
+    await page.goto("/");
+
+    await expect(page.getByRole("button", { name: "Open menu" })).toHaveText(
+      "Menu"
+    );
+
+    const mediaBox = await page.locator("#hero > div").first().boundingBox();
+    expect(mediaBox.width / mediaBox.height).toBeCloseTo(393 / 710, 2);
+
+    await expect(page.locator('[data-testid="mobile-pledge-stack"]')).toBeVisible();
+    await expect(page.locator('[data-testid="desktop-pledge-layer"]')).toBeHidden();
+  });
+
   test('Sign up href is "#" (env default)', async ({ page }) => {
     await page.goto("/");
     await expect(page.getByText("Sign up").first()).toHaveAttribute("href", "#");

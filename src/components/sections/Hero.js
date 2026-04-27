@@ -13,7 +13,9 @@ const PHONES = [
 ];
 
 const PHONE_LOOP = [...PHONES, ...PHONES];
+const PHONE_WIDTH_MOBILE = "31cqi";
 const PHONE_WIDTH = "11cqi";
+const PHONE_MARQUEE_TOP_OFFSET_MOBILE = "40cqi";
 const PHONE_MARQUEE_TOP_OFFSET = "8cqi";
 
 const PLEDGE_STACKS = [
@@ -95,7 +97,14 @@ const STACKED_PLEDGES = PLEDGE_STACKS.flatMap((stack, stackIndex) =>
 
 const PLEDGES = [...PRIMARY_PLEDGES, ...STACKED_PLEDGES];
 
+const MOBILE_PLEDGES = [
+  { amount: "75", rotation: 1, x: "0cqi", y: "0cqi" },
+  { amount: "42", rotation: -4, x: "-1.1cqi", y: "-1.1cqi" },
+  { amount: "28", rotation: 4, x: "1cqi", y: "-1.7cqi" },
+];
+
 const PLEDGE_SCALE = 0.6;
+const MOBILE_PLEDGE_SCALE = 0.72;
 const PLEDGE_LIMIT = 16;
 const PLEDGE_REVEAL_DELAY_MS = 100;
 const PLEDGE_REVEAL_INTERVAL_MS = 550;
@@ -145,18 +154,19 @@ export default function Hero() {
         }
         .proovd-marquee-track {
           animation: proovd-marquee 28s linear infinite;
+          margin-top: ${PHONE_MARQUEE_TOP_OFFSET_MOBILE};
+        }
+        .proovd-phone {
+          width: ${PHONE_WIDTH_MOBILE};
         }
         @keyframes proovd-pledge-reveal {
           from {
-            opacity: 0;
             transform: translateY(1.2cqi) scale(0.96);
           }
           65% {
-            opacity: 1;
             transform: translateY(-0.18cqi) scale(1.01);
           }
           to {
-            opacity: 1;
             transform: translateY(0) scale(1);
           }
         }
@@ -171,10 +181,18 @@ export default function Hero() {
             animation: none;
           }
         }
+        @media (min-width: 768px) {
+          .proovd-marquee-track {
+            margin-top: ${PHONE_MARQUEE_TOP_OFFSET};
+          }
+          .proovd-phone {
+            width: ${PHONE_WIDTH};
+          }
+        }
       `}</style>
 
       <div
-        className="relative w-full aspect-[4/3] md:aspect-[255/136] overflow-hidden"
+        className="relative w-full aspect-[393/710] md:aspect-[255/136] overflow-hidden"
         style={{ containerType: "inline-size" }}
       >
         {/* TODO(assets): hero background photo (full-bleed) — see /docs/assets-needed.md */}
@@ -182,7 +200,7 @@ export default function Hero() {
           src="/assets/hero-bg.jpg"
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full object-cover object-[50%_50%]"
         />
 
         <div className="absolute inset-0 overflow-hidden">
@@ -191,15 +209,13 @@ export default function Hero() {
             style={{
               width: "max-content",
               gap: "2.4cqi",
-              marginTop: PHONE_MARQUEE_TOP_OFFSET,
             }}
           >
             {PHONE_LOOP.map((phone, i) => (
               <div
                 key={`${phone.src}-${i}`}
-                className="relative shrink-0"
+                className="proovd-phone relative shrink-0"
                 style={{
-                  width: PHONE_WIDTH,
                   aspectRatio: "9 / 19.5",
                   top: `${phone.topCqi}cqi`,
                   transform: `rotate(${phone.rotate}deg)`,
@@ -232,14 +248,17 @@ export default function Hero() {
           src="/assets/hero-founder.png"
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-center z-10"
+          className="absolute inset-0 h-full w-full object-cover object-[50%_50%] z-10"
         />
 
-        <div className="absolute inset-0 z-20 pointer-events-none select-none">
+        <div
+          data-testid="desktop-pledge-layer"
+          className="hidden md:block absolute inset-0 z-20 pointer-events-none select-none"
+        >
           {PLEDGES.slice(0, visiblePledgeCount).map((pledge, i) => (
             <div
               key={i}
-              className={`hidden md:block absolute ${pledge.position}`}
+              className={`absolute ${pledge.position}`}
               style={{
                 transform: `translate(${pledge.x}, ${pledge.y}) rotate(${pledge.rotation}deg) scale(${PLEDGE_SCALE})`,
                 transformOrigin: pledge.origin,
@@ -256,6 +275,38 @@ export default function Hero() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div
+          data-testid="mobile-pledge-stack"
+          className="md:hidden absolute bottom-[2.5%] left-1/2 z-20 pointer-events-none select-none"
+          style={{
+            transform: `translateX(-50%) scale(${MOBILE_PLEDGE_SCALE})`,
+            transformOrigin: "bottom center",
+          }}
+        >
+          <div className="relative h-[154px] w-[360px]">
+            {MOBILE_PLEDGES.slice(0, visiblePledgeCount).map((pledge, i) => (
+              <div
+                key={i}
+                className="absolute bottom-0 left-0"
+                style={{
+                  transform: `translate(${pledge.x}, ${pledge.y}) rotate(${pledge.rotation}deg)`,
+                  transformOrigin: "bottom center",
+                  zIndex: i + 1,
+                }}
+              >
+                <div className="proovd-pledge-reveal">
+                  <PledgeCard
+                    amount={pledge.amount}
+                    name="Mira O."
+                    handle="maya.builds"
+                    rotation={0}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
