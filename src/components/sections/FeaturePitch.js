@@ -28,7 +28,9 @@ const TEXT_ARC_PATH = "M 10,30 Q 120,210 380,90";
 const TEXT_VIEWBOX = "0 0 400 220";
 
 // Stamp + mic video (centered in the bg photo)
-const STAMP_WIDTH_PX = 320;
+// width uses cqi so the stamp scales with the column's inline size on mobile,
+// then caps at 320px on desktop where the column gets wide.
+const STAMP_WIDTH = "clamp(180px, 50cqi, 320px)";
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
 const VIDEO_INSET = { top: "8%", left: "10%", right: "11%", bottom: "8%" };
@@ -81,8 +83,13 @@ export default function FeaturePitch() {
       aria-labelledby="features-pitch-heading"
       className="scroll-mt-20 flex flex-col md:flex-row min-h-screen"
     >
-      {/* Left column — layered visual */}
-      <div className="relative w-full md:w-[56.4%] md:min-h-screen overflow-visible">
+      {/* Left column — layered visual.
+          aspect-[4/5] gives the absolute children dimensions on mobile;
+          containerType enables cqi units so the stamp scales with column width. */}
+      <div
+        className="relative w-full md:w-[56.4%] aspect-[4/5] md:aspect-auto md:min-h-screen overflow-hidden md:overflow-visible"
+        style={{ containerType: "inline-size" }}
+      >
         {/* Layer 1 — blurred room photo */}
         {/* TODO(assets): /public/assets/feature-pitch-bg.png */}
         <img
@@ -174,7 +181,7 @@ export default function FeaturePitch() {
           style={{
             left: STAMP_LEFT,
             top: STAMP_TOP,
-            width: `${STAMP_WIDTH_PX}px`,
+            width: STAMP_WIDTH,
             zIndex: Z_STAMP,
             transform: "translate(-50%, -50%)",
           }}
@@ -224,24 +231,24 @@ export default function FeaturePitch() {
 
       {/* Right column — copy + CTA */}
       <div
-        className="relative w-full md:w-[55%] flex flex-col justify-center py-24"
+        className="relative w-full md:w-[55%] flex flex-col justify-center py-12 md:py-24"
         style={{
           backgroundColor: "#BCFCA1",
           zIndex: 20,
-          paddingLeft: "clamp(2rem, 5vw, 5rem)",
-          paddingRight: "clamp(2rem, 5vw, 5rem)",
+          paddingLeft: "clamp(1.5rem, 5vw, 5rem)",
+          paddingRight: "clamp(1.5rem, 5vw, 5rem)",
         }}
       >
         <h2
           id="features-pitch-heading"
-          className="text-ink font-bold leading-tight mb-8"
+          className="text-ink font-bold leading-tight mb-6 md:mb-8"
           style={{ fontSize: "clamp(1.875rem, 3vw, 2.625rem)" }}
         >
           Your pitch done in ten minutes
         </h2>
 
         <p
-          className="text-brand-forest leading-relaxed mb-12"
+          className="text-brand-forest leading-relaxed mb-8 md:mb-12"
           style={{
             fontSize: "clamp(1rem, 1.25vw, 1.125rem)",
             maxWidth: "52ch",
@@ -261,7 +268,7 @@ export default function FeaturePitch() {
             onClick={() =>
               trackEvent("cta_primary_click", { location: "feature_pitch" })
             }
-            className="text-xl px-14 py-4"
+            className="text-base md:text-xl px-8 md:px-14 py-3 md:py-4"
           >
             Try Now
           </Button>
