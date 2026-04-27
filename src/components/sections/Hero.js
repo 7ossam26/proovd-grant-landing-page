@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useSectionInView } from "@/lib/useSectionInView";
 import PledgeCard from "@/components/ui/PledgeCard";
 
@@ -206,11 +207,14 @@ export default function Hero() {
         style={{ containerType: "inline-size" }}
       >
         {/* TODO(assets): hero background photo (full-bleed) — see /docs/assets-needed.md */}
-        <img
+        <Image
+          fill
+          priority
           src="/assets/hero-bg.jpg"
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-[50%_50%]"
+          sizes="100vw"
+          className="object-cover object-[50%_50%]"
         />
 
         <div className="absolute inset-0 overflow-hidden">
@@ -255,11 +259,13 @@ export default function Hero() {
         </div>
 
         {/* TODO(assets): founder PNG cutout (transparent background, aligned 1:1 with hero-bg.jpg) — see /docs/assets-needed.md */}
-        <img
+        <Image
+          fill
           src="/assets/hero-founder.png"
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-[50%_50%] z-10"
+          sizes="100vw"
+          className="object-cover object-[50%_50%] z-10"
         />
 
         <div

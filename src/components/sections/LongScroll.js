@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import EcosystemPlaceholder from "@/components/ui/EcosystemPlaceholder";
 import { useSectionInView } from "@/lib/useSectionInView";
 
@@ -63,13 +62,9 @@ export default function LongScroll() {
               >
                 {/* Illustration — always first in DOM so mobile stacks it above text */}
                 <div className={isEven ? "lg:order-2" : ""}>
-                  <motion.div
-                    whileHover={{ rotate: 2 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    className="inline-block"
-                  >
+                  <div className="inline-block transition-transform duration-[400ms] ease-out hover:rotate-2">
                     <EcosystemPlaceholder />
-                  </motion.div>
+                  </div>
                 </div>
 
                 {/* Text */}

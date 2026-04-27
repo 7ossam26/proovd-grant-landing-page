@@ -63,6 +63,20 @@ export default function RootLayout({ children }) {
           href="/fonts/satoshi/satoshi-black.woff2"
           crossOrigin="anonymous"
         />
+        <link
+          rel="preload"
+          as="font"
+          type="font/woff2"
+          href="/fonts/satoshi/satoshi-regular.woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="font"
+          type="font/woff2"
+          href="/fonts/satoshi/satoshi-bold.woff2"
+          crossOrigin="anonymous"
+        />
         {UMAMI_SRC && (
           <link rel="preconnect" href={new URL(UMAMI_SRC).origin} />
         )}
