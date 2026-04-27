@@ -260,6 +260,7 @@ export default function Hero() {
           src="/assets/hero-founder.png"
           alt=""
           aria-hidden="true"
+          fetchPriority="high"
           className="absolute inset-0 h-full w-full object-cover object-[50%_50%] z-10"
         />
 

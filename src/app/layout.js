@@ -58,6 +58,18 @@ export default function RootLayout({ children }) {
       <head>
         <link
           rel="preload"
+          as="image"
+          href="/assets/hero-founder.png"
+          fetchPriority="high"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="/assets/hero-bg.jpg"
+          fetchPriority="high"
+        />
+        <link
+          rel="preload"
           as="font"
           type="font/woff2"
           href="/fonts/satoshi/satoshi-black.woff2"
