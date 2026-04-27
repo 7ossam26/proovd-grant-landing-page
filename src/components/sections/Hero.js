@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSectionInView } from "@/lib/useSectionInView";
 import PledgeCard from "@/components/ui/PledgeCard";
 
@@ -122,6 +122,7 @@ const PLEDGE_REVEAL_INTERVAL_MS = 550;
 export default function Hero() {
   const ref = useSectionInView("hero");
   const [visiblePledgeCount, setVisiblePledgeCount] = useState(0);
+  const marqueeRef = useRef(null);
 
   useEffect(() => {
     const maxPledges = Math.min(PLEDGE_LIMIT, PLEDGES.length);
@@ -148,6 +149,28 @@ export default function Hero() {
     timer = window.setTimeout(revealNext, PLEDGE_REVEAL_DELAY_MS);
 
     return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const container = marqueeRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target;
+          if (entry.isIntersecting) {
+            if (video.paused) video.play().catch(() => { });
+          } else {
+            if (!video.paused) video.pause();
+          }
+        });
+      },
+      { root: container, threshold: 0 }
+    );
+
+    container.querySelectorAll("video").forEach((v) => observer.observe(v));
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -214,7 +237,7 @@ export default function Hero() {
           className="absolute inset-0 h-full w-full object-cover object-[50%_50%]"
         />
 
-        <div className="absolute inset-0 overflow-hidden">
+        <div ref={marqueeRef} className="absolute inset-0 overflow-hidden">
           <div
             className="proovd-marquee-track flex flex-row items-end"
             style={{
