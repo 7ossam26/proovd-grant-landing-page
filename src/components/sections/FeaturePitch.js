@@ -11,10 +11,11 @@ const ctaUrl = process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#";
  *  Tunables — edit these to adjust the visual without touching JSX
  * ------------------------------------------------------------------ */
 
-// Typing animation
-const TYPING_FULL = "this is my ideaaaa";
-const TYPING_INTERVAL_MS = 50;        // per-character speed
-const TYPING_PAUSE_MS = 100;         // hold at end before restarting
+// Looping curved-text marquee — text flows endlessly along the arc into the stamp
+const TEXT_PHRASE = "this is my ideaaaa";
+const TEXT_SEPARATOR = "   •   ";   // bullet + spaces between repeats
+const TEXT_REPEAT = 24;                  // copies laid down on the path so it's always full
+const TEXT_SCROLL_DURATION_S = 14;       // seconds per full -100% startOffset shift
 
 // Curved text (SVG)
 const TEXT_LEFT = "0%";
@@ -33,15 +34,11 @@ const STAMP_TOP = "50%";
 const VIDEO_INSET = { top: "8%", left: "11%", right: "11%", bottom: "8%" };
 
 // Card chain (positioned relative to stamp center)
-const CHAIN_LEFT = "calc(50% + 100px)";   // start just past the stamp's right edge
+const CHAIN_LEFT = "calc(50% + 100px)";   // overlaps the stamp's right edge so cards emerge from under it
 const CHAIN_TOP = "calc(50% - 40px)";
 const CHAIN_WIDTH_PX = 520;
 const CHAIN_GAP_PX = 5;
-
-// Card animation
-const CARD_DURATION_S = 3;            // total cycle: enter → hold → exit
-const CARD_STAGGER_S = 0.4;           // delay between successive cards
-const CARD_TIMING = "ease-in-out";
+const CHAIN_DURATION_S = 12;              // one full conveyor cycle (seamless because the set is duplicated)
 
 // Per-card data — add / remove entries here to change the chain
 const CARDS = [
@@ -57,49 +54,23 @@ const Z_CARDS = 2;
 const Z_STAMP = 4;
 const Z_TEXT = 3;
 
+const REPEATED_TEXT = `${TEXT_PHRASE}${TEXT_SEPARATOR}`.repeat(TEXT_REPEAT);
+// Track has [...CARDS, ...CARDS] so translating from -50% to 0 of the duplicated row produces a seamless loop
+const CONVEYOR_CARDS = [...CARDS, ...CARDS];
+
 /* ------------------------------------------------------------------ */
 
 export default function FeaturePitch() {
   const ref = useSectionInView("features-pitch");
-  const [displayedText, setDisplayedText] = useState("");
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
-    const reduced =
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (reduced) {
-      setDisplayedText(TYPING_FULL);
-      return;
-    }
-
-    let i = 0;
-    let resetTimeout;
-    let interval;
-
-    const startInterval = () => {
-      interval = setInterval(() => {
-        i += 1;
-        if (i <= TYPING_FULL.length) {
-          setDisplayedText(TYPING_FULL.slice(0, i));
-        } else {
-          clearInterval(interval);
-          resetTimeout = setTimeout(() => {
-            i = 0;
-            setDisplayedText("");
-            startInterval();
-          }, TYPING_PAUSE_MS);
-        }
-      }, TYPING_INTERVAL_MS);
-    };
-
-    startInterval();
-
-    return () => {
-      clearInterval(interval);
-      if (resetTimeout) clearTimeout(resetTimeout);
-    };
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const handler = (e) => setReducedMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
   }, []);
 
   return (
@@ -140,47 +111,55 @@ export default function FeaturePitch() {
             }}
           >
             <textPath href="#text-arc" startOffset="0%">
-              {displayedText}
+              {!reducedMotion && (
+                <animate
+                  attributeName="startOffset"
+                  from="0%"
+                  to="-100%"
+                  dur={`${TEXT_SCROLL_DURATION_S}s`}
+                  repeatCount="indefinite"
+                />
+              )}
+              {REPEATED_TEXT}
             </textPath>
           </text>
         </svg>
 
-        {/* Layer 2 — chained output cards (BEHIND the stamp; they emerge from behind it) */}
+        {/* Layer 2 — endless cards conveyor (BEHIND the stamp; they emerge from behind it) */}
         <div
-          className="absolute hidden md:flex flex-row"
+          className="absolute hidden md:block"
           style={{
             left: CHAIN_LEFT,
             top: CHAIN_TOP,
             width: `${CHAIN_WIDTH_PX}px`,
-            height: "auto",
             zIndex: Z_CARDS,
-            gap: `${CHAIN_GAP_PX}px`,
-            alignItems: "flex-start",
           }}
         >
-          {CARDS.map((card, i) => (
-            // TODO(assets): {card.src}
-            <div
-              key={card.src}
-              className="pitch-card-anim flex-shrink-0"
-              style={{
-                opacity: 0,
-                animation: `pitch-card-slide ${CARD_DURATION_S}s ${CARD_TIMING} ${i * CARD_STAGGER_S}s infinite`,
-              }}
-            >
-              <img
-                src={card.src}
-                alt=""
-                aria-hidden="true"
-                className="h-auto object-contain pointer-events-none select-none block"
-                style={{
-                  width: `${card.width}px`,
-                  transform: `rotate(${card.rotate}deg)`,
-                  marginTop: `${card.marginTop}px`,
-                }}
-              />
-            </div>
-          ))}
+          <div
+            className="pitch-cards-track flex flex-row"
+            style={{
+              gap: `${CHAIN_GAP_PX}px`,
+              alignItems: "flex-start",
+              animationDuration: `${CHAIN_DURATION_S}s`,
+            }}
+          >
+            {CONVEYOR_CARDS.map((card, i) => (
+              // TODO(assets): {card.src}
+              <div key={i} className="flex-shrink-0">
+                <img
+                  src={card.src}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-auto object-contain pointer-events-none select-none block"
+                  style={{
+                    width: `${card.width}px`,
+                    transform: `rotate(${card.rotate}deg)`,
+                    marginTop: `${card.marginTop}px`,
+                  }}
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Layer 3 — stamp centered in the background photo, with mic video on top */}

@@ -68,17 +68,21 @@ body {
   outline-offset: 2px;
 }
 
-/* Pitch-card chain — tunable via CSS variables, override on .pitch-card-anim or its parent */
-.pitch-card-anim {
-  --pitch-card-enter-x:  -220px;  /* how far behind the stamp the card starts (negative = further left) */
-  --pitch-card-exit-x:    60px;   /* how far past its resting spot it drifts before fading */
+/* Pitch-card chain — endless conveyor.
+   The track is rendered with the card set duplicated, then translated from -50% to 0
+   so one full cycle is visually identical at the loop boundary (seamless). */
+.pitch-cards-track {
+  width: max-content;
+  animation-name: pitch-cards-marquee;
+  animation-duration: 12s;             /* overridden inline via animation-duration */
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
 }
-@keyframes pitch-card-slide {
-  0%   { transform: translateX(var(--pitch-card-enter-x)); opacity: 0; }
-  20%  { transform: translateX(0);                          opacity: 1; }
-  80%  { transform: translateX(0);                          opacity: 1; }
-  100% { transform: translateX(var(--pitch-card-exit-x));  opacity: 0; }
+@keyframes pitch-cards-marquee {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pitch-card-anim { animation: none !important; opacity: 1 !important; }
+  .pitch-cards-track { animation: none !important; transform: none !important; }
 }
