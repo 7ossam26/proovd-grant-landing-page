@@ -12,6 +12,8 @@ const PHONES = [
 ];
 
 const PHONE_LOOP = [...PHONES, ...PHONES];
+const PHONE_WIDTH = "11cqi";
+const PHONE_MARQUEE_TOP_OFFSET = "8cqi";
 
 const PLEDGES = [
   {
@@ -69,7 +71,7 @@ export default function Hero() {
       `}</style>
 
       <div
-        className="relative w-full aspect-[4/3] md:aspect-[16/7] overflow-hidden"
+        className="relative w-full aspect-[4/3] md:aspect-[255/136] overflow-hidden"
         style={{ containerType: "inline-size" }}
       >
         {/* TODO(assets): hero background photo (full-bleed) — see /docs/assets-needed.md */}
@@ -83,14 +85,18 @@ export default function Hero() {
         <div className="absolute inset-0 overflow-hidden">
           <div
             className="proovd-marquee-track flex flex-row items-end"
-            style={{ width: "max-content", gap: "2.4cqi" }}
+            style={{
+              width: "max-content",
+              gap: "2.4cqi",
+              marginTop: PHONE_MARQUEE_TOP_OFFSET,
+            }}
           >
             {PHONE_LOOP.map((phone, i) => (
               <div
                 key={`${phone.src}-${i}`}
                 className="relative shrink-0"
                 style={{
-                  width: "13cqi",
+                  width: PHONE_WIDTH,
                   aspectRatio: "9 / 19.5",
                   top: `${phone.topCqi}cqi`,
                   transform: `rotate(${phone.rotate}deg)`,
