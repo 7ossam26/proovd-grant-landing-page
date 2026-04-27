@@ -16,35 +16,69 @@ const PHONE_LOOP = [...PHONES, ...PHONES];
 const PHONE_WIDTH = "11cqi";
 const PHONE_MARQUEE_TOP_OFFSET = "8cqi";
 
-const PLEDGES = [
+const PLEDGE_STACKS = [
   {
-    amount: "10",
-    rotation: -4,
     position: "bottom-[12%] left-[4%]",
     origin: "bottom left",
+    cards: [
+      { amount: "10", rotation: -4, x: "0cqi", y: "0cqi" },
+      { amount: "24", rotation: -7, x: "-0.45cqi", y: "-0.45cqi" },
+    ],
   },
   {
-    amount: "75",
-    rotation: 2,
+    position: "bottom-[1%] left-[8%]",
+    origin: "bottom left",
+    cards: [{ amount: "48", rotation: 3, x: "0cqi", y: "0cqi" }],
+  },
+  {
     position: "bottom-[8%] left-[28%]",
     origin: "bottom left",
+    cards: [
+      { amount: "75", rotation: 2, x: "0cqi", y: "0cqi" },
+      { amount: "55", rotation: -2, x: "-0.55cqi", y: "-0.4cqi" },
+      { amount: "90", rotation: 4, x: "0.45cqi", y: "-0.8cqi" },
+    ],
   },
   {
-    amount: "32",
-    rotation: -2,
     position: "bottom-[12%] right-[20%]",
     origin: "bottom right",
+    cards: [
+      { amount: "32", rotation: -2, x: "0cqi", y: "0cqi" },
+      { amount: "18", rotation: 2, x: "0.55cqi", y: "-0.45cqi" },
+    ],
   },
   {
-    amount: "15",
-    rotation: 3,
     position: "bottom-[6%] right-[2%]",
     origin: "bottom right",
+    cards: [
+      { amount: "15", rotation: 3, x: "0cqi", y: "0cqi" },
+      { amount: "27", rotation: -2, x: "0.45cqi", y: "-0.4cqi" },
+    ],
   },
 ];
 
+const PRIMARY_PLEDGES = PLEDGE_STACKS.map((stack, stackIndex) => ({
+  ...stack.cards[0],
+  position: stack.position,
+  origin: stack.origin,
+  stackIndex,
+  cardIndex: 0,
+}));
+
+const STACKED_PLEDGES = PLEDGE_STACKS.flatMap((stack, stackIndex) =>
+  stack.cards.slice(1).map((card, cardIndex) => ({
+    ...card,
+    position: stack.position,
+    origin: stack.origin,
+    stackIndex,
+    cardIndex: cardIndex + 1,
+  }))
+);
+
+const PLEDGES = [...PRIMARY_PLEDGES, ...STACKED_PLEDGES];
+
 const PLEDGE_SCALE = 0.6;
-const PLEDGE_LIMIT = 4;
+const PLEDGE_LIMIT = 10;
 const PLEDGE_REVEAL_DELAY_MS = 350;
 const PLEDGE_REVEAL_INTERVAL_MS = 700;
 
@@ -189,9 +223,9 @@ export default function Hero() {
               key={i}
               className={`hidden md:block absolute ${pledge.position}`}
               style={{
-                transform: `rotate(${pledge.rotation}deg) scale(${PLEDGE_SCALE})`,
+                transform: `translate(${pledge.x}, ${pledge.y}) rotate(${pledge.rotation}deg) scale(${PLEDGE_SCALE})`,
                 transformOrigin: pledge.origin,
-                zIndex: i + 1,
+                zIndex: pledge.stackIndex * 10 + pledge.cardIndex + 1,
               }}
             >
               <div className="proovd-pledge-reveal">
