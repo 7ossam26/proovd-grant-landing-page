@@ -31,18 +31,19 @@ const TEXT_VIEWBOX = "0 0 400 220";
 const STAMP_WIDTH_PX = 320;
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
-const VIDEO_INSET = { top: "8%", left: "11%", right: "11%", bottom: "8%" };
+const VIDEO_INSET = { top: "8%", left: "10%", right: "11%", bottom: "8%" };
 
 // Card chain (positioned relative to stamp center)
 const CHAIN_LEFT = "calc(50% + 100px)";   // overlaps the stamp's right edge so cards emerge from under it
 const CHAIN_TOP = "calc(50% - 40px)";
 const CHAIN_WIDTH_PX = 520;
+const CHAIN_HEIGHT_PX = 220;              // tall enough to fit rotated cards without clipping their corners
 const CHAIN_GAP_PX = 5;
 const CHAIN_DURATION_S = 12;              // one full conveyor cycle (seamless because the set is duplicated)
 
 // Per-card data — add / remove entries here to change the chain
 const CARDS = [
-  { src: "/assets/feature-pitch-card-1.png", width: 115, rotate: -6, marginTop: 0 },
+  { src: "/assets/feature-pitch-card-1.png", width: 115, rotate: 0, marginTop: 0 },
   { src: "/assets/feature-pitch-card-2.png", width: 115, rotate: -1, marginTop: 16 },
   { src: "/assets/feature-pitch-card-3.png", width: 110, rotate: 4, marginTop: 8 },
   { src: "/assets/feature-pitch-card-4.png", width: 105, rotate: 8, marginTop: 20 },
@@ -114,8 +115,8 @@ export default function FeaturePitch() {
               {!reducedMotion && (
                 <animate
                   attributeName="startOffset"
-                  from="0%"
-                  to="-100%"
+                  from="-100%"
+                  to="0%"
                   dur={`${TEXT_SCROLL_DURATION_S}s`}
                   repeatCount="indefinite"
                 />
@@ -125,13 +126,18 @@ export default function FeaturePitch() {
           </text>
         </svg>
 
-        {/* Layer 2 — endless cards conveyor (BEHIND the stamp; they emerge from behind it) */}
+        {/* Layer 2 — endless cards conveyor (BEHIND the stamp; they emerge from behind it).
+            overflow:hidden clips the duplicated track so it doesn't bleed out the left side of the column;
+            the container's left edge sits ~60px inside the stamp, and stamp z-index hides cards there
+            so they appear to emerge from behind the stamp. */}
         <div
           className="absolute hidden md:block"
           style={{
             left: CHAIN_LEFT,
             top: CHAIN_TOP,
             width: `${CHAIN_WIDTH_PX}px`,
+            height: `${CHAIN_HEIGHT_PX}px`,
+            overflow: "hidden",
             zIndex: Z_CARDS,
           }}
         >
