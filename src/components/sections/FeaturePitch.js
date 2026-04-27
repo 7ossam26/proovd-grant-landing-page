@@ -35,20 +35,22 @@ const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
 const VIDEO_INSET = { top: "8%", left: "10%", right: "11%", bottom: "8%" };
 
-// Card chain (positioned relative to stamp center)
-const CHAIN_LEFT = "calc(50% + 100px)";   // overlaps the stamp's right edge so cards emerge from under it
-const CHAIN_TOP = "calc(50% - 40px)";
-const CHAIN_WIDTH_PX = 520;
-const CHAIN_HEIGHT_PX = 220;              // tall enough to fit rotated cards without clipping their corners
-const CHAIN_GAP_PX = 5;
+// Card chain — cqi units so chain + cards scale with the column at every breakpoint.
+// Desktop col ≈ 812px → 12cqi ≈ 97px, 64cqi ≈ 520px (matches the previous fixed-px sizing).
+// Mobile col ≈ 393px → 12cqi ≈ 47px, 64cqi ≈ 251px (a peek of cards behind the stamp).
+const CHAIN_LEFT = "calc(50% + 12cqi)";   // overlaps the stamp's right edge so cards emerge from under it
+const CHAIN_TOP = "calc(50% - 5cqi)";
+const CHAIN_WIDTH = "64cqi";
+const CHAIN_HEIGHT = "27cqi";             // tall enough to fit rotated cards without clipping their corners
+const CHAIN_GAP = "0.6cqi";
 const CHAIN_DURATION_S = 12;              // one full conveyor cycle (seamless because the set is duplicated)
 
-// Per-card data — add / remove entries here to change the chain
+// Per-card data — width/marginTop in cqi so cards scale with the column.
 const CARDS = [
-  { src: "/assets/feature-pitch-card-1.png", width: 115, rotate: 0, marginTop: 0 },
-  { src: "/assets/feature-pitch-card-2.png", width: 115, rotate: -1, marginTop: 16 },
-  { src: "/assets/feature-pitch-card-3.png", width: 110, rotate: 4, marginTop: 8 },
-  { src: "/assets/feature-pitch-card-4.png", width: 105, rotate: 8, marginTop: 20 },
+  { src: "/assets/feature-pitch-card-1.png", width: "14cqi",   rotate: 0,  marginTop: "0cqi" },
+  { src: "/assets/feature-pitch-card-2.png", width: "14cqi",   rotate: -1, marginTop: "2cqi" },
+  { src: "/assets/feature-pitch-card-3.png", width: "13.5cqi", rotate: 4,  marginTop: "1cqi" },
+  { src: "/assets/feature-pitch-card-4.png", width: "13cqi",   rotate: 8,  marginTop: "2.5cqi" },
 ];
 
 // Z-index stack — cards sit BELOW the stamp so they emerge from behind it
@@ -138,12 +140,12 @@ export default function FeaturePitch() {
             the container's left edge sits ~60px inside the stamp, and stamp z-index hides cards there
             so they appear to emerge from behind the stamp. */}
         <div
-          className="absolute hidden md:block"
+          className="absolute"
           style={{
             left: CHAIN_LEFT,
             top: CHAIN_TOP,
-            width: `${CHAIN_WIDTH_PX}px`,
-            height: `${CHAIN_HEIGHT_PX}px`,
+            width: CHAIN_WIDTH,
+            height: CHAIN_HEIGHT,
             overflow: "hidden",
             zIndex: Z_CARDS,
           }}
@@ -151,7 +153,7 @@ export default function FeaturePitch() {
           <div
             className="pitch-cards-track flex flex-row"
             style={{
-              gap: `${CHAIN_GAP_PX}px`,
+              gap: CHAIN_GAP,
               alignItems: "flex-start",
               animationDuration: `${CHAIN_DURATION_S}s`,
             }}
@@ -165,9 +167,9 @@ export default function FeaturePitch() {
                   aria-hidden="true"
                   className="h-auto object-contain pointer-events-none select-none block"
                   style={{
-                    width: `${card.width}px`,
+                    width: card.width,
                     transform: `rotate(${card.rotate}deg)`,
-                    marginTop: `${card.marginTop}px`,
+                    marginTop: card.marginTop,
                   }}
                 />
               </div>
