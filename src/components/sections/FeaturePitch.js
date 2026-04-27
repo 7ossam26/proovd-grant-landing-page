@@ -18,7 +18,7 @@ const TYPING_PAUSE_MS = 100;         // hold at end before restarting
 
 // Curved text (SVG)
 const TEXT_LEFT = "0%";
-const TEXT_TOP = "40%";
+const TEXT_TOP = "38%";
 const TEXT_WIDTH = "55%";
 const TEXT_FONT_SIZE = 36;
 const TEXT_FILL = "#FAFAFA";
@@ -33,13 +33,13 @@ const STAMP_TOP = "50%";
 const VIDEO_INSET = { top: "8%", left: "11%", right: "11%", bottom: "8%" };
 
 // Card chain (positioned relative to stamp center)
-const CHAIN_LEFT = "calc(50% + 175px)";   // start just past the stamp's right edge
+const CHAIN_LEFT = "calc(50% + 100px)";   // start just past the stamp's right edge
 const CHAIN_TOP = "calc(50% - 40px)";
 const CHAIN_WIDTH_PX = 520;
-const CHAIN_GAP_PX = 14;
+const CHAIN_GAP_PX = 5;
 
 // Card animation
-const CARD_DURATION_S = 5;            // total cycle: enter → hold → exit
+const CARD_DURATION_S = 3;            // total cycle: enter → hold → exit
 const CARD_STAGGER_S = 0.4;           // delay between successive cards
 const CARD_TIMING = "ease-in-out";
 
@@ -110,7 +110,7 @@ export default function FeaturePitch() {
       className="scroll-mt-20 flex flex-col md:flex-row min-h-screen"
     >
       {/* Left column — layered visual */}
-      <div className="relative w-full md:w-[57%] md:min-h-screen overflow-visible">
+      <div className="relative w-full md:w-[56.4%] md:min-h-screen overflow-visible">
         {/* Layer 1 — blurred room photo */}
         {/* TODO(assets): /public/assets/feature-pitch-bg.png */}
         <img
@@ -249,7 +249,7 @@ export default function FeaturePitch() {
       >
         <h2
           id="features-pitch-heading"
-          className="text-ink font-black leading-tight mb-8"
+          className="text-ink font-bold leading-tight mb-8"
           style={{ fontSize: "clamp(1.875rem, 3vw, 2.625rem)" }}
         >
           Your pitch done in ten minutes
