@@ -31,12 +31,30 @@ const PLEDGE_STACKS = [
     cards: [{ amount: "48", rotation: 3, x: "0cqi", y: "0cqi" }],
   },
   {
-    position: "bottom-[8%] left-[28%]",
+    position: "bottom-[4%] left-[18%]",
+    origin: "bottom left",
+    cards: [
+      { amount: "64", rotation: -1, x: "0cqi", y: "0cqi" },
+      { amount: "22", rotation: 3, x: "-0.5cqi", y: "-0.45cqi" },
+      { amount: "39", rotation: -4, x: "0.55cqi", y: "-0.85cqi" },
+    ],
+  },
+  {
+    position: "bottom-[8%] left-[38%]",
     origin: "bottom left",
     cards: [
       { amount: "75", rotation: 2, x: "0cqi", y: "0cqi" },
       { amount: "55", rotation: -2, x: "-0.55cqi", y: "-0.4cqi" },
       { amount: "90", rotation: 4, x: "0.45cqi", y: "-0.8cqi" },
+    ],
+  },
+  {
+    position: "bottom-[10%] left-[51%]",
+    origin: "bottom left",
+    cards: [
+      { amount: "84", rotation: -2, x: "0cqi", y: "0cqi" },
+      { amount: "41", rotation: 3, x: "-0.5cqi", y: "-0.45cqi" },
+      { amount: "68", rotation: -5, x: "0.55cqi", y: "-0.85cqi" },
     ],
   },
   {
@@ -78,9 +96,9 @@ const STACKED_PLEDGES = PLEDGE_STACKS.flatMap((stack, stackIndex) =>
 const PLEDGES = [...PRIMARY_PLEDGES, ...STACKED_PLEDGES];
 
 const PLEDGE_SCALE = 0.6;
-const PLEDGE_LIMIT = 10;
-const PLEDGE_REVEAL_DELAY_MS = 350;
-const PLEDGE_REVEAL_INTERVAL_MS = 700;
+const PLEDGE_LIMIT = 16;
+const PLEDGE_REVEAL_DELAY_MS = 100;
+const PLEDGE_REVEAL_INTERVAL_MS = 550;
 
 export default function Hero() {
   const ref = useSectionInView("hero");
@@ -241,7 +259,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="bg-ink py-6 px-4 md:py-10 md:px-8">
+      <div className="bg-ink py-6 px-4 text-center md:py-10 md:px-8">
         <h1
           id="hero-heading"
           className="text-brand-lime font-black leading-none text-4xl md:text-6xl xl:text-7xl"
