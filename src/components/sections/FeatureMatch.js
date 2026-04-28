@@ -10,7 +10,7 @@ import Button from "@/components/ui/Button";
 const STAMP_WIDTH = "clamp(180px, 40cqi, 320px)";
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
-const VIDEO_INSET = { top: "13%", left: "15%", right: "15%", bottom: "13%" };
+const VIDEO_INSET = { top: "26%", left: "14%", right: "14%", bottom: "26%" };
 
 // Founder card (left of stamp)
 const FOUNDER_LEFT = "4cqi";
@@ -149,7 +149,7 @@ export default function FeatureMatch() {
               muted
               loop
               playsInline
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             >
               <source src="/assets/videos/cupid.mp4" type="video/mp4" />
             </video>
