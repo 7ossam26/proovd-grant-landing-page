@@ -16,7 +16,12 @@ User will provide these before launch. All current placeholders reference this f
 - [x] Feature Match affiliate card → `/public/assets/affiliate-component.png`
 - [x] Feature Match cupid video (MP4) → `/public/assets/videos/cupid.mp4`
 - [ ] Feature Match cupid video (WebM) → optional `.webm` (VP9) variant for `cupid.mp4` to improve loading
-- [ ] Feature Proof visual (Phase 3) — ~786×1117 portrait, replaces `bg-[#D9D9D9]` placeholder in `src/components/sections/FeatureProof.js`
+- [ ] Feature Proof background photo → `/public/assets/feature-proof-bg.png` — blurred desk/workspace photo, portrait crop, behind both vertical conveyors
+- [ ] Feature Proof dollar bill → `/public/assets/feature-proof-dollar.png` — single $100 bill PNG, transparent bg, ~400px wide, used in bottom conveyor
+- [ ] Feature Proof trophy video (WebM) → `/public/assets/videos/feature-proof-trophy.webm` — VP9, no audio, <1.5MB, plays inside stamp frame
+- [ ] Feature Proof trophy video (MP4) → `/public/assets/videos/feature-proof-trophy.mp4` — H.264, faststart, no audio, <1.5MB, MP4 fallback for trophy.webm
+- [x] Feature Proof stamp frame → reuses `/public/assets/icons-bg.png` from FeaturePitch / FeatureMatch — no new export needed
+- [x] Feature Proof pledge cards → reuses `src/components/ui/PledgeCard.js` from Hero — no new component needed
 - [ ] Envelope / top graphic for long-scroll section (Phase 4) — centered, ~800–1000px wide, aspect-square, replaces `bg-[#D9D9D9]` placeholder in `src/components/sections/LongScroll.js`
 - [ ] Ecosystem illustration 1 (Phase 4) — 210×210 SVG, replaces `EcosystemPlaceholder` in block 1 ("Ramble at us") → `/public/assets/ecosystem-1.svg`
 - [ ] Ecosystem illustration 2 (Phase 4) — 210×210 SVG, replaces `EcosystemPlaceholder` in block 2 ("Every pledge") → `/public/assets/ecosystem-2.svg`

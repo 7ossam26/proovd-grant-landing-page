@@ -86,3 +86,20 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .pitch-cards-track { animation: none !important; transform: none !important; }
 }
+
+/* Vertical conveyors for FeatureProof — falling pledges (top) + falling dollars (bottom).
+   Each lane renders [...ITEMS, ...ITEMS]; translateY(-50%) → 0 produces a seamless fall. */
+.proof-lane {
+  display: flex;
+  flex-direction: column;
+  height: max-content;
+  animation: proof-lane-fall var(--proof-lane-duration, 20s) linear infinite;
+  will-change: transform;
+}
+@keyframes proof-lane-fall {
+  from { transform: translateY(-50%); }
+  to   { transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .proof-lane { animation: none !important; transform: none !important; }
+}
