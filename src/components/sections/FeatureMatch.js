@@ -10,7 +10,7 @@ import Button from "@/components/ui/Button";
 const STAMP_WIDTH = "clamp(180px, 40cqi, 320px)";
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
-const VIDEO_INSET = { top: "8%", left: "11%", right: "11%", bottom: "8%" };
+const VIDEO_INSET = { top: "13%", left: "15%", right: "15%", bottom: "13%" };
 
 // Founder card (left of stamp)
 const FOUNDER_LEFT = "4cqi";

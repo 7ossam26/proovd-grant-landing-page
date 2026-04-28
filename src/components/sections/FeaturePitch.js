@@ -33,7 +33,7 @@ const TEXT_VIEWBOX = "0 0 400 220";
 const STAMP_WIDTH = "clamp(180px, 50cqi, 320px)";
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
-const VIDEO_INSET = { top: "8%", left: "10%", right: "11%", bottom: "8%" };
+const VIDEO_INSET = { top: "13%", left: "15%", right: "15%", bottom: "13%" };
 
 // Card chain — cqi units so chain + cards scale with the column at every breakpoint.
 // Desktop col ≈ 812px → 12cqi ≈ 97px, 64cqi ≈ 520px (matches the previous fixed-px sizing).
