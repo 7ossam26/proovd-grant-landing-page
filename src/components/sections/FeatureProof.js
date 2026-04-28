@@ -22,22 +22,22 @@ const VIDEO_INSET = { top: "8%", left: "11%", right: "11%", bottom: "8%" };
 // so cards visibly cross the stamp's top/bottom border before disappearing behind it.
 //   higher → conveyor stops further BEFORE the stamp (less overlap)
 //   lower  → conveyor extends DEEPER into the stamp area
-const CONVEYOR_TO_CENTER_OFFSET = "17cqi";
+const CONVEYOR_TO_CENTER_OFFSET = "5cqi";
 const TOP_CONVEYOR_BOTTOM = `calc(50% + ${CONVEYOR_TO_CENTER_OFFSET})`;
 const BOTTOM_CONVEYOR_TOP = `calc(50% + ${CONVEYOR_TO_CENTER_OFFSET})`;
 
 // Per-lane horizontal positions — kept INSIDE the stamp's horizontal span (~25%–75%)
 // so cards visibly enter/exit through the stamp's top and bottom edges.
 const LANE_POSITIONS = [
-  { left: "32%", transform: "translateX(-50%)" },
-  { left: "50%", transform: "translateX(-50%)" },
-  { left: "68%", transform: "translateX(-50%)" },
+  { left: "35%", transform: "translateX(-50%)" },
+  { left: "46%", transform: "translateX(-50%)" },
+  { left: "57%", transform: "translateX(-50%)" },
 ];
 
 // Per-lane animation durations — staggered to create a natural waterfall.
 // Top and bottom use independent arrays so the two halves never beat in sync.
-const TOP_LANE_DURATIONS = ["18s", "24s", "21s"];
-const BOTTOM_LANE_DURATIONS = ["22s", "16s", "26s"];
+const TOP_LANE_DURATIONS = ["20s", "20s", "20s"];
+const BOTTOM_LANE_DURATIONS = ["20s", "20s", "20s"];
 
 // Pledge card sizing — PledgeCard's text is hardcoded in px (text-[92px], etc.),
 // so shrinking width alone breaks layout. We scale the whole card via transform.
@@ -50,7 +50,7 @@ const PLEDGE_LAYOUT_H_PX = Math.round(PLEDGE_NATURAL_H * PLEDGE_SCALE);
 const PLEDGE_GAP_PX = 18;
 
 // Dollar bill sizing
-const DOLLAR_WIDTH = "clamp(70px, 11cqi, 110px)";
+const DOLLAR_WIDTH = "clamp(48px, 7cqi, 76px)";
 const DOLLAR_GAP_PX = 16;
 const DOLLAR_COUNT_PER_LANE = 12;
 
@@ -128,7 +128,7 @@ export default function FeatureProof() {
               style={{
                 ...pos,
                 top: 0,
-                width: `${PLEDGE_LAYOUT_W_PX}px`,
+                width: `${PLEDGE_LAYOUT_H_PX}px`,
                 gap: `${PLEDGE_GAP_PX}px`,
                 "--proof-lane-duration": TOP_LANE_DURATIONS[laneIdx],
                 animation: reducedMotion ? "none" : undefined,
@@ -138,16 +138,24 @@ export default function FeatureProof() {
                 <div
                   key={`pledge-${laneIdx}-${i}`}
                   style={{
-                    width: `${PLEDGE_LAYOUT_W_PX}px`,
-                    height: `${PLEDGE_LAYOUT_H_PX}px`,
+                    width: `${PLEDGE_LAYOUT_H_PX}px`,
+                    height: `${PLEDGE_LAYOUT_W_PX}px`,
                     flexShrink: 0,
+                    position: "relative",
+                    overflow: "hidden",
                   }}
                 >
                   <div
                     style={{
                       width: `${PLEDGE_NATURAL_W}px`,
-                      transform: `scale(${PLEDGE_SCALE})`,
-                      transformOrigin: "top left",
+                      height: `${PLEDGE_NATURAL_H}px`,
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      marginTop: `-${PLEDGE_NATURAL_H / 2}px`,
+                      marginLeft: `-${PLEDGE_NATURAL_W / 2}px`,
+                      transform: `scale(${PLEDGE_SCALE}) rotate(-90deg)`,
+                      transformOrigin: "center center",
                     }}
                   >
                     <PledgeCard
@@ -196,9 +204,6 @@ export default function FeatureProof() {
                     alt=""
                     aria-hidden="true"
                     className="block w-full h-auto select-none"
-                    style={{
-                      transform: `rotate(${i % 2 === 0 ? -2 : 3}deg)`,
-                    }}
                   />
                 ))}
               </div>
