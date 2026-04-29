@@ -1,0 +1,189 @@
+# LongScroll.js — File Reference
+
+**Path:** `src/components/sections/LongScroll.js`
+
+**Purpose:** The "How It Works" section — 5 alternating text + illustration blocks on a dark background.
+
+---
+
+## Key Details
+
+- **Section ID:** `how-it-works`
+- **Background:** `bg-ink` (dark brand color)
+- **Hook:** `useSectionInView("how-it-works")` for nav highlight
+- **Layout:** `max-w-6xl mx-auto px-6`
+- **Padding:** `clamp(4rem, 8vw, 8rem)` top and bottom
+
+---
+
+## File Structure
+
+```
+<section id="how-it-works">
+  <h2 class="sr-only">How Proovd works</h2>
+  <div class="max-w-6xl mx-auto px-6">
+
+    <!-- 1. Envelope / top graphic placeholder -->
+    <!-- Square gray box (bg-[#D9D9D9]), maxWidth clamp(600px, 80vw, 1000px) -->
+    <!-- TODO(assets): envelope/top graphic -->
+
+    <!-- 2. Five alternating blocks -->
+    <!-- flex-col, gap: clamp(7rem, 12vw, 12rem) -->
+    {BLOCKS.map((block, i) => (
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+        <!-- Illustration -->
+        <!-- <EcosystemPlaceholder /> with hover:rotate-2 transition -->
+        <!-- Even i (1, 3): illustration RIGHT (lg:order-2), text LEFT (lg:order-1) -->
+        <!-- Odd  i (0, 2, 4): illustration LEFT (default), text RIGHT (default) -->
+
+        <!-- Text -->
+        <!-- h3: text-surface, font-black, fontSize clamp(1.75rem, 3.5vw, 3.625rem) -->
+        <!-- p:  text-text-whisper, fontSize clamp(1rem, 1.25vw, 1.25rem), maxWidth 50ch -->
+
+      </div>
+    ))}
+  </div>
+</section>
+```
+
+---
+
+## The 5 BLOCKS (in order)
+
+| # | Heading | Body |
+|---|---------|------|
+| 0 | "Ramble at us. We'll handle the pitch." | "Hit record and describe your idea like you'd explain it to a friend at a bar. Our AI pulls out the problem, the solution, and where you fit against competition." |
+| 1 | "Every pledge comes with a reason." | "Before anyone backs your idea, they answer one question: why do you want this? You get every response in your dashboard, alongside click-through rates, best-performing affiliates, and hour-by-hour conversion" |
+| 2 | "72 hours to know if creators want in" | "Post your idea. Affiliates in your niche already trusted by your exact audience see it within three days" |
+| 3 | "Your friends lied. backers don't." | "Surveys, Twitter replies, and 'omg I'd totally pay for this' are worth nothing. A backer putting $30 down is worth everything." |
+| 4 | "Show the shape. Keep the secret." | "Teaser mode lets you reveal just enough the problem, the niche, early traction to get affiliates interested without handing over the full blueprint" |
+
+---
+
+## Placeholder Assets
+
+- **Top graphic:** `bg-[#D9D9D9]` square div — `TODO(assets): envelope/top graphic for long-scroll`
+- **Block illustrations:** `<EcosystemPlaceholder />` component used 5 times (one per block)
+
+---
+
+## Dependencies
+
+- `EcosystemPlaceholder` — from `@/components/ui/EcosystemPlaceholder`
+- `useSectionInView` — from `@/lib/useSectionInView`
+- Tailwind v4 + brand tokens: `bg-ink`, `text-surface`, `text-text-whisper`
+
+---
+
+## Project Rules That Apply Here
+
+- No shadows, gradients, glow, or blur — ever
+- No Lucide icons — inline SVG only
+- No feature cards (icon + heading + desc stacked in a container)
+- Only the 9 brand colors — no grays, no pure black, no pure white
+- `bg-[#D9D9D9]` placeholder is a temporary asset stand-in only — replace with real asset when available
+- Satoshi is the only font (self-hosted from Fontshare)
+- JavaScript only — no TypeScript
+
+---
+
+## Full Source Code
+
+```js
+"use client";
+
+import EcosystemPlaceholder from "@/components/ui/EcosystemPlaceholder";
+import { useSectionInView } from "@/lib/useSectionInView";
+
+const BLOCKS = [
+  {
+    heading: "Ramble at us. We'll handle the pitch.",
+    body: "Hit record and describe your idea like you'd explain it to a friend at a bar. Our AI pulls out the problem, the solution, and where you fit against competition.",
+  },
+  {
+    heading: "Every pledge comes with a reason.",
+    body: "Before anyone backs your idea, they answer one question: why do you want this? You get every response in your dashboard, alongside click-through rates, best-performing affiliates, and hour-by-hour conversion",
+  },
+  {
+    heading: "72 hours to know if creators want in",
+    body: "Post your idea. Affiliates in your niche already trusted by your exact audience see it within three days",
+  },
+  {
+    heading: "Your friends lied. backers don't.",
+    body: "Surveys, Twitter replies, and 'omg I'd totally pay for this' are worth nothing. A backer putting $30 down is worth everything.",
+  },
+  {
+    heading: "Show the shape. Keep the secret.",
+    body: "Teaser mode lets you reveal just enough the problem, the niche, early traction to get affiliates interested without handing over the full blueprint",
+  },
+];
+
+export default function LongScroll() {
+  const sectionRef = useSectionInView("how-it-works");
+
+  return (
+    <section
+      id="how-it-works"
+      ref={sectionRef}
+      aria-labelledby="how-it-works-heading"
+      className="bg-ink"
+      style={{ paddingTop: "clamp(4rem, 8vw, 8rem)", paddingBottom: "clamp(4rem, 8vw, 8rem)" }}
+    >
+      <h2 id="how-it-works-heading" className="sr-only">
+        How Proovd works
+      </h2>
+      <div className="max-w-6xl mx-auto px-6">
+        {/* Envelope / top graphic placeholder */}
+        <div className="flex justify-center mb-24 lg:mb-32">
+          {/* TODO(assets): envelope/top graphic for long-scroll — see /docs/assets-needed.md */}
+          <div
+            className="bg-[#D9D9D9] aspect-square w-full rounded-md"
+            style={{ maxWidth: "clamp(600px, 80vw, 1000px)" }}
+            aria-hidden="true"
+          />
+        </div>
+
+        {/* 5 value-prop blocks */}
+        <div className="flex flex-col" style={{ gap: "clamp(7rem, 12vw, 12rem)" }}>
+          {BLOCKS.map((block, i) => {
+            const isEven = i % 2 === 1;
+            return (
+              <div
+                key={i}
+                className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center"
+              >
+                {/* Illustration — always first in DOM so mobile stacks it above text */}
+                <div className={isEven ? "lg:order-2" : ""}>
+                  <div className="inline-block transition-transform duration-[400ms] ease-out hover:rotate-2">
+                    <EcosystemPlaceholder />
+                  </div>
+                </div>
+
+                {/* Text */}
+                <div className={isEven ? "lg:order-1" : ""}>
+                  <h3
+                    className="text-surface font-black leading-tight mb-5"
+                    style={{ fontSize: "clamp(1.75rem, 3.5vw, 3.625rem)" }}
+                  >
+                    {block.heading}
+                  </h3>
+                  <p
+                    className="text-text-whisper leading-relaxed"
+                    style={{
+                      fontSize: "clamp(1rem, 1.25vw, 1.25rem)",
+                      maxWidth: "50ch",
+                    }}
+                  >
+                    {block.body}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+```

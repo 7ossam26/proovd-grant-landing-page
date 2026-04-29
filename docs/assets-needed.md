@@ -22,12 +22,17 @@ User will provide these before launch. All current placeholders reference this f
 - [ ] Feature Proof trophy video (MP4) → `/public/assets/videos/feature-proof-trophy.mp4` — H.264, faststart, no audio, <1.5MB, MP4 fallback for trophy.webm
 - [x] Feature Proof stamp frame → reuses `/public/assets/icons-bg.png` from FeaturePitch / FeatureMatch — no new export needed
 - [x] Feature Proof pledge cards → reuses `src/components/ui/PledgeCard.js` from Hero — no new component needed
-- [ ] Envelope / top graphic for long-scroll section (Phase 4) — centered, ~800–1000px wide, aspect-square, replaces `bg-[#D9D9D9]` placeholder in `src/components/sections/LongScroll.js`
-- [ ] Ecosystem illustration 1 (Phase 4) — 210×210 SVG, replaces `EcosystemPlaceholder` in block 1 ("Ramble at us") → `/public/assets/ecosystem-1.svg`
-- [ ] Ecosystem illustration 2 (Phase 4) — 210×210 SVG, replaces `EcosystemPlaceholder` in block 2 ("Every pledge") → `/public/assets/ecosystem-2.svg`
-- [ ] Ecosystem illustration 3 (Phase 4) — 210×210 SVG, replaces `EcosystemPlaceholder` in block 3 ("72 hours") → `/public/assets/ecosystem-3.svg`
-- [ ] Ecosystem illustration 4 (Phase 4) — 210×210 SVG, replaces `EcosystemPlaceholder` in block 4 ("Your friends lied") → `/public/assets/ecosystem-4.svg`
-- [ ] Ecosystem illustration 5 (Phase 4) — 210×210 SVG, replaces `EcosystemPlaceholder` in block 5 ("Show the shape") → `/public/assets/ecosystem-5.svg`
+- [x] LongScroll envelope back (Phase 4) → `/public/assets/longscroll-envelope-back.webp` — full envelope shape, sits behind spilling stamps
+- [x] LongScroll envelope front (Phase 4) → `/public/assets/longscroll-envelope-front.webp` — front flap, sits on top of stamps to clip them
+- [x] LongScroll stamp 1 (Phase 4, "Ramble at us") → `/public/assets/longscroll-stamp-ramble.png`
+- [x] LongScroll stamp 2 (Phase 4, "Every pledge") → `/public/assets/longscroll-stamp-reason.png`
+- [x] LongScroll stamp 3 (Phase 4, "72 hours", landscape orientation) → `/public/assets/longscroll-stamp-72.png`
+- [x] LongScroll stamp 4 (Phase 4, "Your friends lied") → `/public/assets/longscroll-stamp-friends-lied.png`
+- [x] LongScroll stamp 5 (Phase 4, "Show the shape") → `/public/assets/longscroll-stamp-shape.png`
+- [ ] LongScroll spill stamp 1 (Phase 4) → `/public/assets/longscroll-spill-1.png` — small founder-at-desk stamp, top-center of envelope
+- [ ] LongScroll spill stamp 2 (Phase 4) → `/public/assets/longscroll-spill-2.png` — medium creator-with-stamp, center of envelope
+- [ ] LongScroll spill stamp 3 (Phase 4) → `/public/assets/longscroll-spill-3.png` — small profile stamp, left side of envelope
+- [ ] LongScroll spill stamp 4 (Phase 4) → `/public/assets/longscroll-spill-4.png` — small gradient stamp, right side of envelope
 - [ ] CTA strip left graphic (Phase 5) — ~386×399px, positioned absolute left of centered content in `src/components/sections/CtaStrip.js`, hidden on mobile
 - [ ] CTA strip right graphic (Phase 5) — ~386×399px, positioned absolute right of centered content in `src/components/sections/CtaStrip.js`, hidden on mobile
 - [ ] Optional static OG image at `/public/og.png` (Phase 7 — dynamic generator at `src/app/opengraph-image.js` is used by default; drop in a static PNG here and repoint `openGraph.images` in `src/app/layout.js` if a hand-designed card is preferred)
