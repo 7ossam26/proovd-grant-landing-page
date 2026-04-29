@@ -1,67 +1,109 @@
 "use client";
 
 import Image from "next/image";
-import { trackEvent } from "@/lib/analytics";
 
-const footerColumns = [
-  { title: "Platform", links: [
-    { label: "For Founders", href: "#" },
-    { label: "For Affiliates", href: "#" },
-    { label: "How It Works", href: "#how-it-works" },
-    { label: "Pricing", href: "#" },
-    { label: "Success Stories", href: "#" },
-  ]},
-  { title: "Legal", links: [
-    { label: "Terms of Service", href: "#" },
-    { label: "Privacy Policy", href: "#" },
-    { label: "IP Protection Policy", href: "#" },
-    { label: "Backer Disclaimer", href: "#" },
-    { label: "Cookie Settings", href: "#cookie-settings" },
-  ]},
-  { title: "Resources", links: [
-    { label: "Pitch Guide", href: "#" },
-    { label: "Playbook", href: "#" },
-    { label: "Affiliate Toolkit", href: "#" },
-    { label: "Blog", href: "#" },
-    { label: "FAQ", href: "#" },
-  ]},
-  { title: "Company", links: [
-    { label: "About", href: "#" },
-    { label: "Careers", href: "#" },
-    { label: "Contact", href: "#contact" },
-    { label: "Press", href: "#" },
-  ]},
+// ─── Tunables ────────────────────────────────────────────────────────────────
+
+const LOGOMARK_WIDTH = "clamp(280px, 32vw, 520px)";
+
+const LINK_COLUMNS = [
+  {
+    heading: "Platform",
+    links: [
+      { label: "For Founders", href: "#" },
+      { label: "For Affiliates", href: "#" },
+      { label: "How It Works", href: "#how-it-works" },
+      { label: "Pricing", href: "#" },
+      { label: "Success Stories", href: "#" },
+    ],
+  },
+  {
+    heading: "Legal",
+    links: [
+      { label: "Terms of Service", href: "#" },
+      { label: "Privacy Policy", href: "#" },
+      { label: "IP Protection Policy", href: "#" },
+      { label: "Backer Disclaimer", href: "#" },
+      { label: "Cookie Settings", href: "#" },
+    ],
+  },
+  {
+    heading: "Resources",
+    links: [
+      { label: "Pitch Guide", href: "#" },
+      { label: "Playbook", href: "#" },
+      { label: "Affiliate Toolkit", href: "#" },
+      { label: "Blog", href: "#" },
+      { label: "FAQ", href: "#" },
+    ],
+  },
+  {
+    heading: "Company",
+    links: [
+      { label: "About", href: "#" },
+      { label: "Careers", href: "#" },
+      { label: "Contact", href: "#contact" },
+      { label: "Press", href: "#" },
+    ],
+  },
 ];
 
 export default function Footer() {
   return (
-    <footer className="bg-brand-forest pt-32 pb-16">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* 4-column link grid */}
+    <footer style={{ backgroundColor: "#FAFAFA" }}>
+      {/* ─── Link container — tinted surface, big logomark + 4 columns ── */}
+      <div
+        className="footer-link-container relative overflow-hidden"
+        style={{
+          paddingTop: "clamp(4rem, 8vw, 8rem)",
+          paddingBottom: "clamp(4rem, 8vw, 8rem)",
+        }}
+      >
+        {/* Outlined logomark — bleeds off the bottom-left corner */}
+        <img
+          src="/assets/footer-logomark-outlined.png"
+          alt=""
+          aria-hidden="true"
+          className="absolute pointer-events-none select-none"
+          style={{
+            left: "-4vw",
+            bottom: "-6vw",
+            width: LOGOMARK_WIDTH,
+            height: "auto",
+            zIndex: 1,
+          }}
+        />
+
+        {/* Link columns — push right of the logomark on desktop */}
         <nav
           aria-label="Footer"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-16"
+          className="relative grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12 px-6 md:px-12 lg:pl-[40%]"
+          style={{ zIndex: 2 }}
         >
-          {footerColumns.map((col) => (
-            <div key={col.title}>
-              <p className="text-brand-lime text-sm font-bold uppercase tracking-widest mb-4">
-                {col.title}
-              </p>
-              <ul className="flex flex-col gap-2">
+          {LINK_COLUMNS.map((col) => (
+            <div key={col.heading}>
+              <h3
+                className="font-bold mb-4"
+                style={{
+                  color: "#1E4D2F",
+                  fontSize: "clamp(1rem, 1.2vw, 1.125rem)",
+                }}
+              >
+                {col.heading}
+              </h3>
+              <ul className="space-y-2 list-disc list-inside">
                 {col.links.map((link) => (
-                  <li key={link.label}>
+                  <li
+                    key={link.label}
+                    style={{
+                      color: "#1E4D2F",
+                      fontSize: "clamp(0.875rem, 1vw, 1rem)",
+                    }}
+                  >
                     <a
                       href={link.href}
-                      className="text-text-whisper text-sm hover:text-brand-lime transition-colors"
-                      onClick={() => {
-                        trackEvent("footer_link_click", {
-                          column: col.title,
-                          label: link.label,
-                        });
-                        if (/^https?:\/\//i.test(link.href)) {
-                          trackEvent("external_link_click", { href: link.href });
-                        }
-                      }}
+                      className="hover:underline"
+                      style={{ color: "#1E4D2F" }}
                     >
                       {link.label}
                     </a>
@@ -71,8 +113,19 @@ export default function Footer() {
             </div>
           ))}
         </nav>
+      </div>
 
-        {/* Bottom row */}
+      {/* ─── Copyright row — preserved from existing Footer.js, centered ── */}
+      <div
+        className="flex flex-col items-center text-center"
+        style={{
+          backgroundColor: "#FAFAFA",
+          paddingTop: "clamp(1.5rem, 3vw, 2.5rem)",
+          paddingBottom: "clamp(1.5rem, 3vw, 2.5rem)",
+          paddingLeft: "1.5rem",
+          paddingRight: "1.5rem",
+        }}
+      >
         <div className="flex items-center gap-3 border-t border-brand-forest pt-8">
           <Image src="/logo.svg" alt="Proovd logo" width={24} height={24} />
           <p className="text-text-whisper text-sm">

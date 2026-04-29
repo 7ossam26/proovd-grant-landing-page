@@ -103,3 +103,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .proof-lane { animation: none !important; transform: none !important; }
 }
+
+/* Footer link container — light tinted surface to separate from page surface */
+.footer-link-container {
+  background-color: #DCE8CA;
+}

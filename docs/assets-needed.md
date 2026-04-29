@@ -33,6 +33,7 @@ User will provide these before launch. All current placeholders reference this f
 - [ ] LongScroll spill stamp 2 (Phase 4) → `/public/assets/longscroll-spill-2.png` — medium creator-with-stamp, center of envelope
 - [ ] LongScroll spill stamp 3 (Phase 4) → `/public/assets/longscroll-spill-3.png` — small profile stamp, left side of envelope
 - [ ] LongScroll spill stamp 4 (Phase 4) → `/public/assets/longscroll-spill-4.png` — small gradient stamp, right side of envelope
-- [ ] CTA strip left graphic (Phase 5) — ~386×399px, positioned absolute left of centered content in `src/components/sections/CtaStrip.js`, hidden on mobile
-- [ ] CTA strip right graphic (Phase 5) — ~386×399px, positioned absolute right of centered content in `src/components/sections/CtaStrip.js`, hidden on mobile
+- [x] CTA strip left graphic (Phase 5) → `/public/assets/cta-strip-left-affiliate.png` — affiliate creator with phone rig, anchors top-left of `src/components/sections/CtaStrip.js`, hidden on mobile
+- [x] CTA strip right graphic (Phase 5) → `/public/assets/cta-strip-right-phone.png` — vintage white telephone with Proovd P logo, anchors bottom-right of `src/components/sections/CtaStrip.js`, hidden on mobile
+- [x] Footer outlined logomark (Phase 5) → `/public/assets/footer-logomark-outlined.png` — outlined Proovd leaf logomark, transparent bg, anchors bottom-left of `src/components/layout/Footer.js` and bleeds off both edges
 - [ ] Optional static OG image at `/public/og.png` (Phase 7 — dynamic generator at `src/app/opengraph-image.js` is used by default; drop in a static PNG here and repoint `openGraph.images` in `src/app/layout.js` if a hand-designed card is preferred)

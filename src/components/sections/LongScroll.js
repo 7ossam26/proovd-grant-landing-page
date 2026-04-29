@@ -23,11 +23,18 @@ const Z_ENVELOPE_BACK  = 1;
 const Z_SPILL_STAMPS   = 2;
 const Z_ENVELOPE_FRONT = 3;
 
+// Per-block stamp widths — adjust these to control each illustration's size
+const STAMP_WIDTH_RAMBLE       = "clamp(180px, 22vw, 320px)";
+const STAMP_WIDTH_REASON       = "clamp(200px, 24vw, 360px)";
+const STAMP_WIDTH_72           = "clamp(220px, 28vw, 420px)"; // landscape — wider ceiling
+const STAMP_WIDTH_FRIENDS_LIED = "clamp(200px, 24vw, 360px)";
+const STAMP_WIDTH_SHAPE        = "clamp(200px, 24vw, 360px)";
+
 const BLOCKS = [
   {
     stamp: "/assets/longscroll-stamp-ramble.png",
     stampAlt: "Stamp showing a head silhouette with thoughts spilling out",
-    stampWidth: "clamp(180px, 22vw, 320px)",
+    stampWidth: STAMP_WIDTH_RAMBLE,
     heading: "Ramble at us. We'll handle the pitch.",
     body:
       "Hit record and describe your idea like you'd explain it to a friend at a bar. Our AI pulls out the problem, the solution, and where you fit against competition.",
@@ -35,7 +42,7 @@ const BLOCKS = [
   {
     stamp: "/assets/longscroll-stamp-reason.png",
     stampAlt: "Stamp showing a row of stars above a ballot box",
-    stampWidth: "clamp(200px, 24vw, 360px)",
+    stampWidth: STAMP_WIDTH_REASON,
     heading: "Every pledge comes with a reason.",
     body:
       "Before anyone backs your idea, they answer one question: why do you want this? You get every response in your dashboard, alongside click-through rates, best-performing affiliates, and hour-by-hour conversion.",
@@ -43,8 +50,7 @@ const BLOCKS = [
   {
     stamp: "/assets/longscroll-stamp-72.png",
     stampAlt: "Wide horizontal stamp showing a 72:00:00 countdown timer",
-    // Landscape stamp — wider clamp ceiling than the others
-    stampWidth: "clamp(220px, 28vw, 420px)",
+    stampWidth: STAMP_WIDTH_72,
     heading: "72 hours to know if creators want in",
     body:
       "Post your idea. Affiliates in your niche, already trusted by your exact audience, see it within three days.",
@@ -52,7 +58,7 @@ const BLOCKS = [
   {
     stamp: "/assets/longscroll-stamp-friends-lied.png",
     stampAlt: "Stamp showing scales of justice in green and blue",
-    stampWidth: "clamp(200px, 24vw, 360px)",
+    stampWidth: STAMP_WIDTH_FRIENDS_LIED,
     heading: "Your friends lied. Backers don't.",
     body:
       'Surveys, Twitter replies, and "omg I\'d totally pay for this" are worth nothing. A backer putting $30 down is worth everything.',
@@ -60,7 +66,7 @@ const BLOCKS = [
   {
     stamp: "/assets/longscroll-stamp-shape.png",
     stampAlt: "Stamp showing a padlock in green and blue",
-    stampWidth: "clamp(200px, 24vw, 360px)",
+    stampWidth: STAMP_WIDTH_SHAPE,
     heading: "Show the shape. Keep the secret.",
     body:
       "Teaser mode lets you reveal just enough — the problem, the niche, early traction — to get affiliates interested without handing over the full blueprint.",
@@ -154,7 +160,9 @@ export default function LongScroll() {
                 className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center"
               >
                 {/* Stamp illustration */}
-                <div className={stampOnRight ? "lg:order-2" : ""}>
+                <div
+                  className={`flex justify-center ${stampOnRight ? "lg:order-2" : ""}`}
+                >
                   <div className="inline-block transition-transform duration-[400ms] ease-out hover:rotate-2">
                     <img
                       src={block.stamp}
@@ -165,10 +173,13 @@ export default function LongScroll() {
                   </div>
                 </div>
 
-                {/* Copy */}
-                <div className={stampOnRight ? "lg:order-1" : ""}>
+                {/* Copy — center-aligned so all 5 text blocks line up
+                    on the same vertical axis even though stamps alternate L/R */}
+                <div
+                  className={`flex flex-col items-center text-center ${stampOnRight ? "lg:order-1" : ""}`}
+                >
                   <h3
-                    className="font-black leading-tight mb-5"
+                    className="font-medium leading-tight mb-5"
                     style={{
                       color: "#09110C",
                       fontSize: "clamp(1.75rem, 3.5vw, 3.625rem)",
