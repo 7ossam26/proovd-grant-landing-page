@@ -14,7 +14,7 @@ import PledgeCard from "@/components/ui/PledgeCard";
 const STAMP_WIDTH = "clamp(280px, 150cqi, 320px)";
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
-const VIDEO_INSET = { top: "13%", left: "15%", right: "15%", bottom: "13%" };
+const VIDEO_INSET = { top: "13%", left: "13%", right: "15%", bottom: "13%" };
 
 // Where each conveyor meets the stamp — measured from the column's vertical center.
 // Stamp half-height is ≈ 25cqi (since stamp width is ~50cqi and icons-bg is ~square).
@@ -29,9 +29,9 @@ const BOTTOM_CONVEYOR_TOP = `calc(50% + ${CONVEYOR_TO_CENTER_OFFSET})`;
 // Per-lane horizontal positions — kept INSIDE the stamp's horizontal span (~25%–75%)
 // so cards visibly enter/exit through the stamp's top and bottom edges.
 const LANE_POSITIONS = [
-  { left: "35%", transform: "translateX(-50%)" },
+  { left: "37%", transform: "translateX(-50%)" },
   { left: "46%", transform: "translateX(-50%)" },
-  { left: "57%", transform: "translateX(-50%)" },
+  { left: "56%", transform: "translateX(-50%)" },
 ];
 
 // Per-lane animation durations — staggered to create a natural waterfall.
