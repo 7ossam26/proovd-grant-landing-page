@@ -50,7 +50,7 @@ export default function FeatureMatch() {
       >
         {/* Layer 1 — background photo */}
         <img
-          src="/assets/Feature-match-bg.png"
+          src="/assets/Feature-match-bg.webp"
           alt=""
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover object-center"
@@ -70,7 +70,7 @@ export default function FeatureMatch() {
           }}
         >
           <img
-            src="/assets/founder-componant.png"
+            src="/assets/founder-componant.webp"
             alt="Example founder profile"
             className="w-full h-auto block"
           />
@@ -100,7 +100,7 @@ export default function FeatureMatch() {
 
         {/* Layer 2b — Affiliate card */}
         <img
-          src="/assets/affiliate-component.png"
+          src="/assets/affiliate-component.webp"
           alt="Example affiliate profile"
           className="absolute pointer-events-none select-none"
           style={{
@@ -124,9 +124,9 @@ export default function FeatureMatch() {
             zIndex: Z_STAMP,
           }}
         >
-          {/* TODO(assets): /public/assets/icons-bg.png — reused from FeaturePitch, no new export needed */}
+          {/* TODO(assets): /public/assets/icons-bg.svg — reused from FeaturePitch, no new export needed */}
           <img
-            src="/assets/icons-bg.png"
+            src="/assets/icons-bg.svg"
             alt=""
             aria-hidden="true"
             className="relative w-full h-auto block"
@@ -151,7 +151,7 @@ export default function FeatureMatch() {
               playsInline
               className="w-full h-full object-contain"
             >
-              <source src="/assets/videos/cupid.mp4" type="video/mp4" />
+              <source src="/assets/videos/cupid.webm" type="video/webm" />
             </video>
           </div>
         </div>

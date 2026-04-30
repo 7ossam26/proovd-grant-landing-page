@@ -93,9 +93,9 @@ export default function FeaturePitch() {
         style={{ containerType: "inline-size" }}
       >
         {/* Layer 1 — blurred room photo */}
-        {/* TODO(assets): /public/assets/feature-pitch-bg.png */}
+        {/* TODO(assets): /public/assets/feature-pitch-bg.webp */}
         <img
-          src="/assets/feature-pitch-bg.png"
+          src="/assets/feature-pitch-bg.webp"
           alt=""
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover object-center"
@@ -188,9 +188,9 @@ export default function FeaturePitch() {
             transform: "translate(-50%, -50%)",
           }}
         >
-          {/* TODO(assets): /public/assets/icons-bg.png */}
+          {/* TODO(assets): /public/assets/icons-bg.svg */}
           <img
-            src="/assets/icons-bg.png"
+            src="/assets/icons-bg.svg"
             alt=""
             aria-hidden="true"
             className="relative w-full h-auto block"
@@ -209,7 +209,6 @@ export default function FeaturePitch() {
               zIndex: 2,
             }}
           >
-            {/* TODO(assets): /public/assets/videos/feature-pitch-mic.mp4 */}
             {/* TODO(assets): /public/assets/videos/feature-pitch-mic.webm */}
             <video
               autoPlay
@@ -218,10 +217,6 @@ export default function FeaturePitch() {
               playsInline
               className="w-full h-full object-cover"
             >
-              <source
-                src="/assets/videos/feature-pitch-mic.mp4"
-                type="video/mp4"
-              />
               <source
                 src="/assets/videos/feature-pitch-mic.webm"
                 type="video/webm"

@@ -65,7 +65,7 @@ export default function RootLayout({ children }) {
         <link
           rel="preload"
           as="image"
-          href="/assets/hero-bg.jpg"
+          href="/assets/hero-bg.webp"
           fetchPriority="high"
         />
         <link

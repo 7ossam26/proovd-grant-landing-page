@@ -101,9 +101,9 @@ export default function FeatureProof() {
         style={{ containerType: "inline-size" }}
       >
         {/* Layer 1 — background photo */}
-        {/* TODO(assets): /public/assets/feature-proof-bg.png */}
+        {/* TODO(assets): /public/assets/feature-proof-bg.webp */}
         <img
-          src="/assets/feature-proof-bg.png"
+          src="/assets/feature-proof-bg.webp"
           alt=""
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover object-center"
@@ -197,10 +197,10 @@ export default function FeatureProof() {
                 }}
               >
                 {[...dollars, ...dollars].map((_, i) => (
-                  // TODO(assets): /public/assets/feature-proof-dollar.png
+                  // TODO(assets): /public/assets/feature-proof-dollar.webp
                   <img
                     key={`dollar-${laneIdx}-${i}`}
-                    src="/assets/feature-proof-dollar.png"
+                    src="/assets/feature-proof-dollar.webp"
                     alt=""
                     aria-hidden="true"
                     className="block w-full h-auto select-none"
@@ -222,9 +222,9 @@ export default function FeatureProof() {
             zIndex: Z_STAMP,
           }}
         >
-          {/* TODO(assets): /public/assets/icons-bg.png — reused from FeaturePitch / FeatureMatch */}
+          {/* TODO(assets): /public/assets/icons-bg.svg — reused from FeaturePitch / FeatureMatch */}
           <img
-            src="/assets/icons-bg.png"
+            src="/assets/icons-bg.svg"
             alt=""
             aria-hidden="true"
             className="relative w-full h-auto block"
@@ -244,7 +244,6 @@ export default function FeatureProof() {
             }}
           >
             {/* TODO(assets): /public/assets/videos/feature-proof-trophy.webm */}
-            {/* TODO(assets): /public/assets/videos/feature-proof-trophy.mp4 */}
             <video
               autoPlay
               muted
@@ -255,10 +254,6 @@ export default function FeatureProof() {
               <source
                 src="/assets/videos/feature-proof-trophy.webm"
                 type="video/webm"
-              />
-              <source
-                src="/assets/videos/feature-proof-trophy.mp4"
-                type="video/mp4"
               />
             </video>
           </div>

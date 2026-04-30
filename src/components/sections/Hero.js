@@ -13,12 +13,6 @@ const PHONES = [
   { src: "hero-phone-6", topCqi: -2, rotate: 3 },
   { src: "hero-phone-7", topCqi: -5, rotate: -3 },
   { src: "hero-phone-8", topCqi: -1, rotate: 2 },
-  { src: "hero-phone-9", topCqi: -3.5, rotate: -4 },
-  { src: "hero-phone-10", topCqi: -0.5, rotate: 1 },
-  { src: "hero-phone-11", topCqi: -4, rotate: -2 },
-  { src: "hero-phone-12", topCqi: -2.5, rotate: 3 },
-  { src: "hero-phone-13", topCqi: -6, rotate: -1 },
-  { src: "hero-phone-14", topCqi: -1, rotate: 4 },
 ];
 
 const PHONE_LOOP = [...PHONES, ...PHONES];
@@ -230,7 +224,7 @@ export default function Hero() {
       >
         {/* TODO(assets): hero background photo (full-bleed) — see /docs/assets-needed.md */}
         <img
-          src="/assets/hero-bg.jpg"
+          src="/assets/hero-bg.webp"
           alt=""
           aria-hidden="true"
           fetchPriority="high"
@@ -255,7 +249,7 @@ export default function Hero() {
                   transform: `rotate(${phone.rotate}deg)`,
                 }}
               >
-                {/* TODO(assets): phone marquee video (.webm + .mp4) — see /docs/assets-needed.md */}
+                {/* TODO(assets): phone marquee video (.webm) — see /docs/assets-needed.md */}
                 <video
                   autoPlay
                   muted
@@ -268,17 +262,13 @@ export default function Hero() {
                     src={`/assets/videos/${phone.src}.webm`}
                     type="video/webm"
                   />
-                  <source
-                    src={`/assets/videos/${phone.src}.mp4`}
-                    type="video/mp4"
-                  />
                 </video>
               </div>
             ))}
           </div>
         </div>
 
-        {/* TODO(assets): founder PNG cutout (transparent background, aligned 1:1 with hero-bg.jpg) — see /docs/assets-needed.md */}
+        {/* TODO(assets): founder PNG cutout (transparent background, aligned 1:1 with hero-bg.webp) — see /docs/assets-needed.md */}
         <img
           src="/assets/hero-founder.png"
           alt=""
