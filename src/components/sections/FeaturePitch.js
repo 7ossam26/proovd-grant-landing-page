@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useSectionInView } from "@/lib/useSectionInView";
 import Button from "@/components/ui/Button";
+import IconsBgFrame from "@/components/ui/IconsBgFrame";
 
 const ctaUrl = process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#";
 
@@ -188,11 +189,8 @@ export default function FeaturePitch() {
             transform: "translate(-50%, -50%)",
           }}
         >
-          {/* TODO(assets): /public/assets/icons-bg.svg */}
-          <img
-            src="/assets/icons-bg.svg"
-            alt=""
-            aria-hidden="true"
+          <IconsBgFrame
+            fill="#0A110F"
             className="relative w-full h-auto block"
             style={{ zIndex: 1 }}
           />

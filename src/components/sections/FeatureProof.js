@@ -5,6 +5,7 @@ import { trackEvent } from "@/lib/analytics";
 import { useSectionInView } from "@/lib/useSectionInView";
 import Button from "@/components/ui/Button";
 import PledgeCard from "@/components/ui/PledgeCard";
+import IconsBgFrame from "@/components/ui/IconsBgFrame";
 
 /* ------------------------------------------------------------------ *
  *  Tunables — edit these to adjust the visual without touching JSX
@@ -222,10 +223,8 @@ export default function FeatureProof() {
             zIndex: Z_STAMP,
           }}
         >
-          <img
-            src="/assets/icons-bg.svg"
-            alt=""
-            aria-hidden="true"
+          <IconsBgFrame
+            fill="#0A110F"
             className="relative w-full h-auto block"
             style={{ zIndex: 1 }}
           />

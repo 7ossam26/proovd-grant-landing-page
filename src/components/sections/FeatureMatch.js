@@ -3,6 +3,7 @@
 import { trackEvent } from "@/lib/analytics";
 import { useSectionInView } from "@/lib/useSectionInView";
 import Button from "@/components/ui/Button";
+import IconsBgFrame from "@/components/ui/IconsBgFrame";
 
 // ─── Tunables ────────────────────────────────────────────────────────────────
 
@@ -124,11 +125,8 @@ export default function FeatureMatch() {
             zIndex: Z_STAMP,
           }}
         >
-          {/* TODO(assets): /public/assets/icons-bg.svg — reused from FeaturePitch, no new export needed */}
-          <img
-            src="/assets/icons-bg.svg"
-            alt=""
-            aria-hidden="true"
+          <IconsBgFrame
+            fill="#0A110F"
             className="relative w-full h-auto block"
             style={{ zIndex: 1 }}
           />
