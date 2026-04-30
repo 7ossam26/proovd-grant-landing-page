@@ -16,7 +16,7 @@ const PHONES = [
 ];
 
 const PHONE_LOOP = [...PHONES, ...PHONES];
-const MARQUEE_DURATION_S = 60; // increase to slow down, decrease to speed up
+const MARQUEE_DURATION_S = 30; // increase to slow down, decrease to speed up
 const PHONE_WIDTH_MOBILE = "31cqi";
 const PHONE_WIDTH = "11cqi";
 const PHONE_MARQUEE_TOP_OFFSET_MOBILE = "40cqi";

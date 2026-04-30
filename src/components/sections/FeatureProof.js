@@ -76,8 +76,10 @@ const ctaUrl = process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#";
 export default function FeatureProof() {
   const ref = useSectionInView("features-proof");
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     if (typeof window === "undefined" || !window.matchMedia) return;
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(mq.matches);
@@ -101,7 +103,6 @@ export default function FeatureProof() {
         style={{ containerType: "inline-size" }}
       >
         {/* Layer 1 — background photo */}
-        {/* TODO(assets): /public/assets/feature-proof-bg.webp */}
         <img
           src="/assets/feature-proof-bg.webp"
           alt=""
@@ -197,7 +198,6 @@ export default function FeatureProof() {
                 }}
               >
                 {[...dollars, ...dollars].map((_, i) => (
-                  // TODO(assets): /public/assets/feature-proof-dollar.webp
                   <img
                     key={`dollar-${laneIdx}-${i}`}
                     src="/assets/feature-proof-dollar.webp"
@@ -222,7 +222,6 @@ export default function FeatureProof() {
             zIndex: Z_STAMP,
           }}
         >
-          {/* TODO(assets): /public/assets/icons-bg.svg — reused from FeaturePitch / FeatureMatch */}
           <img
             src="/assets/icons-bg.svg"
             alt=""
@@ -232,31 +231,38 @@ export default function FeatureProof() {
           />
 
           {/* Trophy video sits ABOVE the stamp frame, inside its interior */}
-          <div
-            className="absolute overflow-hidden"
-            style={{
-              top: VIDEO_INSET.top,
-              left: VIDEO_INSET.left,
-              right: VIDEO_INSET.right,
-              bottom: VIDEO_INSET.bottom,
-              borderRadius: "4px",
-              zIndex: 2,
-            }}
-          >
-            {/* TODO(assets): /public/assets/videos/feature-proof-trophy.webm */}
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="w-full h-full object-cover"
+          {mounted && (
+            <div
+              className="absolute overflow-hidden"
+              style={{
+                top: VIDEO_INSET.top,
+                left: VIDEO_INSET.left,
+                right: VIDEO_INSET.right,
+                bottom: VIDEO_INSET.bottom,
+                borderRadius: "4px",
+                zIndex: 2,
+              }}
             >
-              <source
-                src="/assets/videos/feature-proof-trophy.webm"
-                type="video/webm"
-              />
-            </video>
-          </div>
+              {/* TODO(assets): /public/assets/videos/feature-proof-trophy.webm */}
+              {/* TODO(assets): /public/assets/videos/feature-proof-trophy.mp4 */}
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-contain"
+              >
+                <source
+                  src="/assets/videos/feature-proof-trophy.webm"
+                  type="video/webm"
+                />
+                <source
+                  src="/assets/videos/feature-proof-trophy.mp4"
+                  type="video/mp4"
+                />
+              </video>
+            </div>
+          )}
         </div>
       </div>
 
