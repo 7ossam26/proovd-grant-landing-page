@@ -55,8 +55,8 @@ export default function Footer() {
       <div
         className="footer-link-container relative overflow-hidden"
         style={{
-          paddingTop: "clamp(4rem, 8vw, 8rem)",
-          paddingBottom: "clamp(4rem, 8vw, 8rem)",
+          paddingTop: "clamp(2rem, 4vw, 4rem)",
+          paddingBottom: "clamp(1rem, 1vw, 1rem)",
         }}
       >
         {/* Outlined logomark — bleeds off the bottom-left corner */}
@@ -67,7 +67,7 @@ export default function Footer() {
           className="absolute pointer-events-none select-none"
           style={{
             left: "-4vw",
-            bottom: "-6vw",
+            top: "-6vw",
             width: LOGOMARK_WIDTH,
             height: "auto",
             zIndex: 1,
@@ -113,24 +113,21 @@ export default function Footer() {
             </div>
           ))}
         </nav>
-      </div>
 
-      {/* ─── Copyright row — preserved from existing Footer.js, centered ── */}
-      <div
-        className="flex flex-col items-center text-center"
-        style={{
-          backgroundColor: "#FAFAFA",
-          paddingTop: "clamp(1.5rem, 3vw, 2.5rem)",
-          paddingBottom: "clamp(1.5rem, 3vw, 2.5rem)",
-          paddingLeft: "1.5rem",
-          paddingRight: "1.5rem",
-        }}
-      >
-        <div className="flex items-center gap-3 border-t border-brand-forest pt-8">
-          <Image src="/logo.svg" alt="Proovd logo" width={24} height={24} />
-          <p className="text-text-whisper text-sm">
-            &copy; 2026 Proovd. All rights reserved.
-          </p>
+        {/* ─── Copyright row — sits inside the link container, centered ── */}
+        <div
+          className="relative flex flex-col items-center text-center px-6 md:px-12"
+          style={{
+            zIndex: 2,
+            paddingTop: "clamp(2.5rem, 5vw, 4rem)",
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <Image src="/logo.svg" alt="Proovd logo" width={24} height={24} />
+            <p className="text-sm" style={{ color: "#1E4D2F" }}>
+              &copy; 2026 Proovd. All rights reserved.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

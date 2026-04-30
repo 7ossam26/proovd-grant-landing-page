@@ -8,14 +8,57 @@ import { useSectionInView } from "@/lib/useSectionInView";
 const ENVELOPE_MAX_WIDTH = "clamp(360px, 50vw, 720px)";
 const ENVELOPE_ASPECT = "1 / 1.05";
 
-// Spilling stamps — placeholders until real assets land.
-// Positions match the design composition; swap the placeholder div for an <img>
-// when /public/assets/longscroll-spill-N.png files arrive.
+// ─── Spill stamps — adjust these to position each stamp ──────────────────────
+// Each stamp straddles the front layer's V-mouth: the TOP is cropped behind
+// the front panel, the BOTTOM hangs through the V opening. Tune top/left to
+// reposition, width to resize, rotate (deg) to tilt.
+
+// 1. Founder at desk
+const SPILL_1_SRC    = "/assets/longscroll-spill-1.webp";
+const SPILL_1_ALT    = "Stamp showing founder writing at desk";
+const SPILL_1_TOP    = "32%";
+const SPILL_1_LEFT   = "42%";
+const SPILL_1_WIDTH  = "16%";
+const SPILL_1_ROTATE = -4;
+
+// 2. Cat (tall portrait)
+const SPILL_2_SRC    = "/assets/longscroll-spill-2.webp";
+const SPILL_2_ALT    = "Stamp showing a glowing cat in green and blue";
+const SPILL_2_TOP    = "40%";
+const SPILL_2_LEFT   = "32%";
+const SPILL_2_WIDTH  = "20%";
+const SPILL_2_ROTATE = 6;
+
+// 3. Rocket (small landscape)
+const SPILL_3_SRC    = "/assets/longscroll-spill-3.webp";
+const SPILL_3_ALT    = "Stamp showing a green rocket";
+const SPILL_3_TOP    = "55%";
+const SPILL_3_LEFT   = "70%";
+const SPILL_3_WIDTH  = "14%";
+const SPILL_3_ROTATE = 14;
+
+// 4. Girl with green leaf
+const SPILL_4_SRC    = "/assets/longscroll-spill-4.webp";
+const SPILL_4_ALT    = "Stamp showing a person holding a green leaf";
+const SPILL_4_TOP    = "48%";
+const SPILL_4_LEFT   = "10%";
+const SPILL_4_WIDTH  = "16%";
+const SPILL_4_ROTATE = -16;
+
+// 5. Hand over face
+const SPILL_5_SRC    = "/assets/longscroll-spill-5.webp";
+const SPILL_5_ALT    = "Stamp showing a green hand over a face";
+const SPILL_5_TOP    = "60%";
+const SPILL_5_LEFT   = "52%";
+const SPILL_5_WIDTH  = "12%";
+const SPILL_5_ROTATE = 18;
+
 const SPILL_STAMPS = [
-  { top: "8%",  left: "44%", width: "16%", rotate: -2,  alt: "Founder at desk" },
-  { top: "30%", left: "38%", width: "26%", rotate: 4,   alt: "Creator with stamp" },
-  { top: "22%", left: "10%", width: "14%", rotate: -18, alt: "Profile stamp" },
-  { top: "18%", left: "78%", width: "13%", rotate: 12,  alt: "Gradient stamp" },
+  { src: SPILL_1_SRC, alt: SPILL_1_ALT, top: SPILL_1_TOP, left: SPILL_1_LEFT, width: SPILL_1_WIDTH, rotate: SPILL_1_ROTATE },
+  { src: SPILL_2_SRC, alt: SPILL_2_ALT, top: SPILL_2_TOP, left: SPILL_2_LEFT, width: SPILL_2_WIDTH, rotate: SPILL_2_ROTATE },
+  { src: SPILL_3_SRC, alt: SPILL_3_ALT, top: SPILL_3_TOP, left: SPILL_3_LEFT, width: SPILL_3_WIDTH, rotate: SPILL_3_ROTATE },
+  { src: SPILL_4_SRC, alt: SPILL_4_ALT, top: SPILL_4_TOP, left: SPILL_4_LEFT, width: SPILL_4_WIDTH, rotate: SPILL_4_ROTATE },
+  { src: SPILL_5_SRC, alt: SPILL_5_ALT, top: SPILL_5_TOP, left: SPILL_5_LEFT, width: SPILL_5_WIDTH, rotate: SPILL_5_ROTATE },
 ];
 
 // Z-stack: front flap clips spill stamps so they appear inside the envelope
@@ -94,13 +137,17 @@ export default function LongScroll() {
       </h2>
 
       <div className="mx-auto px-6" style={{ maxWidth: "min(96rem, 100%)" }}>
-        {/* ─── Envelope graphic with spilling stamps ───────────────────── */}
+        {/* ─── Envelope graphic with spilling stamps ─────────────────────
+            isolation: isolate locks the stacking context so the three
+            z-layers below (back/stamps/front) order purely against each
+            other — nothing outside this container can slip between them. */}
         <div
           className="relative mx-auto"
           style={{
             width: ENVELOPE_MAX_WIDTH,
             aspectRatio: ENVELOPE_ASPECT,
             marginBottom: "clamp(6rem, 14vw, 14rem)",
+            isolation: "isolate",
           }}
           aria-hidden="true"
         >
@@ -115,9 +162,11 @@ export default function LongScroll() {
 
           {/* Layer 2 — spilling stamps (between back and front layers) */}
           {SPILL_STAMPS.map((stamp, i) => (
-            <div
+            <img
               key={`spill-${i}`}
-              className="absolute pointer-events-none select-none"
+              src={stamp.src}
+              alt={stamp.alt}
+              className="absolute pointer-events-none select-none h-auto"
               style={{
                 top: stamp.top,
                 left: stamp.left,
@@ -125,15 +174,7 @@ export default function LongScroll() {
                 transform: `rotate(${stamp.rotate}deg)`,
                 zIndex: Z_SPILL_STAMPS,
               }}
-            >
-              {/* TODO(assets): /public/assets/longscroll-spill-${i + 1}.png — stamp #${i + 1} spilling from envelope */}
-              <div
-                className="w-full"
-                style={{ aspectRatio: "3 / 4", backgroundColor: "#DCE8CA" }}
-                aria-label={stamp.alt}
-                role="img"
-              />
-            </div>
+            />
           ))}
 
           {/* Layer 3 — envelope front flap (clips overlapping stamp tops) */}

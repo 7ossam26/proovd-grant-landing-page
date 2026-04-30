@@ -29,10 +29,11 @@ User will provide these before launch. All current placeholders reference this f
 - [x] LongScroll stamp 3 (Phase 4, "72 hours", landscape orientation) → `/public/assets/longscroll-stamp-72.png`
 - [x] LongScroll stamp 4 (Phase 4, "Your friends lied") → `/public/assets/longscroll-stamp-friends-lied.png`
 - [x] LongScroll stamp 5 (Phase 4, "Show the shape") → `/public/assets/longscroll-stamp-shape.png`
-- [ ] LongScroll spill stamp 1 (Phase 4) → `/public/assets/longscroll-spill-1.png` — small founder-at-desk stamp, top-center of envelope
-- [ ] LongScroll spill stamp 2 (Phase 4) → `/public/assets/longscroll-spill-2.png` — medium creator-with-stamp, center of envelope
-- [ ] LongScroll spill stamp 3 (Phase 4) → `/public/assets/longscroll-spill-3.png` — small profile stamp, left side of envelope
-- [ ] LongScroll spill stamp 4 (Phase 4) → `/public/assets/longscroll-spill-4.png` — small gradient stamp, right side of envelope
+- [x] LongScroll spill stamp 1 (Phase 4) → `/public/assets/longscroll-spill-1.webp` — founder writing at desk
+- [x] LongScroll spill stamp 2 (Phase 4) → `/public/assets/longscroll-spill-2.webp` — glowing cat in green/blue gradient (tall portrait)
+- [x] LongScroll spill stamp 3 (Phase 4) → `/public/assets/longscroll-spill-3.webp` — green rocket (small landscape)
+- [x] LongScroll spill stamp 4 (Phase 4) → `/public/assets/longscroll-spill-4.webp` — person holding green leaf
+- [x] LongScroll spill stamp 5 (Phase 4) → `/public/assets/longscroll-spill-5.webp` — green hand over face
 - [x] CTA strip left graphic (Phase 5) → `/public/assets/cta-strip-left-affiliate.png` — affiliate creator with phone rig, anchors top-left of `src/components/sections/CtaStrip.js`, hidden on mobile
 - [x] CTA strip right graphic (Phase 5) → `/public/assets/cta-strip-right-phone.png` — vintage white telephone with Proovd P logo, anchors bottom-right of `src/components/sections/CtaStrip.js`, hidden on mobile
 - [x] Footer outlined logomark (Phase 5) → `/public/assets/footer-logomark-outlined.png` — outlined Proovd leaf logomark, transparent bg, anchors bottom-left of `src/components/layout/Footer.js` and bleeds off both edges

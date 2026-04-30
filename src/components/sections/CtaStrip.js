@@ -80,13 +80,13 @@ export default function CtaStrip() {
         {/* Heading — surface on brand-forest */}
         <h2
           id="cta-strip-heading"
-          className="font-black mb-4 leading-tight"
+          className="font-medium mb-4 leading-tight"
           style={{
             color: "#FAFAFA",
             fontSize: "clamp(2rem, 4.5vw, 3.5rem)",
           }}
         >
-          Start shipping today.
+          Start Shipping Today.
         </h2>
 
         {/* Sub-copy — text-whisper on brand-forest, NEVER surface, NEVER lime */}
