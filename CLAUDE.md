@@ -6,7 +6,8 @@ You are working on the Proovd landing page. Before writing any code, read these 
 2. `/docs/TECH_STACK.md` — locked tech decisions
 3. `/docs/CONVENTIONS.md` — file structure, env vars, analytics events, git conventions
 4. `/docs/design-rules/Color.md` — every color rule is absolute
-5. `/EXECUTION_PLAN.md` — which phase you're in and what ships
+5. `/AURA-Proovd.md` — design philosophy, anti-AI-template patterns, motion freedom rules
+6. `/EXECUTION_PLAN.md` — which phase you're in and what ships
 
 ## Hard rules (repeated here for emphasis)
 
