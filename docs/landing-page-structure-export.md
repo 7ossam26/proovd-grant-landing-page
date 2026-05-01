@@ -78,8 +78,7 @@ Pruned — build output, node_modules, .git, and local worktrees are intentional
 │   ├── assets-needed.md
 │   ├── analytics-events.md
 │   ├── design-rules/
-│   │   ├── Color.md
-│   │   └── anti-ai-slop.md
+│   │   └── Color.md
 │   └── landing-page-structure-export.md   ← this file
 ├── public/
 │   ├── favicon.ico
