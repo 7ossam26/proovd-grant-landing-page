@@ -70,8 +70,11 @@ test.describe("Phase 2 — Nav + Hero", () => {
       "Menu"
     );
 
-    const mediaBox = await page.locator("#hero > div").first().boundingBox();
-    expect(mediaBox.width / mediaBox.height).toBeCloseTo(393 / 710, 2);
+    // Hero now sizes to 100svh as a flex column (visual fills remaining space after
+    // the headline). Ensure the hero section itself fits within the viewport height
+    // so the headline is visible without scrolling.
+    const heroBox = await page.locator("#hero").boundingBox();
+    expect(heroBox.height).toBeLessThanOrEqual(852 + 1);
 
     await expect(page.locator('[data-testid="mobile-pledge-stack"]')).toBeVisible();
     await expect(page.locator('[data-testid="desktop-pledge-layer"]')).toBeHidden();

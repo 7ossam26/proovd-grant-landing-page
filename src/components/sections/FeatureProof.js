@@ -4,71 +4,38 @@ import { useEffect, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useSectionInView } from "@/lib/useSectionInView";
 import Button from "@/components/ui/Button";
-import PledgeCard from "@/components/ui/PledgeCard";
-import IconsBgFrame from "@/components/ui/IconsBgFrame";
+import { StampMaskedVideo, STAMP_ASPECT } from "@/components/ui/IconsBgFrame";
 
 /* ------------------------------------------------------------------ *
- *  Tunables — edit these to adjust the visual without touching JSX
+ *  Tunables
  * ------------------------------------------------------------------ */
 
-// Stamp + trophy video
-const STAMP_WIDTH = "clamp(280px, 150cqi, 320px)";
+const STAMP_WIDTH = "clamp(220px, 42cqi, 320px)";
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
-const VIDEO_INSET = { top: "13%", left: "13%", right: "15%", bottom: "13%" };
 
-// Where each conveyor meets the stamp — measured from the column's vertical center.
-// Stamp half-height is ≈ 25cqi (since stamp width is ~50cqi and icons-bg is ~square).
-// Using 17cqi here means each conveyor extends 8cqi PAST the stamp's near edge,
-// so cards visibly cross the stamp's top/bottom border before disappearing behind it.
-//   higher → conveyor stops further BEFORE the stamp (less overlap)
-//   lower  → conveyor extends DEEPER into the stamp area
-const CONVEYOR_TO_CENTER_OFFSET = "5cqi";
-const TOP_CONVEYOR_BOTTOM = `calc(50% + ${CONVEYOR_TO_CENTER_OFFSET})`;
-const BOTTOM_CONVEYOR_TOP = `calc(50% + ${CONVEYOR_TO_CENTER_OFFSET})`;
-
-// Per-lane horizontal positions — kept INSIDE the stamp's horizontal span (~25%–75%)
-// so cards visibly enter/exit through the stamp's top and bottom edges.
-const LANE_POSITIONS = [
-  { left: "37%", transform: "translateX(-50%)" },
-  { left: "46%", transform: "translateX(-50%)" },
-  { left: "56%", transform: "translateX(-50%)" },
+// SVG works in a 100×100 viewBox with preserveAspectRatio="none" so curves stretch
+// to fill any column shape. All path coords are percentages of the column.
+const TOP_PATHS = [
+  { id: "proof-top-l", d: "M 12 -8 C 18 18, 30 36, 50 50" },
+  { id: "proof-top-c", d: "M 50 -8 C 50 14, 50 32, 50 50" },
+  { id: "proof-top-r", d: "M 88 -8 C 82 18, 70 36, 50 50" },
+];
+const BOTTOM_PATHS = [
+  { id: "proof-bot-l", d: "M 50 50 C 30 64, 18 82, 12 108" },
+  { id: "proof-bot-c", d: "M 50 50 C 50 68, 50 86, 50 108" },
+  { id: "proof-bot-r", d: "M 50 50 C 70 64, 82 82, 88 108" },
 ];
 
-// Per-lane animation durations — staggered to create a natural waterfall.
-// Top and bottom use independent arrays so the two halves never beat in sync.
-const TOP_LANE_DURATIONS = ["20s", "20s", "20s"];
-const BOTTOM_LANE_DURATIONS = ["20s", "20s", "20s"];
+const TOP_DUR_S = 5.0;        // travel time pledge → stamp
+const BOTTOM_DUR_S = 5.0;     // travel time stamp → outer corners
+const TOKENS_PER_LANE = 4;    // staggered along each lane
 
-// Pledge card sizing — PledgeCard's text is hardcoded in px (text-[92px], etc.),
-// so shrinking width alone breaks layout. We scale the whole card via transform.
-// PledgeCard natural size ≈ 360w × 195h.
-const PLEDGE_SCALE = 0.32;
-const PLEDGE_NATURAL_W = 360;
-const PLEDGE_NATURAL_H = 195;
-const PLEDGE_LAYOUT_W_PX = Math.round(PLEDGE_NATURAL_W * PLEDGE_SCALE);
-const PLEDGE_LAYOUT_H_PX = Math.round(PLEDGE_NATURAL_H * PLEDGE_SCALE);
-const PLEDGE_GAP_PX = 18;
-
-// Dollar bill sizing
-const DOLLAR_WIDTH = "clamp(48px, 7cqi, 76px)";
-const DOLLAR_GAP_PX = 16;
-const DOLLAR_COUNT_PER_LANE = 12;
-
-const PLEDGES = [
-  { amount: 75, name: "Max Q", handle: "maxq.lab" },
-  { amount: 50, name: "Sara K", handle: "sarak.builds" },
-  { amount: 75, name: "Jay M", handle: "jay.mxyz" },
-  { amount: 100, name: "Lia P", handle: "lia.eats.ai" },
-  { amount: 25, name: "Dev R", handle: "dev.r.codes" },
-  { amount: 75, name: "Tom W", handle: "tom.dotwav" },
-];
-
-// Z-index stack — pledges + dollars sit BEHIND the stamp so they appear to enter/exit it
 const Z_BG = 1;
-const Z_PLEDGES = 2;
-const Z_DOLLARS = 2;
+const Z_FUNNEL = 2;
 const Z_STAMP = 4;
+
+const PLEDGE_AMOUNTS = [25, 50, 75, 100, 22, 64, 39, 84, 15, 27, 41, 90];
 
 const ctaUrl = process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#";
 
@@ -94,16 +61,12 @@ export default function FeatureProof() {
       ref={ref}
       id="features-proof"
       aria-labelledby="features-proof-heading"
-      className="scroll-mt-20 flex flex-col md:flex-row min-h-screen"
+      className="proovd-snap-section scroll-mt-20 flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0"
     >
-      {/* Left column — layered visual.
-          aspect-[4/5] gives absolute children dimensions on mobile;
-          containerType enables cqi units inside the column. */}
       <div
-        className="relative w-full md:w-[56.4%] aspect-[4/5] md:aspect-auto md:min-h-screen overflow-hidden"
+        className="relative w-full md:w-[56.4%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden"
         style={{ containerType: "inline-size" }}
       >
-        {/* Layer 1 — background photo */}
         <img
           src="/assets/feature-proof-bg.webp"
           alt=""
@@ -112,107 +75,74 @@ export default function FeatureProof() {
           style={{ zIndex: Z_BG }}
         />
 
-        {/* Layer 2a — TOP conveyor: pledges falling DOWN into the stamp's TOP edge.
-            Bottom edge sits inside the stamp; stamp z-index hides cards beyond it. */}
-        <div
-          className="absolute left-0 right-0 overflow-hidden pointer-events-none"
-          style={{
-            top: 0,
-            bottom: TOP_CONVEYOR_BOTTOM,
-            zIndex: Z_PLEDGES,
-          }}
-          aria-hidden="true"
-        >
-          {LANE_POSITIONS.map((pos, laneIdx) => (
-            <div
-              key={`pledge-lane-${laneIdx}`}
-              className="absolute proof-lane"
-              style={{
-                ...pos,
-                top: 0,
-                width: `${PLEDGE_LAYOUT_H_PX}px`,
-                gap: `${PLEDGE_GAP_PX}px`,
-                "--proof-lane-duration": TOP_LANE_DURATIONS[laneIdx],
-                animation: reducedMotion ? "none" : undefined,
-              }}
-            >
-              {[...PLEDGES, ...PLEDGES].map((p, i) => (
-                <div
-                  key={`pledge-${laneIdx}-${i}`}
-                  style={{
-                    width: `${PLEDGE_LAYOUT_H_PX}px`,
-                    height: `${PLEDGE_LAYOUT_W_PX}px`,
-                    flexShrink: 0,
-                    position: "relative",
-                    overflow: "hidden",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${PLEDGE_NATURAL_W}px`,
-                      height: `${PLEDGE_NATURAL_H}px`,
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      marginTop: `-${PLEDGE_NATURAL_H / 2}px`,
-                      marginLeft: `-${PLEDGE_NATURAL_W / 2}px`,
-                      transform: `scale(${PLEDGE_SCALE}) rotate(-90deg)`,
-                      transformOrigin: "center center",
-                    }}
-                  >
-                    <PledgeCard
-                      amount={p.amount}
-                      name={p.name}
-                      handle={p.handle}
-                      rotation={0}
-                    />
-                  </div>
-                </div>
+        {/* Funnel SVG — viewBox stretches with preserveAspectRatio="none" so paths
+            fit any column dimensions. */}
+        {mounted && (
+          <svg
+            className="absolute inset-0 w-full h-full"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            style={{ zIndex: Z_FUNNEL }}
+            aria-hidden="true"
+          >
+            <defs>
+              {TOP_PATHS.map((p) => (
+                <path key={p.id} id={p.id} d={p.d} />
               ))}
-            </div>
-          ))}
-        </div>
+              {BOTTOM_PATHS.map((p) => (
+                <path key={p.id} id={p.id} d={p.d} />
+              ))}
+            </defs>
 
-        {/* Layer 2b — BOTTOM conveyor: dollars falling DOWN out of the stamp's BOTTOM edge */}
-        <div
-          className="absolute left-0 right-0 overflow-hidden pointer-events-none"
-          style={{
-            top: BOTTOM_CONVEYOR_TOP,
-            bottom: 0,
-            zIndex: Z_DOLLARS,
-          }}
-          aria-hidden="true"
-        >
-          {LANE_POSITIONS.map((pos, laneIdx) => {
-            const dollars = Array.from({ length: DOLLAR_COUNT_PER_LANE });
-            return (
-              <div
-                key={`dollar-lane-${laneIdx}`}
-                className="absolute proof-lane"
-                style={{
-                  ...pos,
-                  top: 0,
-                  width: DOLLAR_WIDTH,
-                  gap: `${DOLLAR_GAP_PX}px`,
-                  "--proof-lane-duration": BOTTOM_LANE_DURATIONS[laneIdx],
-                  animation: reducedMotion ? "none" : undefined,
-                }}
-              >
-                {[...dollars, ...dollars].map((_, i) => (
-                  <img
-                    key={`dollar-${laneIdx}-${i}`}
-                    src="/assets/feature-proof-dollar.webp"
-                    alt=""
-                    aria-hidden="true"
-                    className="block w-full h-auto select-none"
-                  />
-                ))}
-              </div>
-            );
-          })}
-        </div>
+            {/* Top — pledge tokens flowing into the stamp */}
+            {TOP_PATHS.flatMap((path, laneIdx) =>
+              Array.from({ length: TOKENS_PER_LANE }).map((_, i) => {
+                const beginOffset = (i / TOKENS_PER_LANE) * TOP_DUR_S + laneIdx * 0.23;
+                const amount = PLEDGE_AMOUNTS[(laneIdx * TOKENS_PER_LANE + i) % PLEDGE_AMOUNTS.length];
+                return (
+                  <g key={`top-${laneIdx}-${i}`}>
+                    <PledgeToken amount={amount} />
+                    {!reducedMotion && (
+                      <animateMotion
+                        dur={`${TOP_DUR_S}s`}
+                        repeatCount="indefinite"
+                        rotate="auto"
+                        begin={`-${beginOffset}s`}
+                      >
+                        <mpath href={`#${path.id}`} />
+                      </animateMotion>
+                    )}
+                  </g>
+                );
+              })
+            )}
 
-        {/* Layer 3 — stamp + trophy video (centered) */}
+            {/* Bottom — dollar tokens flowing outward */}
+            {BOTTOM_PATHS.flatMap((path, laneIdx) =>
+              Array.from({ length: TOKENS_PER_LANE }).map((_, i) => {
+                const beginOffset = (i / TOKENS_PER_LANE) * BOTTOM_DUR_S + laneIdx * 0.31;
+                const sizeVar = [0.85, 1, 1.1][i % 3];
+                return (
+                  <g key={`bot-${laneIdx}-${i}`}>
+                    <DollarToken scale={sizeVar} />
+                    {!reducedMotion && (
+                      <animateMotion
+                        dur={`${BOTTOM_DUR_S}s`}
+                        repeatCount="indefinite"
+                        rotate="auto"
+                        begin={`-${beginOffset}s`}
+                      >
+                        <mpath href={`#${path.id}`} />
+                      </animateMotion>
+                    )}
+                  </g>
+                );
+              })
+            )}
+          </svg>
+        )}
+
+        {/* Stamp-masked trophy video */}
         <div
           className="absolute"
           style={{
@@ -221,51 +151,20 @@ export default function FeatureProof() {
             width: STAMP_WIDTH,
             transform: "translate(-50%, -50%)",
             zIndex: Z_STAMP,
+            aspectRatio: `${STAMP_ASPECT}`,
           }}
         >
-          <IconsBgFrame
-            fill="#0A110F"
-            className="relative w-full h-auto block"
-            style={{ zIndex: 1 }}
-          />
-
-          {/* Trophy video sits ABOVE the stamp frame, inside its interior */}
           {mounted && (
-            <div
-              className="absolute overflow-hidden"
-              style={{
-                top: VIDEO_INSET.top,
-                left: VIDEO_INSET.left,
-                right: VIDEO_INSET.right,
-                bottom: VIDEO_INSET.bottom,
-                borderRadius: "4px",
-                zIndex: 2,
-              }}
-            >
-              {/* TODO(assets): /public/assets/videos/feature-proof-trophy.webm */}
-              {/* TODO(assets): /public/assets/videos/feature-proof-trophy.mp4 */}
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="w-full h-full object-contain"
-              >
-                <source
-                  src="/assets/videos/feature-proof-trophy.webm"
-                  type="video/webm"
-                />
-                <source
-                  src="/assets/videos/feature-proof-trophy.mp4"
-                  type="video/mp4"
-                />
-              </video>
-            </div>
+            <StampMaskedVideo
+              videoSrc="/assets/videos/feature-proof-trophy.webm"
+              videoSrcMp4="/assets/videos/feature-proof-trophy.mp4"
+              className="w-full h-full"
+              fit="contain"
+            />
           )}
         </div>
       </div>
 
-      {/* Right column — Forest palette */}
       <div
         className="relative w-full md:w-[55%] flex flex-col justify-center py-12 md:py-24"
         style={{
@@ -325,5 +224,52 @@ export default function FeatureProof() {
         </div>
       </div>
     </section>
+  );
+}
+
+// Simplified pledge token — small lime card with $amount; legible at the funnel scale,
+// echoes PledgeCard's lime/forest palette.
+function PledgeToken({ amount }) {
+  // Centered at (0,0) so animateMotion's translation places the token's center on the path.
+  const w = 9;
+  const h = 4;
+  return (
+    <g transform={`translate(${-w / 2}, ${-h / 2})`}>
+      <rect
+        x={0}
+        y={0}
+        width={w}
+        height={h}
+        fill="#BCFCA1"
+        stroke="#1E4D2F"
+        strokeWidth={0.4}
+      />
+      <text
+        x={w / 2}
+        y={h / 2 + 1}
+        fontSize={2.6}
+        fontFamily="Satoshi, sans-serif"
+        fontWeight={900}
+        fill="#09110C"
+        textAnchor="middle"
+      >
+        ${amount}
+      </text>
+    </g>
+  );
+}
+
+function DollarToken({ scale = 1 }) {
+  const w = 5 * scale;
+  const h = 2.5 * scale;
+  return (
+    <g transform={`translate(${-w / 2}, ${-h / 2})`}>
+      <image
+        href="/assets/feature-proof-dollar.webp"
+        width={w}
+        height={h}
+        preserveAspectRatio="xMidYMid meet"
+      />
+    </g>
   );
 }

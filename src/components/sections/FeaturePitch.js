@@ -4,64 +4,57 @@ import { useEffect, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useSectionInView } from "@/lib/useSectionInView";
 import Button from "@/components/ui/Button";
-import IconsBgFrame from "@/components/ui/IconsBgFrame";
+import { StampMaskedVideo, STAMP_ASPECT } from "@/components/ui/IconsBgFrame";
 
 const ctaUrl = process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#";
 
 /* ------------------------------------------------------------------ *
- *  Tunables — edit these to adjust the visual without touching JSX
+ *  Tunables
  * ------------------------------------------------------------------ */
 
-// Looping curved-text marquee — text flows endlessly along the arc into the stamp
-const TEXT_PHRASE = "this is my ideaaaa";
-const TEXT_SEPARATOR = "   •   ";   // bullet + spaces between repeats
-const TEXT_REPEAT = 24;                  // copies laid down on the path so it's always full
-const TEXT_SCROLL_DURATION_S = 14;       // seconds per full -100% startOffset shift
+// Long verbatim "uhh, I've been thinking" pitch. Long enough to fill the arc once;
+// no repetition factor needed.
+const TEXT_PHRASE =
+  "I, uhh, I’ve been thinking about this idea, and, umm, it’s kind of like a SaaS platform, you know? Like, it would help… well, I guess it helps teams organize things, but not just like normal project tools, more like it, uhh, understands what you’re doing and suggests what to do next? Or, umm, maybe it automates parts of it? I’m still figuring that out. It’s sort of like… you log in, and it kind of adapts to your workflow automatically, I think. I mean, I’m not totally sure what the main feature is yet, but the idea is that it saves time and, uhh, reduces, you know, decision fatigue? Yeah, I just, umm, I feel like there’s something there, I just haven’t fully nailed down what it actually does yet.";
+const TEXT_SCROLL_DURATION_S = 9;        // 14s → 9s, faster
 
 // Curved text (SVG)
 const TEXT_LEFT = "0%";
-const TEXT_TOP = "38%";
+const TEXT_TOP = "32%";
 const TEXT_WIDTH = "55%";
-const TEXT_FONT_SIZE = 36;
+const TEXT_FONT_SIZE = 18;
 const TEXT_FILL = "#FAFAFA";
-// Counterclockwise arc — dips down through the middle, rises toward the stamp.
 const TEXT_ARC_PATH = "M 10,30 Q 120,210 380,90";
 const TEXT_VIEWBOX = "0 0 400 220";
 
-// Stamp + mic video (centered in the bg photo)
-// width uses cqi so the stamp scales with the column's inline size on mobile,
-// then caps at 320px on desktop where the column gets wide.
-const STAMP_WIDTH = "clamp(180px, 50cqi, 320px)";
+// Stamp + mic video — shared across all 3 features for consistent sizing.
+const STAMP_WIDTH = "clamp(220px, 42cqi, 320px)";
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
-const VIDEO_INSET = { top: "13%", left: "15%", right: "15%", bottom: "13%" };
 
-// Card chain — cqi units so chain + cards scale with the column at every breakpoint.
-// Desktop col ≈ 812px → 12cqi ≈ 97px, 64cqi ≈ 520px (matches the previous fixed-px sizing).
-// Mobile col ≈ 393px → 12cqi ≈ 47px, 64cqi ≈ 251px (a peek of cards behind the stamp).
-const CHAIN_LEFT = "calc(50% + 12cqi)";   // overlaps the stamp's right edge so cards emerge from under it
+// Card chain — sizes vary along an arc-mirroring shape (small → big → small),
+// no rotation per the new design. Vertical offsets trace the arc apex.
+const CHAIN_LEFT = "calc(50% + 12cqi)";
 const CHAIN_TOP = "calc(50% - 5cqi)";
 const CHAIN_WIDTH = "64cqi";
-const CHAIN_HEIGHT = "27cqi";             // tall enough to fit rotated cards without clipping their corners
+const CHAIN_HEIGHT = "30cqi";
 const CHAIN_GAP = "0.6cqi";
-const CHAIN_DURATION_S = 12;              // one full conveyor cycle (seamless because the set is duplicated)
+const CHAIN_DURATION_S = 8;              // 12s → 8s, faster
 
-// Per-card data — width/marginTop in cqi so cards scale with the column.
+// Per-card data — width varies on an arc; marginTop traces the arc apex (apex card lowest).
 const CARDS = [
-  { src: "/assets/feature-pitch-card-1.png", width: "14cqi",   rotate: 0,  marginTop: "0cqi" },
-  { src: "/assets/feature-pitch-card-2.png", width: "14cqi",   rotate: -1, marginTop: "2cqi" },
-  { src: "/assets/feature-pitch-card-3.png", width: "13.5cqi", rotate: 4,  marginTop: "1cqi" },
-  { src: "/assets/feature-pitch-card-4.png", width: "13cqi",   rotate: 8,  marginTop: "2.5cqi" },
+  { src: "/assets/feature-pitch-card-1.png", width: "12cqi",   marginTop: "0cqi" },
+  { src: "/assets/feature-pitch-card-2.png", width: "15cqi",   marginTop: "2cqi" },
+  { src: "/assets/feature-pitch-card-3.png", width: "17.5cqi", marginTop: "4cqi" },
+  { src: "/assets/feature-pitch-card-4.png", width: "14cqi",   marginTop: "2cqi" },
 ];
 
-// Z-index stack — cards sit BELOW the stamp so they emerge from behind it
+// Z-index stack
 const Z_BG = 1;
 const Z_CARDS = 2;
 const Z_STAMP = 4;
 const Z_TEXT = 3;
 
-const REPEATED_TEXT = `${TEXT_PHRASE}${TEXT_SEPARATOR}`.repeat(TEXT_REPEAT);
-// Track has [...CARDS, ...CARDS] so translating from -50% to 0 of the duplicated row produces a seamless loop
 const CONVEYOR_CARDS = [...CARDS, ...CARDS];
 
 /* ------------------------------------------------------------------ */
@@ -84,13 +77,10 @@ export default function FeaturePitch() {
       ref={ref}
       id="features-pitch"
       aria-labelledby="features-pitch-heading"
-      className="scroll-mt-20 flex flex-col md:flex-row min-h-screen"
+      className="proovd-snap-section scroll-mt-20 flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0"
     >
-      {/* Left column — layered visual.
-          aspect-[4/5] gives the absolute children dimensions on mobile;
-          containerType enables cqi units so the stamp scales with column width. */}
       <div
-        className="relative w-full md:w-[56.4%] aspect-[4/5] md:aspect-auto md:min-h-screen overflow-hidden md:overflow-visible"
+        className="relative w-full md:w-[56.4%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden md:overflow-visible"
         style={{ containerType: "inline-size" }}
       >
         {/* Layer 1 — blurred room photo */}
@@ -131,15 +121,13 @@ export default function FeaturePitch() {
                   repeatCount="indefinite"
                 />
               )}
-              {REPEATED_TEXT}
+              {TEXT_PHRASE}
             </textPath>
           </text>
         </svg>
 
-        {/* Layer 2 — endless cards conveyor (BEHIND the stamp; they emerge from behind it).
-            overflow:hidden clips the duplicated track so it doesn't bleed out the left side of the column;
-            the container's left edge sits ~60px inside the stamp, and stamp z-index hides cards there
-            so they appear to emerge from behind the stamp. */}
+        {/* Layer 2 — endless cards conveyor (BEHIND the stamp). No rotation; size + vertical
+            offset together trace the same arc shape as the curved text. */}
         <div
           className="absolute"
           style={{
@@ -169,7 +157,6 @@ export default function FeaturePitch() {
                   className="h-auto object-contain pointer-events-none select-none block"
                   style={{
                     width: card.width,
-                    transform: `rotate(${card.rotate}deg)`,
                     marginTop: card.marginTop,
                   }}
                 />
@@ -178,7 +165,7 @@ export default function FeaturePitch() {
           </div>
         </div>
 
-        {/* Layer 3 — stamp centered in the background photo, with mic video on top */}
+        {/* Layer 3 — stamp-masked mic video */}
         <div
           className="absolute"
           style={{
@@ -187,40 +174,14 @@ export default function FeaturePitch() {
             width: STAMP_WIDTH,
             zIndex: Z_STAMP,
             transform: "translate(-50%, -50%)",
+            aspectRatio: `${STAMP_ASPECT}`,
           }}
         >
-          <IconsBgFrame
-            fill="#0A110F"
-            className="relative w-full h-auto block"
-            style={{ zIndex: 1 }}
+          {/* TODO(assets): /public/assets/videos/feature-pitch-mic.webm */}
+          <StampMaskedVideo
+            videoSrc="/assets/videos/feature-pitch-mic.webm"
+            className="w-full h-full"
           />
-
-          {/* Mic video sits on top of the stamp interior */}
-          <div
-            className="absolute overflow-hidden"
-            style={{
-              top: VIDEO_INSET.top,
-              left: VIDEO_INSET.left,
-              right: VIDEO_INSET.right,
-              bottom: VIDEO_INSET.bottom,
-              borderRadius: "4px",
-              zIndex: 2,
-            }}
-          >
-            {/* TODO(assets): /public/assets/videos/feature-pitch-mic.webm */}
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="w-full h-full object-cover"
-            >
-              <source
-                src="/assets/videos/feature-pitch-mic.webm"
-                type="video/webm"
-              />
-            </video>
-          </div>
         </div>
       </div>
 

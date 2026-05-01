@@ -1,55 +1,91 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
 import { trackEvent } from "@/lib/analytics";
 import { useSectionInView } from "@/lib/useSectionInView";
 import Button from "@/components/ui/Button";
-import IconsBgFrame from "@/components/ui/IconsBgFrame";
+import { StampMaskedVideo, STAMP_ASPECT } from "@/components/ui/IconsBgFrame";
 
 // ─── Tunables ────────────────────────────────────────────────────────────────
 
-// Stamp + cupid video
-const STAMP_WIDTH = "clamp(180px, 40cqi, 320px)";
+const STAMP_WIDTH = "clamp(220px, 42cqi, 320px)";
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
-const VIDEO_INSET = { top: "26%", left: "14%", right: "14%", bottom: "26%" };
 
-// Founder card (left of stamp)
-const FOUNDER_LEFT = "4cqi";
-const FOUNDER_TOP = "50%";
-const FOUNDER_WIDTH = "clamp(100px, 22cqi, 178px)";
-const FOUNDER_NAME = "Mr. Founder";
-const FOUNDER_TITLE = "AI SAAS";
-const FOUNDER_LABEL_GAP = "1.2cqi";
+// 5x5 grid; selected tile (Rhea) at row 2 col 3 (zero-indexed → idx 12).
+const GRID_COLS = 5;
+const GRID_ROWS = 5;
+const SELECTED_INDEX = 12;
+const TILE_GAP = "1.4cqi";
+const GRID_PADDING = "4cqi";
 
-// Affiliate card (right of stamp)
-const AFFILIATE_RIGHT = "2cqi";
-const AFFILIATE_TOP = "50%";
-const AFFILIATE_WIDTH = "clamp(90px, 20cqi, 160px)";
-
-// Z-index stack
 const Z_BG = 1;
-const Z_CARDS = 2;
+const Z_GRID = 2;
 const Z_STAMP = 3;
+const Z_CURSOR = 5;
 
-// CTA
 const ctaUrl = process.env.NEXT_PUBLIC_CTA_SECONDARY_URL || "#";
+
+// Phase timings — used as fractions of the total animation duration (PHASE.hold).
+const PHASE = {
+  gridIn: 0.0,
+  enlarge: 1.0,
+  cursorIn: 1.6,
+  click: 2.4,
+  fadeOthers: 2.6,
+  hold: 3.6,
+};
 
 export default function FeatureMatch() {
   const ref = useSectionInView("features-match");
+  const containerRef = useRef(null);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [playVersion, setPlayVersion] = useState(0);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const handler = (e) => setReducedMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof window === "undefined" || !window.IntersectionObserver) return;
+    let lastFire = 0;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+            const now = Date.now();
+            if (now - lastFire > 800) {
+              setPlayVersion((v) => v + 1);
+              lastFire = now;
+            }
+          }
+        });
+      },
+      { threshold: [0, 0.5, 1] }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <section
       ref={ref}
       id="features-match"
       aria-labelledby="features-match-heading"
-      className="scroll-mt-20 flex flex-col md:flex-row min-h-screen"
+      className="proovd-snap-section scroll-mt-20 flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0"
     >
-      {/* Left column — static layered visual */}
       <div
-        className="relative w-full md:w-[56.4%] aspect-[4/5] md:aspect-auto md:min-h-screen overflow-hidden"
+        ref={containerRef}
+        className="relative w-full md:w-[56.4%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden"
         style={{ containerType: "inline-size" }}
       >
-        {/* Layer 1 — background photo */}
         <img
           src="/assets/Feature-match-bg.webp"
           alt=""
@@ -58,63 +94,14 @@ export default function FeatureMatch() {
           style={{ zIndex: Z_BG }}
         />
 
-        {/* Layer 2a — Founder card with name + title labels */}
         <div
-          className="absolute pointer-events-none select-none flex flex-col items-center"
-          style={{
-            left: FOUNDER_LEFT,
-            top: FOUNDER_TOP,
-            transform: "translateY(-50%)",
-            width: FOUNDER_WIDTH,
-            zIndex: Z_CARDS,
-            gap: FOUNDER_LABEL_GAP,
-          }}
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ zIndex: Z_GRID, padding: GRID_PADDING }}
+          aria-hidden="true"
         >
-          <img
-            src="/assets/founder-componant.webp"
-            alt="Example founder profile"
-            className="w-full h-auto block"
-          />
-          <div
-            className="font-bold text-center w-full"
-            style={{
-              backgroundColor: "#DCE8CA",
-              color: "#1E4D2F",
-              fontSize: "clamp(0.875rem, 1.8cqi, 1.125rem)",
-              padding: "clamp(0.4rem, 1cqi, 0.6rem) clamp(0.75rem, 2cqi, 1.25rem)",
-            }}
-          >
-            {FOUNDER_NAME}
-          </div>
-          <div
-            className="font-medium text-center"
-            style={{
-              backgroundColor: "#DCE8CA",
-              color: "#1E4D2F",
-              fontSize: "clamp(0.75rem, 1.4cqi, 0.95rem)",
-              padding: "clamp(0.3rem, 0.8cqi, 0.5rem) clamp(1rem, 3cqi, 1.5rem)",
-            }}
-          >
-            {FOUNDER_TITLE}
-          </div>
+          <AffiliateGrid key={playVersion} reducedMotion={reducedMotion} />
         </div>
 
-        {/* Layer 2b — Affiliate card */}
-        <img
-          src="/assets/affiliate-component.webp"
-          alt="Example affiliate profile"
-          className="absolute pointer-events-none select-none"
-          style={{
-            right: AFFILIATE_RIGHT,
-            top: AFFILIATE_TOP,
-            transform: "translateY(-50%)",
-            width: AFFILIATE_WIDTH,
-            height: "auto",
-            zIndex: Z_CARDS,
-          }}
-        />
-
-        {/* Layer 3 — stamp frame + cupid video */}
         <div
           className="absolute"
           style={{
@@ -123,39 +110,17 @@ export default function FeatureMatch() {
             width: STAMP_WIDTH,
             transform: "translate(-50%, -50%)",
             zIndex: Z_STAMP,
+            aspectRatio: `${STAMP_ASPECT}`,
           }}
         >
-          <IconsBgFrame
-            fill="#0A110F"
-            className="relative w-full h-auto block"
-            style={{ zIndex: 1 }}
+          <StampMaskedVideo
+            videoSrc="/assets/videos/cupid.webm"
+            className="w-full h-full"
+            fit="contain"
           />
-
-          <div
-            className="absolute overflow-hidden"
-            style={{
-              top: VIDEO_INSET.top,
-              left: VIDEO_INSET.left,
-              right: VIDEO_INSET.right,
-              bottom: VIDEO_INSET.bottom,
-              borderRadius: "4px",
-              zIndex: 2,
-            }}
-          >
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="w-full h-full object-contain"
-            >
-              <source src="/assets/videos/cupid.webm" type="video/webm" />
-            </video>
-          </div>
         </div>
       </div>
 
-      {/* Right column — copy + CTA */}
       <div
         className="relative w-full md:w-[55%] flex flex-col justify-center py-12 md:py-24"
         style={{
@@ -215,5 +180,180 @@ export default function FeatureMatch() {
         </div>
       </div>
     </section>
+  );
+}
+
+function AffiliateGrid({ reducedMotion }) {
+  const total = GRID_COLS * GRID_ROWS;
+  const selectedRow = Math.floor(SELECTED_INDEX / GRID_COLS);
+  const selectedCol = SELECTED_INDEX % GRID_COLS;
+
+  if (reducedMotion) {
+    return (
+      <div className="relative w-full h-full flex items-center justify-center">
+        <SelectedTileStatic />
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full h-full">
+      <div
+        className="absolute inset-0 grid"
+        style={{
+          gridTemplateColumns: `repeat(${GRID_COLS}, 1fr)`,
+          gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)`,
+          gap: TILE_GAP,
+        }}
+      >
+        {Array.from({ length: total }).map((_, i) => {
+          if (i === SELECTED_INDEX) {
+            return <SelectedTile key={i} />;
+          }
+          return <GridTile key={i} index={i} />;
+        })}
+      </div>
+      <Cursor selectedRow={selectedRow} selectedCol={selectedCol} />
+    </div>
+  );
+}
+
+function GridTile({ index }) {
+  // Stagger the appearance + fade-out by index for the soft, non-uniform feel.
+  const inDelay = (index * 0.018) % 0.3;
+  const outDelay = (index * 0.012) % 0.3;
+  const inEnd = (0.18 + inDelay) / PHASE.hold;
+  const fadeStart = (PHASE.fadeOthers + outDelay) / PHASE.hold;
+  return (
+    <motion.div
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{
+        scale: [0, 1, 1, 0.6],
+        opacity: [0, 1, 1, 0],
+      }}
+      transition={{
+        times: [0, inEnd, fadeStart, 1],
+        duration: PHASE.hold,
+        ease: "easeInOut",
+      }}
+      style={{
+        backgroundColor: "#DCE8CA",
+        border: "1px solid #1E4D2F",
+      }}
+      aria-hidden="true"
+    >
+      <div
+        className="w-full h-full flex items-center justify-center"
+        style={{ color: "#5AAA77", fontSize: "1.6cqi", fontWeight: 700 }}
+      >
+        {/* TODO(assets): /public/assets/affiliate-grid/avatar-{1..25}.webp */}
+        ●
+      </div>
+    </motion.div>
+  );
+}
+
+function SelectedTile() {
+  // grid-in → enlarge → click dip → click bounce → final emphasis (stays).
+  const t1 = 0.18 / PHASE.hold;
+  const t2 = PHASE.enlarge / PHASE.hold;
+  const t3 = PHASE.click / PHASE.hold;
+  const t4 = (PHASE.click + 0.07) / PHASE.hold;
+  const t5 = (PHASE.click + 0.14) / PHASE.hold;
+  const t6 = PHASE.fadeOthers / PHASE.hold;
+  return (
+    <motion.div
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{
+        scale: [0, 1, 1.18, 1.05, 1.18, 1.32, 1.32],
+        opacity: [0, 1, 1, 1, 1, 1, 1],
+      }}
+      transition={{
+        times: [0, t1, t2, t3, t4, t5, t6],
+        duration: PHASE.hold,
+        ease: "easeInOut",
+      }}
+      style={{
+        backgroundColor: "#1E4D2F",
+        border: "2px solid #1E4D2F",
+        position: "relative",
+        zIndex: 4,
+      }}
+      aria-hidden="true"
+    >
+      <div
+        className="w-full h-full flex flex-col items-center justify-center"
+        style={{ color: "#BCFCA1", fontWeight: 900 }}
+      >
+        <div style={{ fontSize: "3.2cqi", lineHeight: 1 }}>R</div>
+        <div style={{ fontSize: "1cqi", marginTop: "0.2cqi", color: "#DCE8CA", fontWeight: 500 }}>
+          Rhea
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function SelectedTileStatic() {
+  return (
+    <div
+      className="flex flex-col items-center justify-center"
+      style={{
+        width: "26cqi",
+        height: "26cqi",
+        backgroundColor: "#1E4D2F",
+        color: "#BCFCA1",
+      }}
+    >
+      <div style={{ fontSize: "6cqi", fontWeight: 900 }}>R</div>
+      <div style={{ fontSize: "1.6cqi", marginTop: "1cqi" }}>Rhea</div>
+      <div style={{ fontSize: "1.3cqi", color: "#DCE8CA" }}>@rhea.affiliate</div>
+    </div>
+  );
+}
+
+function Cursor({ selectedRow, selectedCol }) {
+  const targetXPct = ((selectedCol + 0.5) / GRID_COLS) * 100;
+  const targetYPct = ((selectedRow + 0.5) / GRID_ROWS) * 100;
+
+  const t0 = 0;
+  const t1 = PHASE.cursorIn / PHASE.hold;
+  const t2 = (PHASE.click - 0.05) / PHASE.hold;
+  const t3 = PHASE.click / PHASE.hold;
+  const t4 = PHASE.fadeOthers / PHASE.hold;
+  const t5 = 1;
+
+  return (
+    <motion.div
+      className="absolute"
+      initial={false}
+      animate={{
+        left: ["92%", "92%", `${targetXPct}%`, `${targetXPct}%`, `${targetXPct}%`, `${targetXPct}%`],
+        top: ["92%", "92%", `${targetYPct}%`, `${targetYPct}%`, `${targetYPct}%`, `${targetYPct}%`],
+        opacity: [0, 1, 1, 1, 0, 0],
+        scale: [0.9, 1, 1, 0.86, 0.86, 0.86],
+      }}
+      transition={{
+        times: [t0, t1, t2, t3, t4, t5],
+        duration: PHASE.hold,
+        ease: "easeInOut",
+      }}
+      style={{
+        zIndex: Z_CURSOR,
+        translateX: "-50%",
+        translateY: "-50%",
+      }}
+      aria-hidden="true"
+    >
+      <svg width="24" height="28" viewBox="0 0 24 28" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M3 2 L3 22 L9 17 L13 26 L17 24 L13 15 L21 15 Z"
+          fill="#09110C"
+          stroke="#FAFAFA"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </motion.div>
   );
 }

@@ -16,133 +16,216 @@ const PHONES = [
 ];
 
 const PHONE_LOOP = [...PHONES, ...PHONES];
-const MARQUEE_DURATION_S = 30; // increase to slow down, decrease to speed up
+const MARQUEE_DURATION_S = 15;
+const ORBIT_DURATION_S = 3.6;
 const PHONE_WIDTH_MOBILE = "31cqi";
 const PHONE_WIDTH = "11cqi";
 const PHONE_MARQUEE_TOP_OFFSET_MOBILE = "40cqi";
 const PHONE_MARQUEE_TOP_OFFSET = "8cqi";
 
+// Pools used by randomPledge() — names + handles vary so the loop never repeats noticeably.
+const BACKER_NAMES = [
+  "Max Q.", "Sara K.", "Jay M.", "Lia P.", "Dev R.", "Tom W.", "Mira O.",
+  "Ren A.", "Vik P.", "Ana D.", "Kai L.", "Noa F.", "Ezra T.", "Indi B.",
+  "June H.", "Rae S.", "Cam G.", "Theo V.", "Quin J.", "Sage M.", "Wren C.",
+  "Iris N.", "Otis E.", "Luca Y.", "Pax R.", "Ari Z.", "Hugo K.", "Marlo D.",
+  "Suri T.", "Cleo W.", "Bea L.", "Asher P.", "Niko F.", "Frey O.", "Jules S.",
+  "Vera B.", "Kit H.", "Romi V.", "Tate G.", "Olive M.",
+];
+
+const AFFILIATES = [
+  "maya.builds", "jay.mxyz", "lia.eats.ai", "dev.r.codes", "tom.dotwav",
+  "sarak.builds", "maxq.lab", "ren.angles", "vikram.codes", "ana.draws",
+  "kai.studio", "noa.frames", "ezra.threads", "indi.brews", "june.hertz",
+  "rae.sees", "camg.studio", "theov.ai", "quinj.lab", "sagem.codes",
+  "wrenc.kit", "iris.nyte", "otis.exe", "luca.ynk", "paxr.shop",
+  "ari.zen", "hugo.kicks", "marlo.does", "suri.thinks", "cleo.wave",
+];
+
+const AMOUNTS = [10, 15, 18, 22, 24, 27, 32, 39, 41, 48, 50, 55, 64, 68, 75, 84, 90, 100, 120, 150, 180, 220];
+
+const randomPledge = () => ({
+  amount: String(AMOUNTS[Math.floor(Math.random() * AMOUNTS.length)]),
+  name: BACKER_NAMES[Math.floor(Math.random() * BACKER_NAMES.length)],
+  handle: AFFILIATES[Math.floor(Math.random() * AFFILIATES.length)],
+});
+
+// 7 desktop stacks, totalling 16 slots: 1, 1, 4, 4, 4, 1, 1 — middle three are stacked + larger,
+// outer four are single cards at varied scales.
 const PLEDGE_STACKS = [
   {
-    position: "bottom-[12%] left-[4%]",
+    position: "bottom-[16%] left-[3%]",
     origin: "bottom left",
+    scale: 0.46,
+    cards: [{ rotation: -4, x: "0cqi", y: "0cqi" }],
+  },
+  {
+    position: "bottom-[5%] left-[12%]",
+    origin: "bottom left",
+    scale: 0.56,
+    cards: [{ rotation: 3, x: "0cqi", y: "0cqi" }],
+  },
+  {
+    position: "bottom-[6%] left-[24%]",
+    origin: "bottom left",
+    scale: 0.70,
     cards: [
-      { amount: "10", rotation: -4, x: "0cqi", y: "0cqi" },
-      { amount: "24", rotation: -7, x: "-0.45cqi", y: "-0.45cqi" },
+      { rotation: -1, x: "0cqi", y: "0cqi" },
+      { rotation: 3, x: "-0.5cqi", y: "-0.45cqi" },
+      { rotation: -4, x: "0.55cqi", y: "-0.85cqi" },
+      { rotation: 2, x: "-0.25cqi", y: "-1.25cqi" },
     ],
   },
   {
-    position: "bottom-[1%] left-[8%]",
+    position: "bottom-[10%] left-[40%]",
     origin: "bottom left",
-    cards: [{ amount: "48", rotation: 3, x: "0cqi", y: "0cqi" }],
-  },
-  {
-    position: "bottom-[4%] left-[18%]",
-    origin: "bottom left",
+    scale: 0.78,
     cards: [
-      { amount: "64", rotation: -1, x: "0cqi", y: "0cqi" },
-      { amount: "22", rotation: 3, x: "-0.5cqi", y: "-0.45cqi" },
-      { amount: "39", rotation: -4, x: "0.55cqi", y: "-0.85cqi" },
+      { rotation: 2, x: "0cqi", y: "0cqi" },
+      { rotation: -2, x: "-0.55cqi", y: "-0.4cqi" },
+      { rotation: 4, x: "0.45cqi", y: "-0.8cqi" },
+      { rotation: -3, x: "-0.15cqi", y: "-1.2cqi" },
     ],
   },
   {
-    position: "bottom-[8%] left-[38%]",
+    position: "bottom-[8%] left-[58%]",
     origin: "bottom left",
+    scale: 0.72,
     cards: [
-      { amount: "75", rotation: 2, x: "0cqi", y: "0cqi" },
-      { amount: "55", rotation: -2, x: "-0.55cqi", y: "-0.4cqi" },
-      { amount: "90", rotation: 4, x: "0.45cqi", y: "-0.8cqi" },
+      { rotation: -2, x: "0cqi", y: "0cqi" },
+      { rotation: 3, x: "-0.5cqi", y: "-0.45cqi" },
+      { rotation: -5, x: "0.55cqi", y: "-0.85cqi" },
+      { rotation: 1, x: "-0.2cqi", y: "-1.25cqi" },
     ],
   },
   {
-    position: "bottom-[10%] left-[51%]",
-    origin: "bottom left",
-    cards: [
-      { amount: "84", rotation: -2, x: "0cqi", y: "0cqi" },
-      { amount: "41", rotation: 3, x: "-0.5cqi", y: "-0.45cqi" },
-      { amount: "68", rotation: -5, x: "0.55cqi", y: "-0.85cqi" },
-    ],
-  },
-  {
-    position: "bottom-[12%] right-[20%]",
+    position: "bottom-[14%] right-[14%]",
     origin: "bottom right",
-    cards: [
-      { amount: "32", rotation: -2, x: "0cqi", y: "0cqi" },
-      { amount: "18", rotation: 2, x: "0.55cqi", y: "-0.45cqi" },
-    ],
+    scale: 0.54,
+    cards: [{ rotation: -3, x: "0cqi", y: "0cqi" }],
   },
   {
-    position: "bottom-[6%] right-[2%]",
+    position: "bottom-[7%] right-[2%]",
     origin: "bottom right",
-    cards: [
-      { amount: "15", rotation: 3, x: "0cqi", y: "0cqi" },
-      { amount: "27", rotation: -2, x: "0.45cqi", y: "-0.4cqi" },
-    ],
+    scale: 0.50,
+    cards: [{ rotation: 3, x: "0cqi", y: "0cqi" }],
   },
 ];
 
-const PRIMARY_PLEDGES = PLEDGE_STACKS.map((stack, stackIndex) => ({
-  ...stack.cards[0],
-  position: stack.position,
-  origin: stack.origin,
-  stackIndex,
-  cardIndex: 0,
-}));
-
-const STACKED_PLEDGES = PLEDGE_STACKS.flatMap((stack, stackIndex) =>
-  stack.cards.slice(1).map((card, cardIndex) => ({
+// Flatten stacks into 16 slots, recording stack/card index + per-stack scale.
+const PLEDGE_SLOTS = PLEDGE_STACKS.flatMap((stack, stackIndex) =>
+  stack.cards.map((card, cardIndex) => ({
     ...card,
     position: stack.position,
     origin: stack.origin,
+    scale: stack.scale,
     stackIndex,
-    cardIndex: cardIndex + 1,
+    cardIndex,
   }))
 );
 
-const PLEDGES = [...PRIMARY_PLEDGES, ...STACKED_PLEDGES];
+const SLOT_COUNT = PLEDGE_SLOTS.length; // 16
 
-const MOBILE_PLEDGES = [
-  { amount: "75", rotation: 1, x: "0cqi", y: "0cqi" },
-  { amount: "42", rotation: -4, x: "-1.1cqi", y: "-1.1cqi" },
-  { amount: "28", rotation: 4, x: "1cqi", y: "-1.7cqi" },
+// Mobile — 3 slots stacked at bottom center.
+const MOBILE_SLOTS = [
+  { rotation: 1, x: "0cqi", y: "0cqi" },
+  { rotation: -4, x: "-1.1cqi", y: "-1.1cqi" },
+  { rotation: 4, x: "1cqi", y: "-1.7cqi" },
 ];
 
-const PLEDGE_SCALE = 0.6;
-const MOBILE_PLEDGE_SCALE = 0.72;
-const PLEDGE_LIMIT = 16;
-const PLEDGE_REVEAL_DELAY_MS = 300;
-const PLEDGE_REVEAL_INTERVAL_MS = 750;
+const MOBILE_PLEDGE_SCALE = 0.6;
+const PLEDGE_REVEAL_DELAY_MS = 250;
+const PLEDGE_REVEAL_INTERVAL_MS = 600;
+const PLEDGE_LOOP_INTERVAL_MS = 1500;
 
 export default function Hero() {
   const ref = useSectionInView("hero");
-  const [visiblePledgeCount, setVisiblePledgeCount] = useState(0);
   const marqueeRef = useRef(null);
+  // Each slot holds { data, version } once revealed; null while still hidden.
+  const [slots, setSlots] = useState(() => Array(SLOT_COUNT).fill(null));
+  const [mobileSlots, setMobileSlots] = useState(() => Array(MOBILE_SLOTS.length).fill(null));
 
+  // Initial staggered reveal — fills both desktop (16) and mobile (3) slot arrays
+  // with random pledges. Mobile finishes faster because its array is shorter.
   useEffect(() => {
-    const maxPledges = Math.min(PLEDGE_LIMIT, PLEDGES.length);
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    let count = 0;
-    let timer;
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (reduceMotion) {
-      setVisiblePledgeCount(maxPledges);
+      setSlots(Array.from({ length: SLOT_COUNT }, () => ({ data: randomPledge(), version: 0 })));
+      setMobileSlots(Array.from({ length: MOBILE_SLOTS.length }, () => ({ data: randomPledge(), version: 0 })));
       return;
     }
 
-    const revealNext = () => {
-      count += 1;
-      setVisiblePledgeCount(count);
+    let desktopIdx = 0;
+    let mobileIdx = 0;
+    let timer;
 
-      if (count < maxPledges) {
+    const revealNext = () => {
+      if (desktopIdx < SLOT_COUNT) {
+        const i = desktopIdx;
+        setSlots((prev) => {
+          const next = [...prev];
+          next[i] = { data: randomPledge(), version: 0 };
+          return next;
+        });
+        desktopIdx += 1;
+      }
+      if (mobileIdx < MOBILE_SLOTS.length) {
+        const i = mobileIdx;
+        setMobileSlots((prev) => {
+          const next = [...prev];
+          next[i] = { data: randomPledge(), version: 0 };
+          return next;
+        });
+        mobileIdx += 1;
+      }
+      if (desktopIdx < SLOT_COUNT) {
         timer = window.setTimeout(revealNext, PLEDGE_REVEAL_INTERVAL_MS);
       }
     };
 
     timer = window.setTimeout(revealNext, PLEDGE_REVEAL_DELAY_MS);
-
     return () => window.clearTimeout(timer);
+  }, []);
+
+  // Continuous fan-in: after initial reveal, replace one desktop + one mobile slot per tick
+  // with new randomized data (incrementing version forces a key change and re-runs the deal animation).
+  useEffect(() => {
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    let cycle = 0;
+    const id = window.setInterval(() => {
+      setSlots((prev) => {
+        if (prev.some((s) => s === null)) return prev;
+        const next = [...prev];
+        const target = cycle % SLOT_COUNT;
+        next[target] = {
+          data: randomPledge(),
+          version: (next[target]?.version ?? 0) + 1,
+        };
+        return next;
+      });
+      setMobileSlots((prev) => {
+        if (prev.some((s) => s === null)) return prev;
+        const next = [...prev];
+        const target = cycle % MOBILE_SLOTS.length;
+        next[target] = {
+          data: randomPledge(),
+          version: (next[target]?.version ?? 0) + 1,
+        };
+        return next;
+      });
+      cycle += 1;
+    }, PLEDGE_LOOP_INTERVAL_MS);
+
+    return () => window.clearInterval(id);
   }, []);
 
   useEffect(() => {
@@ -172,7 +255,7 @@ export default function Hero() {
       ref={ref}
       id="hero"
       aria-labelledby="hero-heading"
-      className="relative overflow-hidden bg-ink"
+      className="proovd-snap-section relative overflow-hidden bg-ink flex flex-col h-[100svh]"
     >
       <style>{`
         @keyframes proovd-marquee {
@@ -186,27 +269,17 @@ export default function Hero() {
         .proovd-phone {
           width: ${PHONE_WIDTH_MOBILE};
         }
-        @keyframes proovd-pledge-reveal {
-          from {
-            transform: translateY(1.2cqi) scale(0.96);
-          }
-          65% {
-            transform: translateY(-0.18cqi) scale(1.01);
-          }
-          to {
-            transform: translateY(0) scale(1);
-          }
+        .proovd-phone-orbit {
+          animation: proovd-phone-orbit-local ${ORBIT_DURATION_S}s ease-in-out infinite;
+          transform-origin: center;
         }
-        .proovd-pledge-reveal {
-          animation: proovd-pledge-reveal 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        @keyframes proovd-phone-orbit-local {
+          0%, 100% { transform: rotate(var(--phone-rotate, 0deg)) scale(1.18); }
+          50%      { transform: rotate(var(--phone-rotate, 0deg)) scale(0.78); }
         }
         @media (prefers-reduced-motion: reduce) {
-          .proovd-marquee-track {
-            animation-play-state: paused;
-          }
-          .proovd-pledge-reveal {
-            animation: none;
-          }
+          .proovd-marquee-track { animation-play-state: paused; }
+          .proovd-phone-orbit { animation: none; transform: rotate(var(--phone-rotate, 0deg)) scale(1); }
         }
         @media (min-width: 768px) {
           .proovd-marquee-track {
@@ -219,8 +292,8 @@ export default function Hero() {
       `}</style>
 
       <div
-        className="relative w-full aspect-[393/710] md:aspect-[255/136] overflow-hidden"
-        style={{ containerType: "inline-size" }}
+        className="relative flex-1 min-h-0 w-full overflow-hidden"
+        style={{ containerType: "size" }}
       >
         {/* TODO(assets): hero background photo (full-bleed) — see /docs/assets-needed.md */}
         <img
@@ -242,11 +315,12 @@ export default function Hero() {
             {PHONE_LOOP.map((phone, i) => (
               <div
                 key={`${phone.src}-${i}`}
-                className="proovd-phone relative shrink-0"
+                className="proovd-phone proovd-phone-orbit relative shrink-0"
                 style={{
                   aspectRatio: "9 / 19.5",
                   top: `${phone.topCqi}cqi`,
-                  transform: `rotate(${phone.rotate}deg)`,
+                  "--phone-rotate": `${phone.rotate}deg`,
+                  animationDelay: `${-((i % PHONES.length) * (ORBIT_DURATION_S / PHONES.length))}s`,
                 }}
               >
                 {/* TODO(assets): phone marquee video (.webm) — see /docs/assets-needed.md */}
@@ -281,26 +355,36 @@ export default function Hero() {
           data-testid="desktop-pledge-layer"
           className="hidden md:block absolute inset-0 z-20 pointer-events-none select-none"
         >
-          {PLEDGES.slice(0, visiblePledgeCount).map((pledge, i) => (
-            <div
-              key={i}
-              className={`absolute ${pledge.position}`}
-              style={{
-                transform: `translate(${pledge.x}, ${pledge.y}) rotate(${pledge.rotation}deg) scale(${PLEDGE_SCALE})`,
-                transformOrigin: pledge.origin,
-                zIndex: pledge.stackIndex * 10 + pledge.cardIndex + 1,
-              }}
-            >
-              <div className="proovd-pledge-reveal">
-                <PledgeCard
-                  amount={pledge.amount}
-                  name="Mira O."
-                  handle="maya.builds"
-                  rotation={0}
-                />
+          {PLEDGE_SLOTS.map((slot, i) => {
+            const cell = slots[i];
+            if (!cell) return null;
+            return (
+              <div
+                key={i}
+                className={`absolute ${slot.position}`}
+                style={{
+                  transform: `translate(${slot.x}, ${slot.y}) scale(${slot.scale})`,
+                  transformOrigin: slot.origin,
+                  zIndex: slot.stackIndex * 10 + slot.cardIndex + 1,
+                }}
+              >
+                <div
+                  key={cell.version}
+                  className="proovd-pledge-deal"
+                  style={{
+                    "--rot": `${slot.rotation}deg`,
+                  }}
+                >
+                  <PledgeCard
+                    amount={cell.data.amount}
+                    name={cell.data.name}
+                    handle={cell.data.handle}
+                    rotation={0}
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div
@@ -312,35 +396,57 @@ export default function Hero() {
           }}
         >
           <div className="relative h-[154px] w-[360px]">
-            {MOBILE_PLEDGES.slice(0, visiblePledgeCount).map((pledge, i) => (
-              <div
-                key={i}
-                className="absolute bottom-0 left-0"
-                style={{
-                  transform: `translate(${pledge.x}, ${pledge.y}) rotate(${pledge.rotation}deg)`,
-                  transformOrigin: "bottom center",
-                  zIndex: i + 1,
-                }}
-              >
-                <div className="proovd-pledge-reveal">
-                  <PledgeCard
-                    amount={pledge.amount}
-                    name="Mira O."
-                    handle="maya.builds"
-                    rotation={0}
-                  />
+            {MOBILE_SLOTS.map((slot, i) => {
+              const cell = mobileSlots[i];
+              if (!cell) return null;
+              return (
+                <div
+                  key={i}
+                  className="absolute bottom-0 left-0"
+                  style={{
+                    transform: `translate(${slot.x}, ${slot.y})`,
+                    transformOrigin: "bottom center",
+                    zIndex: i + 1,
+                  }}
+                >
+                  <div
+                    key={cell.version}
+                    className="proovd-pledge-deal"
+                    style={{
+                      "--rot": `${slot.rotation}deg`,
+                    }}
+                  >
+                    <PledgeCard
+                      amount={cell.data.amount}
+                      name={cell.data.name}
+                      handle={cell.data.handle}
+                      rotation={0}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
 
-      <div className="bg-ink py-6 px-4 text-center md:py-10 md:px-8">
+      <div
+        className="bg-ink text-center flex-shrink-0"
+        style={{
+          paddingTop: "clamp(0.75rem, 2.2cqb, 2rem)",
+          paddingBottom: "clamp(0.75rem, 2.2cqb, 2rem)",
+          paddingLeft: "clamp(1rem, 4vw, 2.5rem)",
+          paddingRight: "clamp(1rem, 4vw, 2.5rem)",
+          containerType: "inline-size",
+        }}
+      >
         <h1
           id="hero-heading"
-          className="text-brand-lime font-black leading-none text-4xl md:text-6xl xl:text-7xl"
-          style={{ letterSpacing: "-0.04em" }}
+          className="text-brand-lime font-black leading-none"
+          style={{
+            letterSpacing: "-0.04em",
+            fontSize: "clamp(1.6rem, 7.5cqi, 4.5rem)",
+          }}
         >
           Sell Out Before The Product Exists
         </h1>

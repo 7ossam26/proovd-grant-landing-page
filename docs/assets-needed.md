@@ -16,6 +16,7 @@ User will provide these before launch. All current placeholders reference this f
 - [x] Feature Match affiliate card → `/public/assets/affiliate-component.png`
 - [x] Feature Match cupid video (MP4) → `/public/assets/videos/cupid.mp4`
 - [ ] Feature Match cupid video (WebM) → optional `.webm` (VP9) variant for `cupid.mp4` to improve loading
+- [ ] Feature Match affiliate grid avatars → `/public/assets/affiliate-grid/avatar-{1..25}.webp` — 25 small square headshot/illustration tiles (~96×96px each) populating the 5×5 grid that converges on the selected "Rhea" tile. Currently a `●` placeholder character renders inside each tile; replace with `<img>` once provided. Avatar 13 (zero-indexed 12) is the highlighted "Rhea" tile and may want a distinguishing portrait.
 - [ ] Feature Proof background photo → `/public/assets/feature-proof-bg.png` — blurred desk/workspace photo, portrait crop, behind both vertical conveyors
 - [ ] Feature Proof dollar bill → `/public/assets/feature-proof-dollar.png` — single $100 bill PNG, transparent bg, ~400px wide, used in bottom conveyor
 - [ ] Feature Proof trophy video (WebM) → `/public/assets/videos/feature-proof-trophy.webm` — VP9, no audio, <1.5MB, plays inside stamp frame
