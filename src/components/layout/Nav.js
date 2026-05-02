@@ -13,7 +13,7 @@ export default function Nav() {
     <>
       <nav
         aria-label="Main"
-        className="absolute left-0 right-0 top-3 md:top-[2.6cqi] z-50 bg-ink py-2 md:py-[0.7cqi]"
+        className="absolute left-0 right-0 top-5 md:top-[2.6cqi] z-50 bg-ink py-2.5 md:py-[0.7cqi]"
       >
         <div className="px-5 sm:px-8 md:px-[4.6cqi] flex items-center justify-between">
           {/* Logo — brand-primary dot (1 of 2 allowed uses on the page) */}

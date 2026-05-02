@@ -21,7 +21,7 @@ const PHONE_SCALE_MIN = 0.65;
 const PHONE_SCALE_MAX = 1.5;
 const PHONE_WIDTH_MOBILE = "36cqi";
 const PHONE_WIDTH = "13cqi";
-const PHONE_GAP_MOBILE = "4.4cqi";
+const PHONE_GAP_MOBILE = "20cqi";
 const PHONE_GAP = "15.6cqi";
 const PHONE_MARQUEE_TOP_OFFSET_MOBILE = "40cqi";
 const PHONE_MARQUEE_TOP_OFFSET = "8cqi";
@@ -80,15 +80,23 @@ const SIDE_COUNT = SIDE_POPUPS.length;
 
 // Mobile — 3 slots stacked at bottom center.
 const MOBILE_SLOTS = [
-  { rotation: 1, x: "0cqi", y: "0cqi" },
-  { rotation: -4, x: "-1.1cqi", y: "-1.1cqi" },
-  { rotation: 4, x: "1cqi", y: "-1.7cqi" },
+  { rotation: 1, x: "0cqi", y: "-15cqi" },
+  { rotation: -4, x: "-1.1cqi", y: "-15cqi" },
+  { rotation: 4, x: "1cqi", y: "-15cqi" },
 ];
 
 const MOBILE_PLEDGE_SCALE = 0.6;
 const PLEDGE_REVEAL_DELAY_MS = 250;
 const PLEDGE_REVEAL_INTERVAL_MS = 600;
 const PLEDGE_LOOP_INTERVAL_MS = 1500;
+
+// Heading bar — mobile vs desktop knobs. Desktop values match the previous inline styles 1:1.
+const HEADING_FONT_MOBILE = "clamp(2rem, 11cqi, 5rem)";
+const HEADING_FONT = "clamp(1.3rem, 5.7cqi, 3.55rem)";
+const HEADING_PAD_TOP_MOBILE = "clamp(1.1rem, 4cqb, 1.8rem)";
+const HEADING_PAD_TOP = "clamp(1rem, 2cqb, 2rem)";
+const HEADING_PAD_BOTTOM_MOBILE = "clamp(0.9rem, 4cqb, 1.6rem)";
+const HEADING_PAD_BOTTOM = "clamp(0.8rem, 2cqb, 2rem)";
 
 const SIDE_VISIBLE_BASE_MS = 2400;
 const SIDE_VISIBLE_JITTER_MS = 1400;
@@ -330,6 +338,13 @@ export default function Hero() {
           .proovd-phone-orbit { transform: rotate(var(--phone-rotate, 0deg)) scale(1); }
           .proovd-pledge-popup { opacity: 1 !important; transform: rotate(var(--rot, 0deg)) !important; transition: none !important; }
         }
+        .proovd-hero-heading-bar {
+          padding-top: ${HEADING_PAD_TOP_MOBILE};
+          padding-bottom: ${HEADING_PAD_BOTTOM_MOBILE};
+        }
+        .proovd-hero-heading {
+          font-size: ${HEADING_FONT_MOBILE};
+        }
         @media (min-width: 768px) {
           .proovd-marquee-track {
             margin-top: ${PHONE_MARQUEE_TOP_OFFSET};
@@ -337,6 +352,13 @@ export default function Hero() {
           }
           .proovd-phone {
             width: ${PHONE_WIDTH};
+          }
+          .proovd-hero-heading-bar {
+            padding-top: ${HEADING_PAD_TOP};
+            padding-bottom: ${HEADING_PAD_BOTTOM};
+          }
+          .proovd-hero-heading {
+            font-size: ${HEADING_FONT};
           }
         }
       `}</style>
@@ -505,10 +527,8 @@ export default function Hero() {
       </div>
 
       <div
-        className="absolute bottom-0 left-0 right-0 bg-ink text-center z-[80]"
+        className="proovd-hero-heading-bar absolute bottom-0 left-0 right-0 bg-ink text-center z-[80]"
         style={{
-          paddingTop: "clamp(1rem, 2cqb, 2rem)",
-          paddingBottom: "clamp(0.8rem, 2cqb, 2rem)",
           paddingLeft: "clamp(1rem, 4vw, 2.5rem)",
           paddingRight: "clamp(1rem, 4vw, 2.5rem)",
           containerType: "inline-size",
@@ -516,11 +536,8 @@ export default function Hero() {
       >
         <h1
           id="hero-heading"
-          className="text-brand-lime font-black leading-none"
-          style={{
-            letterSpacing: "-0.03em",
-            fontSize: "clamp(1.3rem, 5.7cqi, 3.55rem)",
-          }}
+          className="proovd-hero-heading text-brand-lime font-black leading-none"
+          style={{ letterSpacing: "-0.03em" }}
         >
           Sell Out Before The Product Exists
         </h1>
