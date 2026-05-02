@@ -177,33 +177,25 @@ export default function FeatureProof() {
       >
         <FeatureSectionNav location="feature_proof" tone="forest" />
 
-        <p
-          className="mb-4"
-          style={{
-            color: "#BCFCA1",
-            fontSize: "clamp(1rem, 1.25vw, 1.125rem)",
-          }}
-        >
-          Real money from real backers, tracked live.
-        </p>
+
 
         <h2
           id="features-proof-heading"
-          className="font-bold leading-tight mb-6 md:mb-8"
+          className="font-bold leading-tight mb-5 md:mb-6"
           style={{
             color: "#FAFAFA",
-            fontSize: "clamp(1.875rem, 3vw, 2.625rem)",
+            fontSize: "clamp(1.5rem, 2.2vw, 2rem)",
           }}
         >
           People pledge. You get proof.
         </h2>
 
         <p
-          className="leading-relaxed mb-8 md:mb-12"
+          className="leading-relaxed mb-6 md:mb-8"
           style={{
             color: "#DCE8CA",
-            fontSize: "clamp(1rem, 1.25vw, 1.125rem)",
-            maxWidth: "52ch",
+            fontSize: "clamp(0.875rem, 1.05vw, 1rem)",
+            maxWidth: "48ch",
           }}
         >
           Real money from real backers, tracked live. Affiliates share your
@@ -220,7 +212,7 @@ export default function FeatureProof() {
             onClick={() =>
               trackEvent("cta_primary_click", { location: "feature_proof" })
             }
-            className="text-base md:text-xl px-8 md:px-14 py-3 md:py-4"
+            className="text-sm md:text-base px-6 md:px-10 py-2.5 md:py-3"
           >
             Try Now
           </Button>

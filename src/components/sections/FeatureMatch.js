@@ -133,33 +133,24 @@ export default function FeatureMatch() {
       >
         <FeatureSectionNav location="feature_match" />
 
-        <p
-          className="mb-4"
-          style={{
-            color: "#5AAA77",
-            fontSize: "clamp(1rem, 1.25vw, 1.125rem)",
-          }}
-        >
-          Affiliates in your niche.
-        </p>
 
         <h2
           id="features-match-heading"
-          className="font-bold leading-tight mb-6 md:mb-8"
+          className="font-bold leading-tight mb-5 md:mb-6"
           style={{
             color: "#09110C",
-            fontSize: "clamp(1.875rem, 3vw, 2.625rem)",
+            fontSize: "clamp(1.5rem, 2.2vw, 2rem)",
           }}
         >
           Get matched with creators in 72 hours.
         </h2>
 
         <p
-          className="leading-relaxed mb-8 md:mb-12"
+          className="leading-relaxed mb-6 md:mb-8"
           style={{
             color: "#1E4D2F",
-            fontSize: "clamp(1rem, 1.25vw, 1.125rem)",
-            maxWidth: "52ch",
+            fontSize: "clamp(0.875rem, 1.05vw, 1rem)",
+            maxWidth: "48ch",
           }}
         >
           Affiliates in your niche, already trusted by your audience. We match
@@ -176,7 +167,7 @@ export default function FeatureMatch() {
             onClick={() =>
               trackEvent("cta_primary_click", { location: "feature_match" })
             }
-            className="text-base md:text-xl px-8 md:px-14 py-3 md:py-4"
+            className="text-sm md:text-base px-6 md:px-10 py-2.5 md:py-3"
           >
             Try Now
           </Button>

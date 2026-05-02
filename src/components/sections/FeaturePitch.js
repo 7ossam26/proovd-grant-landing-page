@@ -44,10 +44,10 @@ const CHAIN_DURATION_S = 8;              // 12s → 8s, faster
 
 // Per-card data — width varies on an arc; marginTop traces the arc apex (apex card lowest).
 const CARDS = [
-  { src: "/assets/feature-pitch-card-1.png", width: "12cqi",   marginTop: "0cqi" },
-  { src: "/assets/feature-pitch-card-2.png", width: "15cqi",   marginTop: "2cqi" },
+  { src: "/assets/feature-pitch-card-1.png", width: "12cqi", marginTop: "0cqi" },
+  { src: "/assets/feature-pitch-card-2.png", width: "15cqi", marginTop: "2cqi" },
   { src: "/assets/feature-pitch-card-3.png", width: "17.5cqi", marginTop: "4cqi" },
-  { src: "/assets/feature-pitch-card-4.png", width: "14cqi",   marginTop: "2cqi" },
+  { src: "/assets/feature-pitch-card-4.png", width: "14cqi", marginTop: "2cqi" },
 ];
 
 // Z-index stack
@@ -200,17 +200,17 @@ export default function FeaturePitch() {
 
         <h2
           id="features-pitch-heading"
-          className="text-ink font-bold leading-tight mb-6 md:mb-8"
-          style={{ fontSize: "clamp(1.875rem, 3vw, 2.625rem)" }}
+          className="text-ink font-bold leading-tight mb-5 md:mb-6"
+          style={{ fontSize: "clamp(1.5rem, 2.2vw, 2rem)" }}
         >
           Your pitch done in ten minutes
         </h2>
 
         <p
-          className="text-brand-forest leading-relaxed mb-8 md:mb-12"
+          className="text-brand-forest leading-relaxed mb-6 md:mb-8"
           style={{
-            fontSize: "clamp(1rem, 1.25vw, 1.125rem)",
-            maxWidth: "52ch",
+            fontSize: "clamp(0.875rem, 1.05vw, 1rem)",
+            maxWidth: "48ch",
           }}
         >
           Record yourself explaining the idea like you would to a friend, or
@@ -227,7 +227,7 @@ export default function FeaturePitch() {
             onClick={() =>
               trackEvent("cta_primary_click", { location: "feature_pitch" })
             }
-            className="text-base md:text-xl px-8 md:px-14 py-3 md:py-4"
+            className="!text-[#BBFCA2] text-sm md:text-base px-6 md:px-10 py-2.5 md:py-3"
           >
             Try Now
           </Button>

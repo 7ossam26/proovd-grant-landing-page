@@ -16,8 +16,8 @@ const signupUrl = process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#";
 //                   Sign up reads as bold ink text pre-hover (emphasis color on lime/surface).
 //                   Hover follows "Primary button on lime/surface": brand-forest bg, surface text.
 const TONE = {
-  forest:  { text: "#DCE8CA", underline: "#DCE8CA", signupColor: "#FAFAFA", signupHoverBg: "#FAFAFA", signupHoverText: "#1E4D2F" },
-  ink:     { text: "#DCE8CA", underline: "#DCE8CA", signupColor: "#FAFAFA", signupHoverBg: "#FAFAFA", signupHoverText: "#09110C" },
+  forest: { text: "#DCE8CA", underline: "#DCE8CA", signupColor: "#FAFAFA", signupHoverBg: "#FAFAFA", signupHoverText: "#1E4D2F" },
+  ink: { text: "#DCE8CA", underline: "#DCE8CA", signupColor: "#FAFAFA", signupHoverBg: "#FAFAFA", signupHoverText: "#09110C" },
   default: { text: "#1E4D2F", underline: "#1E4D2F", signupColor: "#09110C", signupHoverBg: "#1E4D2F", signupHoverText: "#FAFAFA" },
 };
 
@@ -51,9 +51,9 @@ export default function FeatureSectionNav({ location, tone = "default", animate 
       aria-label="Section nav"
       data-animate={animate}
       data-visible={visible}
-      className="proovd-pitch-nav hidden md:flex absolute top-[2.6cqi] items-center gap-[3.1cqi]"
+      className="proovd-pitch-nav hidden md:flex absolute top-[1.9cqi] items-center gap-[2.4cqi]"
       style={{
-        right: "clamp(1.5rem, 5vw, 5rem)",
+        right: "clamp(1rem, 3vw, 3rem)",
         // CSS vars consumed by .proovd-pitch-nav-link / .proovd-pitch-nav-signup in globals.css.
         "--nav-link-color": palette.text,
         "--nav-underline-color": palette.underline,
@@ -65,21 +65,21 @@ export default function FeatureSectionNav({ location, tone = "default", animate 
       <a
         href="#features-pitch"
         data-active="true"
-        className="proovd-pitch-nav-link font-medium md:text-[1.18cqi]"
+        className="proovd-pitch-nav-link font-medium md:text-[1.2cqi]"
         onClick={() => trackEvent("nav_click", { target: "features", location })}
       >
         Features
       </a>
       <a
         href="#contact"
-        className="proovd-pitch-nav-link font-medium md:text-[1.18cqi]"
+        className="proovd-pitch-nav-link font-medium md:text-[1.2cqi]"
         onClick={() => trackEvent("nav_click", { target: "contact", location })}
       >
         Contact
       </a>
       <a
         href={signupUrl}
-        className="proovd-pitch-nav-signup font-bold md:text-[1.18cqi] px-5 md:px-[1.6cqi] py-2 md:py-[0.65cqi] -ml-5 md:ml-[-1.6cqi]"
+        className="proovd-pitch-nav-signup font-bold md:text-[1.3cqi] px-4 md:px-[1.3cqi] py-1.5 md:py-[0.5cqi] -ml-4 md:ml-[-1.3cqi]"
         onClick={() => trackEvent("nav_click", { target: "signup", location })}
       >
         Sign up
