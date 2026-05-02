@@ -315,7 +315,7 @@ export default function Hero() {
       ref={ref}
       id="hero"
       aria-labelledby="hero-heading"
-      className="proovd-snap-section relative overflow-hidden bg-ink h-[100svh]"
+      className="proovd-feature-snap relative overflow-hidden bg-ink h-[100svh]"
     >
       <style>{`
         @keyframes proovd-marquee {

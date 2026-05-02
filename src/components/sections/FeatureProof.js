@@ -61,7 +61,7 @@ export default function FeatureProof() {
       ref={ref}
       id="features-proof"
       aria-labelledby="features-proof-heading"
-      className="proovd-snap-section scroll-mt-20 flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0"
+      className="proovd-feature-snap flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0"
     >
       <div
         className="relative w-full md:w-[56.4%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden"

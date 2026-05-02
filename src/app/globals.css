@@ -125,14 +125,17 @@ body {
   background-color: #DCE8CA;
 }
 
-/* Desktop-only scroll-snap on document scroll. Hero + feature sections opt in via
-   .proovd-snap-section. LongScroll, CTA strip, and footer don't snap (no class). */
+/* Desktop-only mandatory snap, scoped to the three feature sections. The
+   .proovd-snap-active class is toggled on <html> by FeatureSnapController only
+   while the user is inside the feature zone — Hero above and LongScroll below
+   stay free-scrolling. */
 @media (min-width: 768px) {
-  html {
+  html.proovd-snap-active {
     scroll-snap-type: y mandatory;
   }
-  .proovd-snap-section {
+  .proovd-feature-snap {
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }
 }
+

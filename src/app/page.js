@@ -6,6 +6,7 @@ import FeatureMatch from "@/components/sections/FeatureMatch";
 import FeatureProof from "@/components/sections/FeatureProof";
 import LongScroll from "@/components/sections/LongScroll";
 import CtaStrip from "@/components/sections/CtaStrip";
+import FeatureSnapController from "@/components/FeatureSnapController";
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
         </main>
       </div>
       <Footer />
+      <FeatureSnapController />
     </>
   );
 }

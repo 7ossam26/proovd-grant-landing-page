@@ -79,7 +79,7 @@ export default function FeatureMatch() {
       ref={ref}
       id="features-match"
       aria-labelledby="features-match-heading"
-      className="proovd-snap-section scroll-mt-20 flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0"
+      className="proovd-feature-snap flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0"
     >
       <div
         ref={containerRef}
