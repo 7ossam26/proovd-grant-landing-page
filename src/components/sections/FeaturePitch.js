@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useSectionInView } from "@/lib/useSectionInView";
 import Button from "@/components/ui/Button";
+import FeatureSectionNav from "@/components/ui/FeatureSectionNav";
 import { StampMaskedVideo, STAMP_ASPECT } from "@/components/ui/IconsBgFrame";
 
 const ctaUrl = process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#";
@@ -195,6 +196,8 @@ export default function FeaturePitch() {
           paddingRight: "clamp(1.5rem, 5vw, 5rem)",
         }}
       >
+        <FeatureSectionNav location="feature_pitch" animate />
+
         <h2
           id="features-pitch-heading"
           className="text-ink font-bold leading-tight mb-6 md:mb-8"

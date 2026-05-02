@@ -68,6 +68,97 @@ body {
   outline-offset: 2px;
 }
 
+/* In-section nav for feature panels.
+   - Hover: underline-grow on text links, color shift on the Sign up button.
+     These are always on.
+   - Entry animation: staggered fade + slide-down for the links, slide-from-right
+     for the Sign up button. Gated by data-animate="true" on the parent nav,
+     so only the first feature section (FeaturePitch) animates — the others
+     sit static. Color comes from CSS vars set per-section so the same
+     component works on lime, surface, forest, etc. */
+.proovd-pitch-nav-link {
+  position: relative;
+  color: var(--nav-link-color, #1E4D2F);
+}
+
+.proovd-pitch-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  background-color: var(--nav-underline-color, #1E4D2F);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.proovd-pitch-nav-link[data-active="true"]::after,
+.proovd-pitch-nav-link:hover::after,
+.proovd-pitch-nav-link:focus-visible::after {
+  transform: scaleX(1);
+}
+.proovd-pitch-nav-link[data-active="true"]:hover::after {
+  transform-origin: right center;
+}
+
+/* Sign up — reads as bold text pre-hover, fills into a Primary button on hover.
+   Padding is kept always so there's no layout shift when the bg appears. */
+.proovd-pitch-nav-signup {
+  display: inline-block;
+  background-color: transparent;
+  color: var(--nav-signup-color, #09110C);
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+/* Hover follows the Primary-button recipe for the section background per Color.md:
+   on lime/surface  → brand-forest bg + surface text
+   on brand-forest  → surface bg + brand-forest text
+   on ink           → surface bg + ink text
+   Defaults below match the lime/surface case. */
+.proovd-pitch-nav-signup:hover,
+.proovd-pitch-nav-signup:focus-visible {
+  background-color: var(--nav-signup-hover-bg, #1E4D2F);
+  color: var(--nav-signup-hover-text, #FAFAFA);
+}
+
+/* Entry animation — only when nav has data-animate="true" (FeaturePitch). */
+.proovd-pitch-nav[data-animate="true"] .proovd-pitch-nav-link {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.proovd-pitch-nav[data-animate="true"] .proovd-pitch-nav-signup {
+  opacity: 0;
+  transform: translateX(24px);
+  transition:
+    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 200ms ease,
+    color 200ms ease;
+}
+.proovd-pitch-nav[data-animate="true"][data-visible="true"] .proovd-pitch-nav-link,
+.proovd-pitch-nav[data-animate="true"][data-visible="true"] .proovd-pitch-nav-signup {
+  opacity: 1;
+  transform: none;
+}
+.proovd-pitch-nav[data-animate="true"][data-visible="true"] .proovd-pitch-nav-link:nth-child(1) { transition-delay: 80ms; }
+.proovd-pitch-nav[data-animate="true"][data-visible="true"] .proovd-pitch-nav-link:nth-child(2) { transition-delay: 200ms; }
+.proovd-pitch-nav[data-animate="true"][data-visible="true"] .proovd-pitch-nav-signup       { transition-delay: 320ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .proovd-pitch-nav[data-animate="true"] .proovd-pitch-nav-link,
+  .proovd-pitch-nav[data-animate="true"] .proovd-pitch-nav-signup {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: background-color 200ms ease, color 200ms ease !important;
+  }
+  .proovd-pitch-nav-link::after { transition: none !important; }
+}
+
 /* Pitch-card chain — endless conveyor.
    The track is rendered with the card set duplicated, then translated from -50% to 0
    so one full cycle is visually identical at the loop boundary (seamless). */

@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { trackEvent } from "@/lib/analytics";
 import { useSectionInView } from "@/lib/useSectionInView";
 import Button from "@/components/ui/Button";
+import FeatureSectionNav from "@/components/ui/FeatureSectionNav";
 import { StampMaskedVideo, STAMP_ASPECT } from "@/components/ui/IconsBgFrame";
 
 // ─── Tunables ────────────────────────────────────────────────────────────────
@@ -130,6 +131,8 @@ export default function FeatureMatch() {
           paddingRight: "clamp(1.5rem, 5vw, 5rem)",
         }}
       >
+        <FeatureSectionNav location="feature_match" />
+
         <p
           className="mb-4"
           style={{

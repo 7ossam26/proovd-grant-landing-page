@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useSectionInView } from "@/lib/useSectionInView";
 import Button from "@/components/ui/Button";
+import FeatureSectionNav from "@/components/ui/FeatureSectionNav";
 import { StampMaskedVideo, STAMP_ASPECT } from "@/components/ui/IconsBgFrame";
 
 /* ------------------------------------------------------------------ *
@@ -174,6 +175,8 @@ export default function FeatureProof() {
           paddingRight: "clamp(1.5rem, 5vw, 5rem)",
         }}
       >
+        <FeatureSectionNav location="feature_proof" tone="forest" />
+
         <p
           className="mb-4"
           style={{
