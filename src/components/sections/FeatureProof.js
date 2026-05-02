@@ -152,12 +152,14 @@ export default function FeatureProof() {
             transform: "translate(-50%, -50%)",
             zIndex: Z_STAMP,
             aspectRatio: `${STAMP_ASPECT}`,
+            "--video-scale": 0.65,
           }}
         >
           {mounted && (
             <StampMaskedVideo
               videoSrc="/assets/videos/feature-proof-trophy.webm"
               videoSrcMp4="/assets/videos/feature-proof-trophy.mp4"
+              fit="contain"
               className="w-full h-full"
             />
           )}

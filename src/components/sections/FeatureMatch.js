@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
 import { trackEvent } from "@/lib/analytics";
 import { useSectionInView } from "@/lib/useSectionInView";
 import Button from "@/components/ui/Button";
@@ -10,70 +8,17 @@ import { StampMaskedVideo, STAMP_ASPECT } from "@/components/ui/IconsBgFrame";
 
 // ─── Tunables ────────────────────────────────────────────────────────────────
 
-// Stamp width / video-scale come from .proovd-stamp-frame (CSS vars, responsive).
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
 
-// 5x5 grid; selected tile (Rhea) at row 2 col 3 (zero-indexed → idx 12).
-const GRID_COLS = 5;
-const GRID_ROWS = 5;
-const SELECTED_INDEX = 12;
-const TILE_GAP = "1.4cqi";
-const GRID_PADDING = "4cqi";
-
 const Z_BG = 1;
-const Z_GRID = 2;
+const Z_CARDS = 2;
 const Z_STAMP = 3;
-const Z_CURSOR = 5;
 
 const ctaUrl = process.env.NEXT_PUBLIC_CTA_SECONDARY_URL || "#";
 
-// Phase timings — used as fractions of the total animation duration (PHASE.hold).
-const PHASE = {
-  gridIn: 0.0,
-  enlarge: 1.0,
-  cursorIn: 1.6,
-  click: 2.4,
-  fadeOthers: 2.6,
-  hold: 3.6,
-};
-
 export default function FeatureMatch() {
   const ref = useSectionInView("features-match");
-  const containerRef = useRef(null);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [playVersion, setPlayVersion] = useState(0);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.matchMedia) return;
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotion(mq.matches);
-    const handler = (e) => setReducedMotion(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el || typeof window === "undefined" || !window.IntersectionObserver) return;
-    let lastFire = 0;
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-            const now = Date.now();
-            if (now - lastFire > 800) {
-              setPlayVersion((v) => v + 1);
-              lastFire = now;
-            }
-          }
-        });
-      },
-      { threshold: [0, 0.5, 1] }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
 
   return (
     <section
@@ -83,7 +28,6 @@ export default function FeatureMatch() {
       className="proovd-feature-snap flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0"
     >
       <div
-        ref={containerRef}
         className="relative w-full md:w-[40%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden"
         style={{ containerType: "inline-size" }}
       >
@@ -96,11 +40,23 @@ export default function FeatureMatch() {
         />
 
         <div
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ zIndex: Z_GRID, padding: GRID_PADDING }}
+          className="absolute inset-0 flex items-center justify-between"
+          style={{
+            zIndex: Z_CARDS,
+            paddingLeft: "5cqi",
+            paddingRight: "5cqi",
+          }}
           aria-hidden="true"
         >
-          <AffiliateGrid key={playVersion} reducedMotion={reducedMotion} />
+          <FounderCard />
+          {/* Invisible spacer matches the stamp footprint so the two cards
+              push to the edges and the absolutely-positioned stamp lands
+              centered between them. */}
+          <div
+            className="proovd-stamp-frame"
+            style={{ visibility: "hidden", aspectRatio: `${STAMP_ASPECT}` }}
+          />
+          <AffiliateCard />
         </div>
 
         <div
@@ -111,10 +67,12 @@ export default function FeatureMatch() {
             transform: "translate(-50%, -50%)",
             zIndex: Z_STAMP,
             aspectRatio: `${STAMP_ASPECT}`,
+            "--video-scale": 0.85,
           }}
         >
           <StampMaskedVideo
             videoSrc="/assets/videos/cupid.webm"
+            fit="contain"
             className="w-full h-full"
           />
         </div>
@@ -130,7 +88,6 @@ export default function FeatureMatch() {
         }}
       >
         <FeatureSectionNav location="feature_match" />
-
 
         <h2
           id="features-match-heading"
@@ -175,177 +132,131 @@ export default function FeatureMatch() {
   );
 }
 
-function AffiliateGrid({ reducedMotion }) {
-  const total = GRID_COLS * GRID_ROWS;
-  const selectedRow = Math.floor(SELECTED_INDEX / GRID_COLS);
-  const selectedCol = SELECTED_INDEX % GRID_COLS;
-
-  if (reducedMotion) {
-    return (
-      <div className="relative w-full h-full flex items-center justify-center">
-        <SelectedTileStatic />
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative w-full h-full">
-      <div
-        className="absolute inset-0 grid"
-        style={{
-          gridTemplateColumns: `repeat(${GRID_COLS}, 1fr)`,
-          gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)`,
-          gap: TILE_GAP,
-        }}
-      >
-        {Array.from({ length: total }).map((_, i) => {
-          if (i === SELECTED_INDEX) {
-            return <SelectedTile key={i} />;
-          }
-          return <GridTile key={i} index={i} />;
-        })}
-      </div>
-      <Cursor selectedRow={selectedRow} selectedCol={selectedCol} />
-    </div>
-  );
-}
-
-function GridTile({ index }) {
-  // Stagger the appearance + fade-out by index for the soft, non-uniform feel.
-  const inDelay = (index * 0.018) % 0.3;
-  const outDelay = (index * 0.012) % 0.3;
-  const inEnd = (0.18 + inDelay) / PHASE.hold;
-  const fadeStart = (PHASE.fadeOthers + outDelay) / PHASE.hold;
-  return (
-    <motion.div
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{
-        scale: [0, 1, 1, 0.6],
-        opacity: [0, 1, 1, 0],
-      }}
-      transition={{
-        times: [0, inEnd, fadeStart, 1],
-        duration: PHASE.hold,
-        ease: "easeInOut",
-      }}
-      style={{
-        backgroundColor: "#DCE8CA",
-        border: "1px solid #1E4D2F",
-      }}
-      aria-hidden="true"
-    >
-      <div
-        className="w-full h-full flex items-center justify-center"
-        style={{ color: "#5AAA77", fontSize: "1.6cqi", fontWeight: 700 }}
-      >
-        {/* TODO(assets): /public/assets/affiliate-grid/avatar-{1..25}.webp */}
-        ●
-      </div>
-    </motion.div>
-  );
-}
-
-function SelectedTile() {
-  // grid-in → enlarge → click dip → click bounce → final emphasis (stays).
-  const t1 = 0.18 / PHASE.hold;
-  const t2 = PHASE.enlarge / PHASE.hold;
-  const t3 = PHASE.click / PHASE.hold;
-  const t4 = (PHASE.click + 0.07) / PHASE.hold;
-  const t5 = (PHASE.click + 0.14) / PHASE.hold;
-  const t6 = PHASE.fadeOthers / PHASE.hold;
-  return (
-    <motion.div
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{
-        scale: [0, 1, 1.18, 1.05, 1.18, 1.32, 1.32],
-        opacity: [0, 1, 1, 1, 1, 1, 1],
-      }}
-      transition={{
-        times: [0, t1, t2, t3, t4, t5, t6],
-        duration: PHASE.hold,
-        ease: "easeInOut",
-      }}
-      style={{
-        backgroundColor: "#1E4D2F",
-        border: "2px solid #1E4D2F",
-        position: "relative",
-        zIndex: 4,
-      }}
-      aria-hidden="true"
-    >
-      <div
-        className="w-full h-full flex flex-col items-center justify-center"
-        style={{ color: "#BCFCA1", fontWeight: 900 }}
-      >
-        <div style={{ fontSize: "3.2cqi", lineHeight: 1 }}>R</div>
-        <div style={{ fontSize: "1cqi", marginTop: "0.2cqi", color: "#DCE8CA", fontWeight: 500 }}>
-          Rhea
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function SelectedTileStatic() {
+function FounderCard() {
+  const pillBase = {
+    backgroundColor: "#DCE8CA",
+    color: "#1E4D2F",
+    border: "1px solid #1E4D2F",
+    whiteSpace: "nowrap",
+  };
+  const founderPillStyle = {
+    ...pillBase,
+    padding: "1cqi 4.5cqi",
+    fontSize: "3cqi",
+    fontWeight: 700,
+  };
+  const tagPillStyle = {
+    ...pillBase,
+    padding: "0.5cqi 1.4cqi",
+    fontSize: "1.7cqi",
+    fontWeight: 500,
+  };
   return (
     <div
-      className="flex flex-col items-center justify-center"
-      style={{
-        width: "26cqi",
-        height: "26cqi",
-        backgroundColor: "#1E4D2F",
-        color: "#BCFCA1",
-      }}
+      className="flex flex-col items-center"
+      style={{ gap: "1.4cqi", width: "22cqi" }}
     >
-      <div style={{ fontSize: "6cqi", fontWeight: 900 }}>R</div>
-      <div style={{ fontSize: "1.6cqi", marginTop: "1cqi" }}>Rhea</div>
-      <div style={{ fontSize: "1.3cqi", color: "#DCE8CA" }}>@rhea.affiliate</div>
+      <div
+        className="flex items-center justify-between"
+        style={{
+          backgroundColor: "#BCFCA1",
+          color: "#1E4D2F",
+          border: "1px solid #1E4D2F",
+          padding: "0.7cqi 1.4cqi",
+          width: "100%",
+          fontWeight: 500,
+          fontSize: "1.5cqi",
+          fontStyle: "italic",
+          gap: "1cqi",
+          whiteSpace: "nowrap",
+        }}
+      >
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+          you but in a different font
+        </span>
+        <svg
+          width="1.4cqi"
+          height="1.4cqi"
+          viewBox="0 0 12 8"
+          fill="none"
+          aria-hidden="true"
+          style={{ flexShrink: 0 }}
+        >
+          <path
+            d="M1 1.5 L6 6.5 L11 1.5"
+            stroke="#1E4D2F"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+
+      {/* TODO(assets): /public/assets/founder-componant.webp */}
+      <img
+        src="/assets/founder-componant.webp"
+        alt=""
+        style={{
+          width: "100%",
+          aspectRatio: "1 / 1.15",
+          objectFit: "cover",
+          border: "2.5px solid #BCFCA1",
+          backgroundColor: "#FAFAFA",
+        }}
+      />
+
+      <div style={founderPillStyle}>Mr. Founder</div>
+      <div style={tagPillStyle}>AI SAAS</div>
     </div>
   );
 }
 
-function Cursor({ selectedRow, selectedCol }) {
-  const targetXPct = ((selectedCol + 0.5) / GRID_COLS) * 100;
-  const targetYPct = ((selectedRow + 0.5) / GRID_ROWS) * 100;
-
-  const t0 = 0;
-  const t1 = PHASE.cursorIn / PHASE.hold;
-  const t2 = (PHASE.click - 0.05) / PHASE.hold;
-  const t3 = PHASE.click / PHASE.hold;
-  const t4 = PHASE.fadeOthers / PHASE.hold;
-  const t5 = 1;
-
+function AffiliateCard() {
   return (
-    <motion.div
-      className="absolute"
-      initial={false}
-      animate={{
-        left: ["92%", "92%", `${targetXPct}%`, `${targetXPct}%`, `${targetXPct}%`, `${targetXPct}%`],
-        top: ["92%", "92%", `${targetYPct}%`, `${targetYPct}%`, `${targetYPct}%`, `${targetYPct}%`],
-        opacity: [0, 1, 1, 1, 0, 0],
-        scale: [0.9, 1, 1, 0.86, 0.86, 0.86],
-      }}
-      transition={{
-        times: [t0, t1, t2, t3, t4, t5],
-        duration: PHASE.hold,
-        ease: "easeInOut",
-      }}
+    <div
       style={{
-        zIndex: Z_CURSOR,
-        translateX: "-50%",
-        translateY: "-50%",
+        width: "27cqi",
+        border: "2.5px solid #BCFCA1",
+        backgroundColor: "#1E4D2F",
       }}
-      aria-hidden="true"
     >
-      <svg width="24" height="28" viewBox="0 0 24 28" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M3 2 L3 22 L9 17 L13 26 L17 24 L13 15 L21 15 Z"
-          fill="#09110C"
-          stroke="#FAFAFA"
-          strokeWidth="1.5"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </motion.div>
+      {/* TODO(assets): /public/assets/affiliate-component.webp */}
+      <img
+        src="/assets/affiliate-component.webp"
+        alt=""
+        style={{
+          width: "100%",
+          aspectRatio: "0.62 / 1",
+          objectFit: "cover",
+          display: "block",
+        }}
+      />
+      <div
+        className="flex items-end justify-between"
+        style={{
+          backgroundColor: "#1E4D2F",
+          color: "#BCFCA1",
+          padding: "1.4cqi 1.6cqi",
+          gap: "1cqi",
+        }}
+      >
+        <div className="flex flex-col">
+          <span style={{ fontSize: "1.5cqi", fontWeight: 500, lineHeight: 1.1 }}>
+            Rhea
+          </span>
+          <span style={{ fontSize: "2.3cqi", fontWeight: 700, marginTop: "0.5cqi", lineHeight: 1.1 }}>
+            128K Followers
+          </span>
+        </div>
+        <div className="flex flex-col items-end">
+          <span style={{ fontSize: "1.5cqi", fontWeight: 500, lineHeight: 1.1 }}>
+            commission
+          </span>
+          <span style={{ fontSize: "2.5cqi", fontWeight: 700, marginTop: "0.5cqi", lineHeight: 1.1 }}>
+            25%
+          </span>
+        </div>
+      </div>
+    </div>
   );
 }
