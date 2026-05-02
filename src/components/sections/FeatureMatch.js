@@ -10,7 +10,7 @@ import { StampMaskedVideo, STAMP_ASPECT } from "@/components/ui/IconsBgFrame";
 
 // ─── Tunables ────────────────────────────────────────────────────────────────
 
-const STAMP_WIDTH = "clamp(220px, 42cqi, 320px)";
+// Stamp width / video-scale come from .proovd-stamp-frame (CSS vars, responsive).
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
 
@@ -84,7 +84,7 @@ export default function FeatureMatch() {
     >
       <div
         ref={containerRef}
-        className="relative w-full md:w-[56.4%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden"
+        className="relative w-full md:w-[40%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden"
         style={{ containerType: "inline-size" }}
       >
         <img
@@ -104,11 +104,10 @@ export default function FeatureMatch() {
         </div>
 
         <div
-          className="absolute"
+          className="absolute proovd-stamp-frame"
           style={{
             left: STAMP_LEFT,
             top: STAMP_TOP,
-            width: STAMP_WIDTH,
             transform: "translate(-50%, -50%)",
             zIndex: Z_STAMP,
             aspectRatio: `${STAMP_ASPECT}`,
@@ -117,13 +116,12 @@ export default function FeatureMatch() {
           <StampMaskedVideo
             videoSrc="/assets/videos/cupid.webm"
             className="w-full h-full"
-            fit="contain"
           />
         </div>
       </div>
 
       <div
-        className="relative w-full md:w-[55%] flex flex-col justify-center py-12 md:py-24"
+        className="relative w-full md:w-[60%] flex flex-col justify-center py-12 md:py-24"
         style={{
           backgroundColor: "#FAFAFA",
           zIndex: 20,

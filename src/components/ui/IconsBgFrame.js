@@ -41,13 +41,28 @@ export function StampMaskedVideo({
   videoSrc,
   videoSrcMp4,
   fit = "cover",
+  bgColor = "#09110C", // ink — fills the stamp shape around the scaled video
 }) {
+  // Video size is driven by --video-scale on an ancestor (default 1 = full stamp).
+  // Sections set this via the .proovd-stamp-frame class with mobile/desktop overrides.
+  const videoStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    width: "calc(var(--video-scale, 1) * 100%)",
+    height: "calc(var(--video-scale, 1) * 100%)",
+    transform: "translate(-50%, -50%)",
+    objectFit: fit,
+    display: "block",
+  };
+
   return (
     <div
       className={className}
       style={{
         position: "relative",
         aspectRatio: `${STAMP_VIEWBOX.width} / ${STAMP_VIEWBOX.height}`,
+        backgroundColor: bgColor,
         ...STAMP_MASK_STYLE,
         ...style,
       }}
@@ -59,12 +74,7 @@ export function StampMaskedVideo({
         loop
         playsInline
         preload="auto"
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: fit,
-          display: "block",
-        }}
+        style={videoStyle}
       >
         <source src={videoSrc} type="video/webm" />
         {videoSrcMp4 && <source src={videoSrcMp4} type="video/mp4" />}

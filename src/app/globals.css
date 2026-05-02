@@ -68,6 +68,21 @@ body {
   outline-offset: 2px;
 }
 
+/* Feature-section stamp frame — responsive width + video-scale via CSS vars.
+   StampMaskedVideo reads --video-scale; sections set width via --stamp-width.
+   Mobile gets a larger stamp + larger video so the icon reads at a glance. */
+.proovd-stamp-frame {
+  --stamp-width: clamp(120px, 22cqi, 180px);
+  --video-scale: 0.5;
+  width: var(--stamp-width);
+}
+@media (max-width: 767px) {
+  .proovd-stamp-frame {
+    --stamp-width: 200px;
+    --video-scale: 0.6;
+  }
+}
+
 /* In-section nav for feature panels.
    - Hover: underline-grow on text links, color shift on the Sign up button.
      These are always on.
@@ -160,25 +175,6 @@ body {
     transition: background-color 200ms ease, color 200ms ease !important;
   }
   .proovd-pitch-nav-link::after { transition: none !important; }
-}
-
-/* Pitch-card chain — endless conveyor.
-   The track is rendered with the card set duplicated, then translated from -50% to 0
-   so one full cycle is visually identical at the loop boundary (seamless). */
-.pitch-cards-track {
-  width: max-content;
-  animation-name: pitch-cards-marquee;
-  animation-duration: 12s;             /* overridden inline via animation-duration */
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  will-change: transform;
-}
-@keyframes pitch-cards-marquee {
-  from { transform: translateX(-50%); }
-  to   { transform: translateX(0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .pitch-cards-track { animation: none !important; transform: none !important; }
 }
 
 /* Hero pledge "deal" reveal — drops from above with rotation overshoot, then settles.

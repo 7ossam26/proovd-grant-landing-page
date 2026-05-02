@@ -13,50 +13,60 @@ const ctaUrl = process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#";
  *  Tunables
  * ------------------------------------------------------------------ */
 
-// Long verbatim "uhh, I've been thinking" pitch. Long enough to fill the arc once;
-// no repetition factor needed.
+// Long verbatim "uhh, I've been thinking" pitch.
 const TEXT_PHRASE =
   "I, uhh, I’ve been thinking about this idea, and, umm, it’s kind of like a SaaS platform, you know? Like, it would help… well, I guess it helps teams organize things, but not just like normal project tools, more like it, uhh, understands what you’re doing and suggests what to do next? Or, umm, maybe it automates parts of it? I’m still figuring that out. It’s sort of like… you log in, and it kind of adapts to your workflow automatically, I think. I mean, I’m not totally sure what the main feature is yet, but the idea is that it saves time and, uhh, reduces, you know, decision fatigue? Yeah, I just, umm, I feel like there’s something there, I just haven’t fully nailed down what it actually does yet.";
-const TEXT_SCROLL_DURATION_S = 9;        // 14s → 9s, faster
 
-// Curved text (SVG)
-const TEXT_LEFT = "0%";
-const TEXT_TOP = "32%";
-const TEXT_WIDTH = "55%";
-const TEXT_FONT_SIZE = 18;
+// One continuous semi-circular arc whose midpoint sits exactly at the
+// stamp center (SVG 50, 50). The two halves below are a De Casteljau
+// subdivision of the single curve `M 0 15 Q 50 85, 100 15` — so they
+// share an identical tangent at the meeting point and visually read
+// as one uninterrupted arc that the stamp covers in the middle.
+//   - Text rides the LEFT half (flowing into the stamp)
+//   - Card images ride the RIGHT half (flowing out)
+//   - rotate="auto" tilts each card to the path tangent (beads on string)
+const ARC_VIEWBOX = "0 0 100 100";
+const TEXT_ARC_PATH = "M 0 15 Q 25 50, 50 50";  // upper-left → stamp center
+const CARD_ARC_PATH = "M 50 50 Q 75 50, 100 15"; // stamp center → upper-right
+const TEXT_FONT_SIZE = 3.6;  // viewBox units (≈ panel-relative %)
 const TEXT_FILL = "#FAFAFA";
-const TEXT_ARC_PATH = "M 10,30 Q 120,210 380,90";
-const TEXT_VIEWBOX = "0 0 400 220";
+const TEXT_DURATION_S = 9;
+const CARD_DURATION_S = 8;
 
-// Stamp + mic video — shared across all 3 features for consistent sizing.
-const STAMP_WIDTH = "clamp(220px, 42cqi, 320px)";
+// Card render box in SVG units. preserveAspectRatio="xMidYMid meet" inside
+// each <image> means the underlying PNG keeps its own aspect ratio inside
+// this box (no distortion).
+const CARD_W = 16;
+const CARD_H = 20;
+const CARDS = [
+  { src: "/assets/feature-pitch-card-1.png" },
+  { src: "/assets/feature-pitch-card-2.png" },
+  { src: "/assets/feature-pitch-card-3.png" },
+  { src: "/assets/feature-pitch-card-4.png" },
+];
+
+// Stamp + mic video — width / video-scale come from .proovd-stamp-frame
+// (responsive via CSS vars).
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
 
-// Card chain — sizes vary along an arc-mirroring shape (small → big → small),
-// no rotation per the new design. Vertical offsets trace the arc apex.
-const CHAIN_LEFT = "calc(50% + 12cqi)";
-const CHAIN_TOP = "calc(50% - 5cqi)";
-const CHAIN_WIDTH = "64cqi";
-const CHAIN_HEIGHT = "30cqi";
-const CHAIN_GAP = "0.6cqi";
-const CHAIN_DURATION_S = 8;              // 12s → 8s, faster
-
-// Per-card data — width varies on an arc; marginTop traces the arc apex (apex card lowest).
-const CARDS = [
-  { src: "/assets/feature-pitch-card-1.png", width: "12cqi", marginTop: "0cqi" },
-  { src: "/assets/feature-pitch-card-2.png", width: "15cqi", marginTop: "2cqi" },
-  { src: "/assets/feature-pitch-card-3.png", width: "17.5cqi", marginTop: "4cqi" },
-  { src: "/assets/feature-pitch-card-4.png", width: "14cqi", marginTop: "2cqi" },
-];
-
-// Z-index stack
+// Z-index stack — cards/text sit BEHIND the stamp so they appear to flow
+// in/out of it.
 const Z_BG = 1;
-const Z_CARDS = 2;
-const Z_STAMP = 4;
-const Z_TEXT = 3;
+const Z_FLOW = 2;
+const Z_STAMP = 3;
 
-const CONVEYOR_CARDS = [...CARDS, ...CARDS];
+// Bezier helper for rendering static (reduced-motion) card positions.
+function quadBezierPoint(p0, p1, p2, t) {
+  const u = 1 - t;
+  return {
+    x: u * u * p0.x + 2 * u * t * p1.x + t * t * p2.x,
+    y: u * u * p0.y + 2 * u * t * p1.y + t * t * p2.y,
+  };
+}
+const CARD_PATH_P0 = { x: 50, y: 50 };
+const CARD_PATH_P1 = { x: 75, y: 50 };
+const CARD_PATH_P2 = { x: 100, y: 15 };
 
 /* ------------------------------------------------------------------ */
 
@@ -81,7 +91,7 @@ export default function FeaturePitch() {
       className="proovd-feature-snap flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0"
     >
       <div
-        className="relative w-full md:w-[56.4%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden md:overflow-visible"
+        className="relative w-full md:w-[40%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden md:overflow-visible"
         style={{ containerType: "inline-size" }}
       >
         {/* Layer 1 — blurred room photo */}
@@ -94,16 +104,24 @@ export default function FeaturePitch() {
           style={{ zIndex: Z_BG }}
         />
 
-        {/* Layer 4 — curved typing text arcing toward the centered stamp */}
+        {/* Single SVG — text rides the LEFT half of one continuous smile-shaped
+            arc that passes under the stamp; cards ride the RIGHT half and
+            rotate to follow the path tangent. Both halves share the apex
+            point at the stamp's center, so visually it reads as one
+            uninterrupted curve that the stamp interrupts in the middle. */}
         <svg
-          className="absolute"
-          style={{ left: TEXT_LEFT, top: TEXT_TOP, width: TEXT_WIDTH, zIndex: Z_TEXT }}
-          viewBox={TEXT_VIEWBOX}
+          className="absolute inset-0 w-full h-full"
+          viewBox={ARC_VIEWBOX}
+          preserveAspectRatio="xMidYMid meet"
+          style={{ zIndex: Z_FLOW }}
           aria-hidden="true"
         >
           <defs>
-            <path id="text-arc" d={TEXT_ARC_PATH} />
+            <path id="pitch-text-arc" d={TEXT_ARC_PATH} />
+            <path id="pitch-card-arc" d={CARD_ARC_PATH} />
           </defs>
+
+          {/* Text scrolling INTO the stamp along the left half */}
           <text
             style={{
               fontFamily: "Satoshi, sans-serif",
@@ -112,67 +130,60 @@ export default function FeaturePitch() {
               fill: TEXT_FILL,
             }}
           >
-            <textPath href="#text-arc" startOffset="0%">
+            <textPath href="#pitch-text-arc" startOffset="0%">
               {!reducedMotion && (
                 <animate
                   attributeName="startOffset"
                   from="-100%"
                   to="0%"
-                  dur={`${TEXT_SCROLL_DURATION_S}s`}
+                  dur={`${TEXT_DURATION_S}s`}
                   repeatCount="indefinite"
                 />
               )}
               {TEXT_PHRASE}
             </textPath>
           </text>
-        </svg>
 
-        {/* Layer 2 — endless cards conveyor (BEHIND the stamp). No rotation; size + vertical
-            offset together trace the same arc shape as the curved text. */}
-        <div
-          className="absolute"
-          style={{
-            left: CHAIN_LEFT,
-            top: CHAIN_TOP,
-            width: CHAIN_WIDTH,
-            height: CHAIN_HEIGHT,
-            overflow: "hidden",
-            zIndex: Z_CARDS,
-          }}
-        >
-          <div
-            className="pitch-cards-track flex flex-row"
-            style={{
-              gap: CHAIN_GAP,
-              alignItems: "flex-start",
-              animationDuration: `${CHAIN_DURATION_S}s`,
-            }}
-          >
-            {CONVEYOR_CARDS.map((card, i) => (
-              // TODO(assets): {card.src}
-              <div key={i} className="flex-shrink-0">
-                <img
-                  src={card.src}
-                  alt=""
-                  aria-hidden="true"
-                  className="h-auto object-contain pointer-events-none select-none block"
-                  style={{
-                    width: card.width,
-                    marginTop: card.marginTop,
-                  }}
+          {/* Cards emerging from the stamp along the right half. Each card
+              is offset in time so the chain stays evenly distributed along
+              the path. rotate="auto" tilts each card to the path tangent. */}
+          {CARDS.map((card, i) => {
+            const t = i / CARDS.length;
+            const staticPos = quadBezierPoint(CARD_PATH_P0, CARD_PATH_P1, CARD_PATH_P2, t);
+            return (
+              <g
+                key={card.src}
+                transform={reducedMotion ? `translate(${staticPos.x}, ${staticPos.y})` : undefined}
+              >
+                <image
+                  href={card.src}
+                  width={CARD_W}
+                  height={CARD_H}
+                  x={-CARD_W / 2}
+                  y={-CARD_H / 2}
+                  preserveAspectRatio="xMidYMid meet"
                 />
-              </div>
-            ))}
-          </div>
-        </div>
+                {!reducedMotion && (
+                  <animateMotion
+                    dur={`${CARD_DURATION_S}s`}
+                    repeatCount="indefinite"
+                    rotate="auto"
+                    begin={`-${t * CARD_DURATION_S}s`}
+                  >
+                    <mpath href="#pitch-card-arc" />
+                  </animateMotion>
+                )}
+              </g>
+            );
+          })}
+        </svg>
 
         {/* Layer 3 — stamp-masked mic video */}
         <div
-          className="absolute"
+          className="absolute proovd-stamp-frame"
           style={{
             left: STAMP_LEFT,
             top: STAMP_TOP,
-            width: STAMP_WIDTH,
             zIndex: Z_STAMP,
             transform: "translate(-50%, -50%)",
             aspectRatio: `${STAMP_ASPECT}`,
@@ -188,7 +199,7 @@ export default function FeaturePitch() {
 
       {/* Right column — copy + CTA */}
       <div
-        className="relative w-full md:w-[55%] flex flex-col justify-center py-12 md:py-24"
+        className="relative w-full md:w-[60%] flex flex-col justify-center py-12 md:py-24"
         style={{
           backgroundColor: "#BCFCA1",
           zIndex: 20,
