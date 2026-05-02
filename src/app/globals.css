@@ -72,14 +72,14 @@ body {
    StampMaskedVideo reads --video-scale; sections set width via --stamp-width.
    Mobile gets a larger stamp + larger video so the icon reads at a glance. */
 .proovd-stamp-frame {
-  --stamp-width: clamp(120px, 22cqi, 180px);
-  --video-scale: 0.5;
+  --stamp-width: clamp(139px, 25.4cqi, 208px);
+  --video-scale: 0.58;
   width: var(--stamp-width);
 }
 @media (max-width: 767px) {
   .proovd-stamp-frame {
-    --stamp-width: 200px;
-    --video-scale: 0.6;
+    --stamp-width: 231px;
+    --video-scale: 0.69;
   }
 }
 
