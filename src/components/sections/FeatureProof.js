@@ -21,31 +21,43 @@ const STAMP_TOP = "50%";
 // the stamp's bottom edge (~y=68). Stamp is centered at (50,50) and roughly
 // 36% tall in the SVG's stretched coords.
 const TOP_PATHS = [
-  { id: "proof-top-l", d: "M 12 -8 C 18 10, 30 22, 50 32" },
-  { id: "proof-top-c", d: "M 50 -8 C 50 8, 50 20, 50 32" },
-  { id: "proof-top-r", d: "M 88 -8 C 82 10, 70 22, 50 32" },
+  { id: "proof-top-l", d: "M 18 -8 L 18 32" },
+  { id: "proof-top-c", d: "M 50 -8 L 50 32" },
+  { id: "proof-top-r", d: "M 82 -8 L 82 32" },
 ];
 const BOTTOM_PATHS = [
-  { id: "proof-bot-l", d: "M 50 68 C 30 80, 18 92, 12 108" },
-  { id: "proof-bot-c", d: "M 50 68 C 50 82, 50 96, 50 108" },
-  { id: "proof-bot-r", d: "M 50 68 C 70 80, 82 92, 88 108" },
+  { id: "proof-bot-l", d: "M 18 68 L 18 108" },
+  { id: "proof-bot-c", d: "M 50 68 L 50 108" },
+  { id: "proof-bot-r", d: "M 82 68 L 82 108" },
 ];
 
 const TOP_DUR_S = 5.0;        // travel time pledge → stamp
 const BOTTOM_DUR_S = 5.0;     // travel time stamp → outer corners
 const TOKENS_PER_LANE = 4;    // staggered along each lane
 
-// Per-token opacity envelope: tokens materialize over the first ~15% of their
-// journey and dissolve over the last ~25% so they don't pile up at the
-// convergence point (the stamp).
+// Tokens fade in quickly then dissolve right as they enter/exit the stamp edge.
 const FADE_VALUES = "0;1;1;0";
-const FADE_KEYTIMES = "0;0.18;0.72;1";
+const TOP_FADE_KEYTIMES = "0;0.08;0.88;1";   // stay visible until stamp
+const BOT_FADE_KEYTIMES = "0;0.12;0.90;1";   // appear right from stamp
 
 const Z_BG = 1;
 const Z_FUNNEL = 2;
 const Z_STAMP = 4;
 
-const PLEDGE_AMOUNTS = [25, 50, 75, 100, 22, 64, 39, 84, 15, 27, 41, 90];
+const PLEDGE_DATA = [
+  { amount: 25, name: "Max Q." },
+  { amount: 50, name: "Sara K." },
+  { amount: 75, name: "Jay M." },
+  { amount: 100, name: "Alex T." },
+  { amount: 22, name: "Kim R." },
+  { amount: 64, name: "Tom B." },
+  { amount: 39, name: "Lee S." },
+  { amount: 84, name: "Ana P." },
+  { amount: 15, name: "Rob W." },
+  { amount: 27, name: "Mia C." },
+  { amount: 41, name: "Dan F." },
+  { amount: 90, name: "Zoe L." },
+];
 
 const ctaUrl = process.env.NEXT_PUBLIC_CTA_PRIMARY_URL || "#";
 
@@ -104,20 +116,20 @@ export default function FeatureProof() {
               ))}
             </defs>
 
-            {/* Top — pledge tokens flowing into the stamp */}
+            {/* Top — pledge notification cards flowing into the stamp */}
             {TOP_PATHS.flatMap((path, laneIdx) =>
               Array.from({ length: TOKENS_PER_LANE }).map((_, i) => {
                 const beginOffset = (i / TOKENS_PER_LANE) * TOP_DUR_S + laneIdx * 0.23;
-                const amount = PLEDGE_AMOUNTS[(laneIdx * TOKENS_PER_LANE + i) % PLEDGE_AMOUNTS.length];
+                const pledge = PLEDGE_DATA[(laneIdx * TOKENS_PER_LANE + i) % PLEDGE_DATA.length];
                 return (
                   <g key={`top-${laneIdx}-${i}`}>
-                    <PledgeToken amount={amount} />
+                    <PledgeToken amount={pledge.amount} name={pledge.name} />
                     {!reducedMotion && (
                       <>
                         <animate
                           attributeName="opacity"
                           values={FADE_VALUES}
-                          keyTimes={FADE_KEYTIMES}
+                          keyTimes={TOP_FADE_KEYTIMES}
                           dur={`${TOP_DUR_S}s`}
                           repeatCount="indefinite"
                           begin={`-${beginOffset}s`}
@@ -125,7 +137,7 @@ export default function FeatureProof() {
                         <animateMotion
                           dur={`${TOP_DUR_S}s`}
                           repeatCount="indefinite"
-                          rotate="auto"
+                          rotate="0"
                           begin={`-${beginOffset}s`}
                         >
                           <mpath href={`#${path.id}`} />
@@ -137,7 +149,7 @@ export default function FeatureProof() {
               })
             )}
 
-            {/* Bottom — dollar tokens flowing outward */}
+            {/* Bottom — dollar bills flowing out of the stamp */}
             {BOTTOM_PATHS.flatMap((path, laneIdx) =>
               Array.from({ length: TOKENS_PER_LANE }).map((_, i) => {
                 const beginOffset = (i / TOKENS_PER_LANE) * BOTTOM_DUR_S + laneIdx * 0.31;
@@ -150,7 +162,7 @@ export default function FeatureProof() {
                         <animate
                           attributeName="opacity"
                           values={FADE_VALUES}
-                          keyTimes={FADE_KEYTIMES}
+                          keyTimes={BOT_FADE_KEYTIMES}
                           dur={`${BOTTOM_DUR_S}s`}
                           repeatCount="indefinite"
                           begin={`-${beginOffset}s`}
@@ -158,7 +170,7 @@ export default function FeatureProof() {
                         <animateMotion
                           dur={`${BOTTOM_DUR_S}s`}
                           repeatCount="indefinite"
-                          rotate="auto"
+                          rotate="0"
                           begin={`-${beginOffset}s`}
                         >
                           <mpath href={`#${path.id}`} />
@@ -251,42 +263,37 @@ export default function FeatureProof() {
   );
 }
 
-// Simplified pledge token — small lime card with $amount; legible at the funnel scale,
-// echoes PledgeCard's lime/forest palette.
-function PledgeToken({ amount }) {
-  // Centered at (0,0) so animateMotion's translation places the token's center on the path.
-  const w = 9;
-  const h = 4;
+// Mini pledge notification card — mirrors the PledgeCard design from the Hero.
+// Centered at (0,0) so animateMotion places the card center on the path.
+function PledgeToken({ amount, name }) {
+  const w = 12;
+  const h = 8;
+  const x = -w / 2;
+  const y = -h / 2;
   return (
-    <g transform={`translate(${-w / 2}, ${-h / 2})`}>
-      <rect
-        x={0}
-        y={0}
-        width={w}
-        height={h}
-        fill="#BCFCA1"
-        stroke="#1E4D2F"
-        strokeWidth={0.4}
-      />
-      <text
-        x={w / 2}
-        y={h / 2 + 1}
-        fontSize={2.6}
-        fontFamily="Satoshi, sans-serif"
-        fontWeight={900}
-        fill="#09110C"
-        textAnchor="middle"
-      >
+    <g>
+      <rect x={x} y={y} width={w} height={h} fill="#BCFCA1" stroke="#1E4D2F" strokeWidth={0.35} />
+      {/* Top notch bar */}
+      <rect x={x + 1.8} y={y} width={4} height={0.7} fill="#1E4D2F" />
+      {/* "NEW PLEDGE" label */}
+      <text x={x + 0.9} y={y + 2.2} fontSize={1.3} fontFamily="Satoshi, sans-serif" fontWeight={700} fill="#1E4D2F">
+        NEW PLEDGE
+      </text>
+      {/* Amount */}
+      <text x={x + 0.9} y={y + 6.4} fontSize={4.2} fontFamily="Satoshi, sans-serif" fontWeight={900} fill="#09110C">
         ${amount}
+      </text>
+      {/* Name */}
+      <text x={x + 0.9} y={y + h - 0.7} fontSize={1.4} fontFamily="Satoshi, sans-serif" fontWeight={500} fill="#09110C">
+        {name}
       </text>
     </g>
   );
 }
 
 function DollarToken({ scale = 1 }) {
-  // Match the pledge token's visual weight; dollar bill aspect ~2.35:1.
-  const w = 9 * scale;
-  const h = 3.8 * scale;
+  const w = 10 * scale;
+  const h = 4.3 * scale;
   return (
     <g transform={`translate(${-w / 2}, ${-h / 2})`}>
       <image

@@ -154,7 +154,7 @@ function FounderCard() {
   return (
     <div
       className="flex flex-col items-center"
-      style={{ gap: "1.4cqi", width: "22cqi" }}
+      style={{ gap: "1.4cqi", width: "28cqi" }}
     >
       {/* TODO(assets): /public/assets/founder-componant.webp */}
       <img
@@ -162,9 +162,8 @@ function FounderCard() {
         alt=""
         style={{
           width: "100%",
-          aspectRatio: "1 / 1.15",
-          objectFit: "cover",
-          backgroundColor: "#FAFAFA",
+          height: "auto",
+          display: "block",
         }}
       />
 
@@ -187,8 +186,7 @@ function AffiliateCard() {
         alt=""
         style={{
           width: "100%",
-          aspectRatio: "0.62 / 1",
-          objectFit: "cover",
+          height: "auto",
           display: "block",
         }}
       />
