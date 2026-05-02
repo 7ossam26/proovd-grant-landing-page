@@ -16,7 +16,10 @@ const PHONES = [
 ];
 
 const PHONE_LOOP = [...PHONES, ...PHONES];
+const MARQUEE_DURATION_S_MOBILE = 7.5;
 const MARQUEE_DURATION_S = 11;
+const PHONE_SCALE_MIN_MOBILE = 0.70;
+const PHONE_SCALE_MAX_MOBILE = 1.2;
 const PHONE_SCALE_MIN = 0.65;
 const PHONE_SCALE_MAX = 1.5;
 const PHONE_WIDTH_MOBILE = "36cqi";
@@ -71,9 +74,9 @@ const CENTER_CARD_COUNT = CENTER_STACK.cards.length;
 // Six side popups — each one independently fades in, lingers, fades out, then re-appears with a new pledge.
 const SIDE_POPUPS = [
   { position: "bottom-[28%] left-[-2%]", origin: "bottom left", scale: 0.58, rotation: -4 },
-  { position: "bottom-[10%] left-[17%]", origin: "bottom left", scale: 0.66, rotation: 3 },
+  { position: "bottom-[10%] left-[17%]", origin: "bottom left", scale: 0.56, rotation: 3 },
   { position: "bottom-[28%] right-[2%]", origin: "bottom right", scale: 0.58, rotation: -3 },
-  { position: "bottom-[6%] right-[10%]", origin: "bottom right", scale: 0.66, rotation: 3 },
+  { position: "bottom-[15%] right-[20%]", origin: "bottom right", scale: 0.56, rotation: 3 },
 ];
 
 const SIDE_COUNT = SIDE_POPUPS.length;
@@ -86,8 +89,8 @@ const MOBILE_SLOTS = [
 ];
 
 const MOBILE_PLEDGE_SCALE = 0.6;
-const PLEDGE_REVEAL_DELAY_MS = 250;
-const PLEDGE_REVEAL_INTERVAL_MS = 600;
+const PLEDGE_REVEAL_DELAY_MS = 200;
+const PLEDGE_REVEAL_INTERVAL_MS = 500;
 const PLEDGE_LOOP_INTERVAL_MS = 1500;
 
 // Heading bar — mobile vs desktop knobs. Desktop values match the previous inline styles 1:1.
@@ -274,11 +277,17 @@ export default function Hero() {
     if (reduceMotion) return;
 
     let raf = 0;
+    const desktopMq = window.matchMedia("(min-width: 768px)");
+    let isDesktop = desktopMq.matches;
+    const onBreakpointChange = (e) => { isDesktop = e.matches; };
+    desktopMq.addEventListener("change", onBreakpointChange);
 
     const tick = () => {
       const containerRect = container.getBoundingClientRect();
       const mid = containerRect.left + containerRect.width / 2;
       const halfRange = containerRect.width / 2 || 1;
+      const minScale = isDesktop ? PHONE_SCALE_MIN : PHONE_SCALE_MIN_MOBILE;
+      const maxScale = isDesktop ? PHONE_SCALE_MAX : PHONE_SCALE_MAX_MOBILE;
       const phones = container.querySelectorAll(".proovd-phone");
       phones.forEach((phone) => {
         const rect = phone.getBoundingClientRect();
@@ -288,14 +297,17 @@ export default function Hero() {
         if (t > 1) t = 1;
         // Smoothstep so the transition through center feels organic.
         const eased = t * t * (3 - 2 * t);
-        const scale = PHONE_SCALE_MIN + (PHONE_SCALE_MAX - PHONE_SCALE_MIN) * eased;
+        const scale = minScale + (maxScale - minScale) * eased;
         phone.style.setProperty("--phone-scale", scale.toFixed(3));
       });
       raf = window.requestAnimationFrame(tick);
     };
 
     raf = window.requestAnimationFrame(tick);
-    return () => window.cancelAnimationFrame(raf);
+    return () => {
+      window.cancelAnimationFrame(raf);
+      desktopMq.removeEventListener("change", onBreakpointChange);
+    };
   }, []);
 
   return (
@@ -311,7 +323,7 @@ export default function Hero() {
           to { transform: translateX(-50%); }
         }
         .proovd-marquee-track {
-          animation: proovd-marquee ${MARQUEE_DURATION_S}s linear infinite;
+          animation: proovd-marquee ${MARQUEE_DURATION_S_MOBILE}s linear infinite;
           margin-top: ${PHONE_MARQUEE_TOP_OFFSET_MOBILE};
           gap: ${PHONE_GAP_MOBILE};
         }
@@ -347,6 +359,7 @@ export default function Hero() {
         }
         @media (min-width: 768px) {
           .proovd-marquee-track {
+            animation: proovd-marquee ${MARQUEE_DURATION_S}s linear infinite;
             margin-top: ${PHONE_MARQUEE_TOP_OFFSET};
             gap: ${PHONE_GAP};
           }
@@ -416,7 +429,7 @@ export default function Hero() {
           alt=""
           aria-hidden="true"
           fetchPriority="high"
-          className="absolute inset-0 h-full w-full object-cover object-[50%_50%] z-[60]"
+          className="absolute inset-0 h-full w-full object-cover object-[50%_50%] z-[60] pointer-events-none"
         />
 
         {/* Desktop pledge layer */}
