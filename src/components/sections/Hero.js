@@ -16,7 +16,7 @@ const PHONES = [
 ];
 
 const PHONE_LOOP = [...PHONES, ...PHONES];
-const MARQUEE_DURATION_S = 12;
+const MARQUEE_DURATION_S = 11;
 const PHONE_SCALE_MIN = 0.65;
 const PHONE_SCALE_MAX = 1.5;
 const PHONE_WIDTH_MOBILE = "36cqi";
@@ -52,9 +52,12 @@ const randomPledge = () => ({
   handle: AFFILIATES[Math.floor(Math.random() * AFFILIATES.length)],
 });
 
+let _pledgeId = 0;
+const newCell = () => ({ data: randomPledge(), version: 0, id: ++_pledgeId });
+
 // Single hero stack — sits center-bottom, larger than the side popups.
 const CENTER_STACK = {
-  scale: 1.0,
+  scale: 0.78,
   cards: [
     { rotation: 2, x: "0cqi", y: "0cqi" },
     { rotation: -2, x: "-0.55cqi", y: "-0.4cqi" },
@@ -67,12 +70,10 @@ const CENTER_CARD_COUNT = CENTER_STACK.cards.length;
 
 // Six side popups — each one independently fades in, lingers, fades out, then re-appears with a new pledge.
 const SIDE_POPUPS = [
-  { position: "bottom-[18%] left-[3%]", origin: "bottom left", scale: 0.50, rotation: -4 },
-  { position: "bottom-[6%] left-[13%]", origin: "bottom left", scale: 0.58, rotation: 3 },
-  { position: "bottom-[12%] left-[26%]", origin: "bottom left", scale: 0.62, rotation: -2 },
-  { position: "bottom-[12%] right-[26%]", origin: "bottom right", scale: 0.62, rotation: 2 },
-  { position: "bottom-[18%] right-[14%]", origin: "bottom right", scale: 0.55, rotation: -3 },
-  { position: "bottom-[6%] right-[3%]", origin: "bottom right", scale: 0.50, rotation: 3 },
+  { position: "bottom-[28%] left-[-2%]", origin: "bottom left", scale: 0.58, rotation: -4 },
+  { position: "bottom-[10%] left-[17%]", origin: "bottom left", scale: 0.66, rotation: 3 },
+  { position: "bottom-[28%] right-[2%]", origin: "bottom right", scale: 0.58, rotation: -3 },
+  { position: "bottom-[6%] right-[10%]", origin: "bottom right", scale: 0.66, rotation: 3 },
 ];
 
 const SIDE_COUNT = SIDE_POPUPS.length;
@@ -112,8 +113,8 @@ export default function Hero() {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (reduceMotion) {
-      setCenterCards(Array.from({ length: CENTER_CARD_COUNT }, () => ({ data: randomPledge(), version: 0 })));
-      setMobileSlots(Array.from({ length: MOBILE_SLOTS.length }, () => ({ data: randomPledge(), version: 0 })));
+      setCenterCards(Array.from({ length: CENTER_CARD_COUNT }, () => newCell()));
+      setMobileSlots(Array.from({ length: MOBILE_SLOTS.length }, () => newCell()));
       return;
     }
 
@@ -126,7 +127,7 @@ export default function Hero() {
         const i = centerIdx;
         setCenterCards((prev) => {
           const next = [...prev];
-          next[i] = { data: randomPledge(), version: 0 };
+          next[i] = newCell();
           return next;
         });
         centerIdx += 1;
@@ -135,7 +136,7 @@ export default function Hero() {
         const i = mobileIdx;
         setMobileSlots((prev) => {
           const next = [...prev];
-          next[i] = { data: randomPledge(), version: 0 };
+          next[i] = newCell();
           return next;
         });
         mobileIdx += 1;
@@ -157,29 +158,16 @@ export default function Hero() {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) return;
 
-    let cycle = 0;
     const id = window.setInterval(() => {
       setCenterCards((prev) => {
         if (prev.some((c) => c === null)) return prev;
-        const next = [...prev];
-        const target = cycle % CENTER_CARD_COUNT;
-        next[target] = {
-          data: randomPledge(),
-          version: (next[target]?.version ?? 0) + 1,
-        };
-        return next;
+        // Shift: oldest at index 0 falls off, all cards sink one slot, new pledge lands on top.
+        return [...prev.slice(1), newCell()];
       });
       setMobileSlots((prev) => {
         if (prev.some((s) => s === null)) return prev;
-        const next = [...prev];
-        const target = cycle % MOBILE_SLOTS.length;
-        next[target] = {
-          data: randomPledge(),
-          version: (next[target]?.version ?? 0) + 1,
-        };
-        return next;
+        return [...prev.slice(1), newCell()];
       });
-      cycle += 1;
     }, PLEDGE_LOOP_INTERVAL_MS);
 
     return () => window.clearInterval(id);
@@ -329,8 +317,8 @@ export default function Hero() {
         }
         .proovd-pledge-popup {
           opacity: 0;
-          transform: rotate(var(--rot, 0deg)) translateY(0.7cqi) scale(0.9);
-          transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+          transform: rotate(calc(var(--rot, 0deg) * 0.6)) translateY(1.4cqi) scale(0.78);
+          transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1), transform 520ms cubic-bezier(0.34, 1.56, 0.64, 1);
           will-change: opacity, transform;
         }
         .proovd-pledge-popup.is-visible {
@@ -402,7 +390,7 @@ export default function Hero() {
 
         {/* TODO(assets): founder PNG cutout (transparent background, aligned 1:1 with hero-bg.webp) — see /docs/assets-needed.md */}
         <img
-          src="/assets/hero-founder.png"
+          src="/assets/hero-founder.webp"
           alt=""
           aria-hidden="true"
           fetchPriority="high"
@@ -420,12 +408,12 @@ export default function Hero() {
             if (!cell) return null;
             return (
               <div
-                key={`center-${i}`}
-                className="absolute bottom-[12%] left-1/2"
+                key={`center-${cell.id}`}
+                className="absolute bottom-[15%] left-1/2"
                 style={{
                   transform: `translate(calc(-50% + ${card.x}), ${card.y}) scale(${CENTER_STACK.scale})`,
                   transformOrigin: "bottom center",
-                  zIndex: i + 1,
+                  zIndex: 100 + i,
                 }}
               >
                 <div
@@ -489,7 +477,7 @@ export default function Hero() {
               if (!cell) return null;
               return (
                 <div
-                  key={i}
+                  key={`mobile-${cell.id}`}
                   className="absolute bottom-0 left-0"
                   style={{
                     transform: `translate(${slot.x}, ${slot.y})`,
@@ -519,8 +507,8 @@ export default function Hero() {
       <div
         className="absolute bottom-0 left-0 right-0 bg-ink text-center z-[80]"
         style={{
-          paddingTop: "clamp(0.5rem, 1.4cqb, 1.25rem)",
-          paddingBottom: "clamp(0.5rem, 1.4cqb, 1.25rem)",
+          paddingTop: "clamp(1rem, 2cqb, 2rem)",
+          paddingBottom: "clamp(0.8rem, 2cqb, 2rem)",
           paddingLeft: "clamp(1rem, 4vw, 2.5rem)",
           paddingRight: "clamp(1rem, 4vw, 2.5rem)",
           containerType: "inline-size",
@@ -530,11 +518,11 @@ export default function Hero() {
           id="hero-heading"
           className="text-brand-lime font-black leading-none"
           style={{
-            letterSpacing: "-0.04em",
-            fontSize: "clamp(1.2rem, 5.5cqi, 3.25rem)",
+            letterSpacing: "-0.03em",
+            fontSize: "clamp(1.3rem, 5.7cqi, 3.55rem)",
           }}
         >
-          Sell out before the product exists
+          Sell Out Before The Product Exists
         </h1>
       </div>
     </section>

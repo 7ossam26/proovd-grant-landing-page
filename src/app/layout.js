@@ -59,7 +59,7 @@ export default function RootLayout({ children }) {
         <link
           rel="preload"
           as="image"
-          href="/assets/hero-founder.png"
+          href="/assets/hero-founder.webp"
           fetchPriority="high"
         />
         <link
