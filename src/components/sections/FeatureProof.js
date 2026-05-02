@@ -17,20 +17,29 @@ const STAMP_TOP = "50%";
 
 // SVG works in a 100×100 viewBox with preserveAspectRatio="none" so curves stretch
 // to fill any column shape. All path coords are percentages of the column.
+// Top paths converge at the stamp's top edge (~y=32); bottom paths emerge from
+// the stamp's bottom edge (~y=68). Stamp is centered at (50,50) and roughly
+// 36% tall in the SVG's stretched coords.
 const TOP_PATHS = [
-  { id: "proof-top-l", d: "M 12 -8 C 18 18, 30 36, 50 50" },
-  { id: "proof-top-c", d: "M 50 -8 C 50 14, 50 32, 50 50" },
-  { id: "proof-top-r", d: "M 88 -8 C 82 18, 70 36, 50 50" },
+  { id: "proof-top-l", d: "M 12 -8 C 18 10, 30 22, 50 32" },
+  { id: "proof-top-c", d: "M 50 -8 C 50 8, 50 20, 50 32" },
+  { id: "proof-top-r", d: "M 88 -8 C 82 10, 70 22, 50 32" },
 ];
 const BOTTOM_PATHS = [
-  { id: "proof-bot-l", d: "M 50 50 C 30 64, 18 82, 12 108" },
-  { id: "proof-bot-c", d: "M 50 50 C 50 68, 50 86, 50 108" },
-  { id: "proof-bot-r", d: "M 50 50 C 70 64, 82 82, 88 108" },
+  { id: "proof-bot-l", d: "M 50 68 C 30 80, 18 92, 12 108" },
+  { id: "proof-bot-c", d: "M 50 68 C 50 82, 50 96, 50 108" },
+  { id: "proof-bot-r", d: "M 50 68 C 70 80, 82 92, 88 108" },
 ];
 
 const TOP_DUR_S = 5.0;        // travel time pledge → stamp
 const BOTTOM_DUR_S = 5.0;     // travel time stamp → outer corners
 const TOKENS_PER_LANE = 4;    // staggered along each lane
+
+// Per-token opacity envelope: tokens materialize over the first ~15% of their
+// journey and dissolve over the last ~25% so they don't pile up at the
+// convergence point (the stamp).
+const FADE_VALUES = "0;1;1;0";
+const FADE_KEYTIMES = "0;0.18;0.72;1";
 
 const Z_BG = 1;
 const Z_FUNNEL = 2;
@@ -104,14 +113,24 @@ export default function FeatureProof() {
                   <g key={`top-${laneIdx}-${i}`}>
                     <PledgeToken amount={amount} />
                     {!reducedMotion && (
-                      <animateMotion
-                        dur={`${TOP_DUR_S}s`}
-                        repeatCount="indefinite"
-                        rotate="auto"
-                        begin={`-${beginOffset}s`}
-                      >
-                        <mpath href={`#${path.id}`} />
-                      </animateMotion>
+                      <>
+                        <animate
+                          attributeName="opacity"
+                          values={FADE_VALUES}
+                          keyTimes={FADE_KEYTIMES}
+                          dur={`${TOP_DUR_S}s`}
+                          repeatCount="indefinite"
+                          begin={`-${beginOffset}s`}
+                        />
+                        <animateMotion
+                          dur={`${TOP_DUR_S}s`}
+                          repeatCount="indefinite"
+                          rotate="auto"
+                          begin={`-${beginOffset}s`}
+                        >
+                          <mpath href={`#${path.id}`} />
+                        </animateMotion>
+                      </>
                     )}
                   </g>
                 );
@@ -127,14 +146,24 @@ export default function FeatureProof() {
                   <g key={`bot-${laneIdx}-${i}`}>
                     <DollarToken scale={sizeVar} />
                     {!reducedMotion && (
-                      <animateMotion
-                        dur={`${BOTTOM_DUR_S}s`}
-                        repeatCount="indefinite"
-                        rotate="auto"
-                        begin={`-${beginOffset}s`}
-                      >
-                        <mpath href={`#${path.id}`} />
-                      </animateMotion>
+                      <>
+                        <animate
+                          attributeName="opacity"
+                          values={FADE_VALUES}
+                          keyTimes={FADE_KEYTIMES}
+                          dur={`${BOTTOM_DUR_S}s`}
+                          repeatCount="indefinite"
+                          begin={`-${beginOffset}s`}
+                        />
+                        <animateMotion
+                          dur={`${BOTTOM_DUR_S}s`}
+                          repeatCount="indefinite"
+                          rotate="auto"
+                          begin={`-${beginOffset}s`}
+                        >
+                          <mpath href={`#${path.id}`} />
+                        </animateMotion>
+                      </>
                     )}
                   </g>
                 );
@@ -255,8 +284,9 @@ function PledgeToken({ amount }) {
 }
 
 function DollarToken({ scale = 1 }) {
-  const w = 5 * scale;
-  const h = 2.5 * scale;
+  // Match the pledge token's visual weight; dollar bill aspect ~2.35:1.
+  const w = 9 * scale;
+  const h = 3.8 * scale;
   return (
     <g transform={`translate(${-w / 2}, ${-h / 2})`}>
       <image

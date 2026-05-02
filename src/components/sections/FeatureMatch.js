@@ -156,42 +156,6 @@ function FounderCard() {
       className="flex flex-col items-center"
       style={{ gap: "1.4cqi", width: "22cqi" }}
     >
-      <div
-        className="flex items-center justify-between"
-        style={{
-          backgroundColor: "#BCFCA1",
-          color: "#1E4D2F",
-          border: "1px solid #1E4D2F",
-          padding: "0.7cqi 1.4cqi",
-          width: "100%",
-          fontWeight: 500,
-          fontSize: "1.5cqi",
-          fontStyle: "italic",
-          gap: "1cqi",
-          whiteSpace: "nowrap",
-        }}
-      >
-        <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-          you but in a different font
-        </span>
-        <svg
-          width="1.4cqi"
-          height="1.4cqi"
-          viewBox="0 0 12 8"
-          fill="none"
-          aria-hidden="true"
-          style={{ flexShrink: 0 }}
-        >
-          <path
-            d="M1 1.5 L6 6.5 L11 1.5"
-            stroke="#1E4D2F"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </div>
-
       {/* TODO(assets): /public/assets/founder-componant.webp */}
       <img
         src="/assets/founder-componant.webp"
@@ -200,7 +164,6 @@ function FounderCard() {
           width: "100%",
           aspectRatio: "1 / 1.15",
           objectFit: "cover",
-          border: "2.5px solid #BCFCA1",
           backgroundColor: "#FAFAFA",
         }}
       />
@@ -216,8 +179,6 @@ function AffiliateCard() {
     <div
       style={{
         width: "27cqi",
-        border: "2.5px solid #BCFCA1",
-        backgroundColor: "#1E4D2F",
       }}
     >
       {/* TODO(assets): /public/assets/affiliate-component.webp */}
@@ -231,32 +192,6 @@ function AffiliateCard() {
           display: "block",
         }}
       />
-      <div
-        className="flex items-end justify-between"
-        style={{
-          backgroundColor: "#1E4D2F",
-          color: "#BCFCA1",
-          padding: "1.4cqi 1.6cqi",
-          gap: "1cqi",
-        }}
-      >
-        <div className="flex flex-col">
-          <span style={{ fontSize: "1.5cqi", fontWeight: 500, lineHeight: 1.1 }}>
-            Rhea
-          </span>
-          <span style={{ fontSize: "2.3cqi", fontWeight: 700, marginTop: "0.5cqi", lineHeight: 1.1 }}>
-            128K Followers
-          </span>
-        </div>
-        <div className="flex flex-col items-end">
-          <span style={{ fontSize: "1.5cqi", fontWeight: 500, lineHeight: 1.1 }}>
-            commission
-          </span>
-          <span style={{ fontSize: "2.5cqi", fontWeight: 700, marginTop: "0.5cqi", lineHeight: 1.1 }}>
-            25%
-          </span>
-        </div>
-      </div>
     </div>
   );
 }
