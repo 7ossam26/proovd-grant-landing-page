@@ -5,8 +5,21 @@ import { useSectionInView } from "@/lib/useSectionInView";
 // ─── Tunables ────────────────────────────────────────────────────────────────
 
 // Envelope graphic
-const ENVELOPE_MAX_WIDTH = "clamp(360px, 50vw, 720px)";
-const ENVELOPE_ASPECT = "1 / 1.05";
+const ENVELOPE_MAX_WIDTH = "clamp(480px, 70vw, 1000px)";
+const ENVELOPE_ASPECT_W = 1;
+const ENVELOPE_ASPECT_H = 1.05;
+const ENVELOPE_ASPECT = `${ENVELOPE_ASPECT_W} / ${ENVELOPE_ASPECT_H}`;
+// Fraction of envelope height kept visible — the TOP is clipped so the
+// envelope appears to slide up from underneath the section above. The
+// asset has ~10% transparent padding above the V-flap, so the effective
+// clip = ENVELOPE_VISIBLE_RATIO minus that empty band.
+const ENVELOPE_VISIBLE_RATIO = 0.72;
+// Negative top margin (% of width) needed to clip (1 - visible) of the height.
+const ENVELOPE_CLIP_MARGIN = `-${(
+  (1 - ENVELOPE_VISIBLE_RATIO) *
+  (ENVELOPE_ASPECT_H / ENVELOPE_ASPECT_W) *
+  100
+).toFixed(2)}%`;
 
 // ─── Spill stamps — adjust these to position each stamp ──────────────────────
 // Each stamp straddles the front layer's V-mouth: the TOP is cropped behind
@@ -128,8 +141,9 @@ export default function LongScroll() {
       aria-labelledby="how-it-works-heading"
       style={{
         backgroundColor: "#FAFAFA",
-        paddingTop: "clamp(4rem, 8vw, 8rem)",
+        paddingTop: 0,
         paddingBottom: "clamp(4rem, 8vw, 8rem)",
+        overflow: "hidden",
       }}
     >
       <h2 id="how-it-works-heading" className="sr-only">
@@ -140,16 +154,28 @@ export default function LongScroll() {
         {/* ─── Envelope graphic with spilling stamps ─────────────────────
             isolation: isolate locks the stacking context so the three
             z-layers below (back/stamps/front) order purely against each
-            other — nothing outside this container can slip between them. */}
+            other — nothing outside this container can slip between them.
+            The outer wrapper clips the TOP of the envelope (negative
+            margin-top on the inner box) so it looks like the envelope is
+            sliding up from underneath the section above. */}
         <div
-          className="relative mx-auto"
+          className="mx-auto"
           style={{
             width: ENVELOPE_MAX_WIDTH,
-            aspectRatio: ENVELOPE_ASPECT,
-            marginBottom: "clamp(6rem, 14vw, 14rem)",
-            isolation: "isolate",
+            maxWidth: "100%",
+            overflow: "hidden",
+            marginBottom: "clamp(3rem, 6vw, 6rem)",
           }}
           aria-hidden="true"
+        >
+        <div
+          className="relative"
+          style={{
+            width: "100%",
+            aspectRatio: ENVELOPE_ASPECT,
+            marginTop: ENVELOPE_CLIP_MARGIN,
+            isolation: "isolate",
+          }}
         >
           {/* Layer 1 — envelope back (full envelope shape) */}
           <img
@@ -185,6 +211,7 @@ export default function LongScroll() {
             className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
             style={{ zIndex: Z_ENVELOPE_FRONT }}
           />
+        </div>
         </div>
 
         {/* ─── 5 alternating value-prop blocks ─────────────────────────── */}
