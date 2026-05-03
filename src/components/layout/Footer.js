@@ -13,11 +13,12 @@ const FOOTER_SECTIONS = [
       [
         { label: "Terms of Service", href: "#" },
         { label: "IP Protection Policy", href: "#" },
+        { label: "Cookie Settings", href: "#" },
       ],
       [
         { label: "Privacy Policy", href: "#" },
         { label: "Backer Disclaimer", href: "#" },
-        { label: "Cookie Settings", href: "#" },
+
       ],
     ],
   },

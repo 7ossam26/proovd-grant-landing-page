@@ -27,45 +27,45 @@ const ENVELOPE_CLIP_MARGIN = `-${(
 // the front panel, the BOTTOM hangs through the V opening. Tune top/left to
 // reposition, width to resize, rotate (deg) to tilt.
 
-// 1. Founder at desk
-const SPILL_1_SRC    = "/assets/longscroll-spill-1.webp";
-const SPILL_1_ALT    = "Stamp showing founder writing at desk";
-const SPILL_1_TOP    = "32%";
-const SPILL_1_LEFT   = "42%";
-const SPILL_1_WIDTH  = "16%";
-const SPILL_1_ROTATE = -4;
+// 1. Hand over face
+const SPILL_1_SRC = "/assets/longscroll-spill-1.webp";
+const SPILL_1_ALT = "Stamp showing founder writing at desk";
+const SPILL_1_TOP = "72%";
+const SPILL_1_LEFT = "27%";
+const SPILL_1_WIDTH = "9%";
+const SPILL_1_ROTATE = 14;
 
-// 2. Cat (tall portrait)
-const SPILL_2_SRC    = "/assets/longscroll-spill-2.webp";
-const SPILL_2_ALT    = "Stamp showing a glowing cat in green and blue";
-const SPILL_2_TOP    = "40%";
-const SPILL_2_LEFT   = "32%";
-const SPILL_2_WIDTH  = "20%";
-const SPILL_2_ROTATE = 6;
+// 2. Girl with green leaf
+const SPILL_2_SRC = "/assets/longscroll-spill-2.webp";
+const SPILL_2_ALT = "Stamp showing a glowing cat in green and blue";
+const SPILL_2_TOP = "55%";
+const SPILL_2_LEFT = "45%";
+const SPILL_2_WIDTH = "17%";
+const SPILL_2_ROTATE = -10;
 
 // 3. Rocket (small landscape)
-const SPILL_3_SRC    = "/assets/longscroll-spill-3.webp";
-const SPILL_3_ALT    = "Stamp showing a green rocket";
-const SPILL_3_TOP    = "55%";
-const SPILL_3_LEFT   = "70%";
-const SPILL_3_WIDTH  = "14%";
-const SPILL_3_ROTATE = 14;
+const SPILL_3_SRC = "/assets/longscroll-spill-3.webp";
+const SPILL_3_ALT = "Stamp showing a green rocket";
+const SPILL_3_TOP = "53%";
+const SPILL_3_LEFT = "69%";
+const SPILL_3_WIDTH = "13%";
+const SPILL_3_ROTATE = -7;
 
-// 4. Girl with green leaf
-const SPILL_4_SRC    = "/assets/longscroll-spill-4.webp";
-const SPILL_4_ALT    = "Stamp showing a person holding a green leaf";
-const SPILL_4_TOP    = "48%";
-const SPILL_4_LEFT   = "10%";
-const SPILL_4_WIDTH  = "16%";
-const SPILL_4_ROTATE = -16;
+// 4. Cat (tall portrait)
+const SPILL_4_SRC = "/assets/longscroll-spill-4.webp";
+const SPILL_4_ALT = "Stamp showing a person holding a green leaf";
+const SPILL_4_TOP = "38%";
+const SPILL_4_LEFT = "18%";
+const SPILL_4_WIDTH = "16%";
+const SPILL_4_ROTATE = 16;
 
-// 5. Hand over face
-const SPILL_5_SRC    = "/assets/longscroll-spill-5.webp";
-const SPILL_5_ALT    = "Stamp showing a green hand over a face";
-const SPILL_5_TOP    = "60%";
-const SPILL_5_LEFT   = "52%";
-const SPILL_5_WIDTH  = "12%";
-const SPILL_5_ROTATE = 18;
+// 5. Founder at desk
+const SPILL_5_SRC = "/assets/longscroll-spill-5.webp";
+const SPILL_5_ALT = "Stamp showing a green hand over a face";
+const SPILL_5_TOP = "35%";
+const SPILL_5_LEFT = "41%";
+const SPILL_5_WIDTH = "15%";
+const SPILL_5_ROTATE = -8;
 
 const SPILL_STAMPS = [
   { src: SPILL_1_SRC, alt: SPILL_1_ALT, top: SPILL_1_TOP, left: SPILL_1_LEFT, width: SPILL_1_WIDTH, rotate: SPILL_1_ROTATE },
@@ -76,16 +76,16 @@ const SPILL_STAMPS = [
 ];
 
 // Z-stack: front flap clips spill stamps so they appear inside the envelope
-const Z_ENVELOPE_BACK  = 1;
-const Z_SPILL_STAMPS   = 2;
+const Z_ENVELOPE_BACK = 1;
+const Z_SPILL_STAMPS = 2;
 const Z_ENVELOPE_FRONT = 3;
 
 // Single stamp width applied to all blocks.
 const STAMP_WIDTH = "clamp(120px, 13vw, 200px)";
-const STAMP_WIDTH_RAMBLE       = STAMP_WIDTH;
-const STAMP_WIDTH_REASON       = STAMP_WIDTH;
+const STAMP_WIDTH_RAMBLE = STAMP_WIDTH;
+const STAMP_WIDTH_REASON = STAMP_WIDTH;
 const STAMP_WIDTH_FRIENDS_LIED = STAMP_WIDTH;
-const STAMP_WIDTH_SHAPE        = STAMP_WIDTH;
+const STAMP_WIDTH_SHAPE = STAMP_WIDTH;
 
 const BLOCKS = [
   {
@@ -197,50 +197,50 @@ export default function LongScroll() {
           }}
           aria-hidden="true"
         >
-        <div
-          className="relative"
-          style={{
-            width: "100%",
-            aspectRatio: ENVELOPE_ASPECT,
-            marginTop: ENVELOPE_CLIP_MARGIN,
-            isolation: "isolate",
-          }}
-        >
-          {/* Layer 1 — envelope back (full envelope shape) */}
-          <img
-            src="/assets/longscroll-envelope-back.webp"
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
-            style={{ zIndex: Z_ENVELOPE_BACK }}
-          />
-
-          {/* Layer 2 — spilling stamps (between back and front layers) */}
-          {SPILL_STAMPS.map((stamp, i) => (
+          <div
+            className="relative"
+            style={{
+              width: "100%",
+              aspectRatio: ENVELOPE_ASPECT,
+              marginTop: ENVELOPE_CLIP_MARGIN,
+              isolation: "isolate",
+            }}
+          >
+            {/* Layer 1 — envelope back (full envelope shape) */}
             <img
-              key={`spill-${i}`}
-              src={stamp.src}
-              alt={stamp.alt}
-              className="absolute pointer-events-none select-none h-auto"
-              style={{
-                top: stamp.top,
-                left: stamp.left,
-                width: stamp.width,
-                transform: `rotate(${stamp.rotate}deg)`,
-                zIndex: Z_SPILL_STAMPS,
-              }}
+              src="/assets/longscroll-envelope-back.webp"
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
+              style={{ zIndex: Z_ENVELOPE_BACK }}
             />
-          ))}
 
-          {/* Layer 3 — envelope front flap (clips overlapping stamp tops) */}
-          <img
-            src="/assets/longscroll-envelope-front.webp"
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
-            style={{ zIndex: Z_ENVELOPE_FRONT }}
-          />
-        </div>
+            {/* Layer 2 — spilling stamps (between back and front layers) */}
+            {SPILL_STAMPS.map((stamp, i) => (
+              <img
+                key={`spill-${i}`}
+                src={stamp.src}
+                alt={stamp.alt}
+                className="absolute pointer-events-none select-none h-auto"
+                style={{
+                  top: stamp.top,
+                  left: stamp.left,
+                  width: stamp.width,
+                  transform: `rotate(${stamp.rotate}deg)`,
+                  zIndex: Z_SPILL_STAMPS,
+                }}
+              />
+            ))}
+
+            {/* Layer 3 — envelope front flap (clips overlapping stamp tops) */}
+            <img
+              src="/assets/longscroll-envelope-front.webp"
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
+              style={{ zIndex: Z_ENVELOPE_FRONT }}
+            />
+          </div>
         </div>
 
         {/* ─── 5 alternating value-prop blocks ─────────────────────────── */}
@@ -291,9 +291,8 @@ export default function LongScroll() {
               >
                 {/* Stamp illustration */}
                 <div
-                  className={`flex justify-center ${
-                    stampOnRight ? "lg:order-2 lg:justify-end" : "lg:justify-start"
-                  }`}
+                  className={`flex justify-center ${stampOnRight ? "lg:order-2 lg:justify-end" : "lg:justify-start"
+                    }`}
                 >
                   <div style={stampEnterStyle}>
                     <div className="inline-block transition-transform duration-[400ms] ease-out hover:rotate-2">
@@ -310,11 +309,10 @@ export default function LongScroll() {
                 {/* Copy — text aligns to the same side as its block's stamp:
                     stamp-left blocks left-align, stamp-right blocks right-align. */}
                 <div
-                  className={`flex flex-col items-center text-center ${
-                    stampOnRight
-                      ? "lg:order-1 lg:items-end lg:text-right"
-                      : "lg:items-start lg:text-left"
-                  }`}
+                  className={`flex flex-col items-center text-center ${stampOnRight
+                    ? "lg:order-1 lg:items-end lg:text-right"
+                    : "lg:items-start lg:text-left"
+                    }`}
                   style={textEnterStyle}
                 >
                   <h3
