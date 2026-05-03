@@ -10,9 +10,16 @@ const isExternal = (h) => /^https?:\/\//i.test(h);
 
 // ─── Tunables ────────────────────────────────────────────────────────────────
 
-const SIDE_PHOTO_WIDTH = "clamp(220px, 22vw, 380px)";
-const SIDE_PHOTO_HEIGHT = "clamp(260px, 28vw, 420px)";
+const SIDE_PHOTO_WIDTH = "clamp(180px, 18vw, 320px)";
+// Force 1:1 ratio. `object-cover` on the <img> centers the asset and crops
+// top/bottom evenly to fit the square box.
+const SIDE_PHOTO_HEIGHT = SIDE_PHOTO_WIDTH;
 const STRIP_MIN_HEIGHT = "clamp(420px, 48vw, 560px)";
+// Negative offset that pulls the top of the left photo above the section
+// and the bottom of the right photo below it, so they "escape" the panel.
+const SIDE_PHOTO_OFFSET = "clamp(-120px, -9vw, -60px)";
+// Horizontal inset from the page edge for each side photo.
+const SIDE_PHOTO_INSET = "clamp(16px, 2.5vw, 48px)";
 
 // Z-stack
 const Z_BG_PHOTOS = 1;
@@ -27,35 +34,42 @@ export default function CtaStrip() {
       tone="forest"
       width="fullbleed"
       aria-labelledby="cta-strip-heading"
-      className="relative overflow-hidden flex items-center"
+      className="relative flex items-center"
       style={{
         minHeight: STRIP_MIN_HEIGHT,
         paddingTop: "clamp(3rem, 6vw, 6rem)",
         paddingBottom: "clamp(3rem, 6vw, 6rem)",
+        zIndex: 2,
       }}
     >
-      {/* ─── Left photo — affiliate creator with phone rig ────────────── */}
+      {/* ─── Left photo — affiliate creator with phone rig.
+            Negative `top` lifts it above the section's top edge. */}
       <img
         src="/assets/cta-strip-left-affiliate.png"
         alt=""
         aria-hidden="true"
-        className="absolute left-0 top-0 hidden md:block pointer-events-none select-none object-cover"
+        className="absolute hidden md:block pointer-events-none select-none object-cover"
         style={{
           width: SIDE_PHOTO_WIDTH,
           height: SIDE_PHOTO_HEIGHT,
+          top: SIDE_PHOTO_OFFSET,
+          left: SIDE_PHOTO_INSET,
           zIndex: Z_BG_PHOTOS,
         }}
       />
 
-      {/* ─── Right photo — vintage phone with Proovd P logo ──────────── */}
+      {/* ─── Right photo — vintage phone with Proovd P logo.
+            Negative `bottom` pushes it below the section's bottom edge. */}
       <img
         src="/assets/cta-strip-right-phone.png"
         alt=""
         aria-hidden="true"
-        className="absolute right-0 bottom-0 hidden md:block pointer-events-none select-none object-cover"
+        className="absolute hidden md:block pointer-events-none select-none object-cover"
         style={{
           width: SIDE_PHOTO_WIDTH,
           height: SIDE_PHOTO_HEIGHT,
+          bottom: SIDE_PHOTO_OFFSET,
+          right: SIDE_PHOTO_INSET,
           zIndex: Z_BG_PHOTOS,
         }}
       />
@@ -115,7 +129,7 @@ export default function CtaStrip() {
                 trackEvent("outbound_cta_redirect", { destination: PRIMARY });
               }
             }}
-            className="inline-block px-8 py-3 text-base md:text-lg font-bold rounded-full cursor-pointer transition-colors duration-150"
+            className="inline-block px-8 py-3 text-base md:text-lg font-bold rounded-none cursor-pointer transition-colors duration-150"
             style={{ backgroundColor: "#FAFAFA", color: "#09110C" }}
           >
             Create account
@@ -130,7 +144,7 @@ export default function CtaStrip() {
                 trackEvent("outbound_cta_redirect", { destination: SECONDARY });
               }
             }}
-            className="inline-block px-8 py-3 text-base md:text-lg font-bold rounded-full border-2 cursor-pointer transition-colors duration-150"
+            className="inline-block px-8 py-3 text-base md:text-lg font-bold rounded-none border-2 cursor-pointer transition-colors duration-150"
             style={{
               backgroundColor: "transparent",
               color: "#BCFCA1",

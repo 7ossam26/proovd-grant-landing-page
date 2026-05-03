@@ -1,49 +1,37 @@
 "use client";
 
-import Image from "next/image";
-
 // ─── Tunables ────────────────────────────────────────────────────────────────
 
 const LOGOMARK_WIDTH = "clamp(280px, 32vw, 520px)";
 
-const LINK_COLUMNS = [
-  {
-    heading: "Platform",
-    links: [
-      { label: "For Founders", href: "#" },
-      { label: "For Affiliates", href: "#" },
-      { label: "How It Works", href: "#how-it-works" },
-      { label: "Pricing", href: "#" },
-      { label: "Success Stories", href: "#" },
-    ],
-  },
+// Two top-level sections; each renders as a heading over a 2-column grid
+// of links. The split mirrors the reference layout exactly.
+const FOOTER_SECTIONS = [
   {
     heading: "Legal",
-    links: [
-      { label: "Terms of Service", href: "#" },
-      { label: "Privacy Policy", href: "#" },
-      { label: "IP Protection Policy", href: "#" },
-      { label: "Backer Disclaimer", href: "#" },
-      { label: "Cookie Settings", href: "#" },
-    ],
-  },
-  {
-    heading: "Resources",
-    links: [
-      { label: "Pitch Guide", href: "#" },
-      { label: "Playbook", href: "#" },
-      { label: "Affiliate Toolkit", href: "#" },
-      { label: "Blog", href: "#" },
-      { label: "FAQ", href: "#" },
+    columns: [
+      [
+        { label: "Terms of Service", href: "#" },
+        { label: "IP Protection Policy", href: "#" },
+      ],
+      [
+        { label: "Privacy Policy", href: "#" },
+        { label: "Backer Disclaimer", href: "#" },
+        { label: "Cookie Settings", href: "#" },
+      ],
     ],
   },
   {
     heading: "Company",
-    links: [
-      { label: "About", href: "#" },
-      { label: "Careers", href: "#" },
-      { label: "Contact", href: "#contact" },
-      { label: "Press", href: "#" },
+    columns: [
+      [
+        { label: "About", href: "#" },
+        { label: "Contact", href: "#contact" },
+      ],
+      [
+        { label: "Careers", href: "#" },
+        { label: "Press", href: "#" },
+      ],
     ],
   },
 ];
@@ -51,12 +39,13 @@ const LINK_COLUMNS = [
 export default function Footer() {
   return (
     <footer style={{ backgroundColor: "#FAFAFA" }}>
-      {/* ─── Link container — tinted surface, big logomark + 4 columns ── */}
       <div
-        className="footer-link-container relative overflow-hidden"
+        className="relative overflow-hidden"
         style={{
-          paddingTop: "clamp(2rem, 4vw, 4rem)",
-          paddingBottom: "clamp(1rem, 1vw, 1rem)",
+          // Top padding clears the CtaStrip right photo, which overflows
+          // ~60–120px into the footer via SIDE_PHOTO_OFFSET in CtaStrip.js.
+          paddingTop: "clamp(8rem, 13vw, 11rem)",
+          paddingBottom: "clamp(2rem, 4vw, 4rem)",
         }}
       >
         {/* Outlined logomark — bleeds off the bottom-left corner */}
@@ -74,14 +63,15 @@ export default function Footer() {
           }}
         />
 
-        {/* Link columns — push right of the logomark on desktop */}
+        {/* Two sections side-by-side on desktop, stacked on mobile.
+            Pushed right of the logomark via lg:pl-[35%]. */}
         <nav
           aria-label="Footer"
-          className="relative grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12 px-6 md:px-12 lg:pl-[40%]"
+          className="relative grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 px-6 md:px-12 lg:pl-[35%]"
           style={{ zIndex: 2 }}
         >
-          {LINK_COLUMNS.map((col) => (
-            <div key={col.heading}>
+          {FOOTER_SECTIONS.map((section) => (
+            <div key={section.heading}>
               <h3
                 className="font-bold mb-4"
                 style={{
@@ -89,46 +79,34 @@ export default function Footer() {
                   fontSize: "clamp(1rem, 1.2vw, 1.125rem)",
                 }}
               >
-                {col.heading}
+                {section.heading}
               </h3>
-              <ul className="space-y-2 list-disc list-inside">
-                {col.links.map((link) => (
-                  <li
-                    key={link.label}
-                    style={{
-                      color: "#1E4D2F",
-                      fontSize: "clamp(0.875rem, 1vw, 1rem)",
-                    }}
-                  >
-                    <a
-                      href={link.href}
-                      className="hover:underline"
-                      style={{ color: "#1E4D2F" }}
-                    >
-                      {link.label}
-                    </a>
-                  </li>
+              <div className="grid grid-cols-2 gap-x-8">
+                {section.columns.map((column, ci) => (
+                  <ul key={ci} className="space-y-2">
+                    {column.map((link) => (
+                      <li
+                        key={link.label}
+                        style={{
+                          color: "#1E4D2F",
+                          fontSize: "clamp(0.875rem, 1vw, 1rem)",
+                        }}
+                      >
+                        <a
+                          href={link.href}
+                          className="hover:underline"
+                          style={{ color: "#1E4D2F" }}
+                        >
+                          {link.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 ))}
-              </ul>
+              </div>
             </div>
           ))}
         </nav>
-
-        {/* ─── Copyright row — sits inside the link container, centered ── */}
-        <div
-          className="relative flex flex-col items-center text-center px-6 md:px-12"
-          style={{
-            zIndex: 2,
-            paddingTop: "clamp(2.5rem, 5vw, 4rem)",
-          }}
-        >
-          <div className="flex items-center gap-3">
-            <Image src="/logo.svg" alt="Proovd logo" width={24} height={24} />
-            <p className="text-sm" style={{ color: "#1E4D2F" }}>
-              &copy; 2026 Proovd. All rights reserved.
-            </p>
-          </div>
-        </div>
       </div>
     </footer>
   );
