@@ -229,7 +229,7 @@ export default function FeatureProof() {
             fontSize: "clamp(1.5rem, 2.2vw, 2rem)",
           }}
         >
-          People pledge. You get proof.
+          Find The People Who’d Pay For It
         </h2>
 
         <p
@@ -240,10 +240,10 @@ export default function FeatureProof() {
             maxWidth: "48ch",
           }}
         >
-          Real money from real backers, tracked live. Affiliates share your
-          idea with their audience over three weeks. Every click, every
-          pledge, every backer&apos;s reason for buying lands in your
-          dashboard in real time.
+          For three weeks, creators put your idea in front of people who can actually back it.
+          Proovd tracks the campaign live, from the first click to the pledge that tells you someone wanted this badly enough to pay.
+          Your dashboard shows what’s landing, who’s buying in,
+          and where the idea should go next.
         </p>
 
         <div>

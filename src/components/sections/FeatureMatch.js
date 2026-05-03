@@ -38,9 +38,8 @@ export default function FeatureMatch() {
       ref={ref}
       id="features-match"
       aria-labelledby="features-match-heading"
-      className={`proovd-feature-snap flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0 ${
-        inView ? "proovd-match-in-view" : ""
-      }`}
+      className={`proovd-feature-snap flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0 ${inView ? "proovd-match-in-view" : ""
+        }`}
     >
       <div
         className="relative w-full md:w-[40%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden"
@@ -116,7 +115,7 @@ export default function FeatureMatch() {
             fontSize: "clamp(1.5rem, 2.2vw, 2rem)",
           }}
         >
-          Get matched with creators in 72 hours.
+          Get Picked By The Right Creators.
         </h2>
 
         <p
@@ -127,10 +126,8 @@ export default function FeatureMatch() {
             maxWidth: "48ch",
           }}
         >
-          Affiliates in your niche, already trusted by your audience. We match
-          you with content creators who have 40K to 250K followers in the
-          space your idea lives in. They see your pitch within three days. If
-          none of them want in, you get your fee back.
+          Proovd matches your idea with content creators who already speak to the audience you’re trying to reach.
+          They have 40K to 250K followers, understand the space, and accept campaigns in less than 72 hours.
         </p>
 
         <div>
