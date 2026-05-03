@@ -298,7 +298,7 @@ export default function Hero() {
           alt=""
           aria-hidden="true"
           fetchPriority="high"
-          className="absolute inset-0 h-full w-full object-cover object-[50%_50%]"
+          className="absolute inset-0 h-full w-full object-cover object-[53%_50%]"
         />
 
         <div ref={marqueeRef} className="absolute inset-0 overflow-hidden">
@@ -341,7 +341,7 @@ export default function Hero() {
           alt=""
           aria-hidden="true"
           fetchPriority="high"
-          className="absolute inset-0 h-full w-full object-cover object-[50%_50%] z-[60] pointer-events-none"
+          className="absolute inset-0 h-full w-full object-cover object-[53%_50%] z-[60] pointer-events-none"
         />
 
         {/* Desktop pledge layer */}
