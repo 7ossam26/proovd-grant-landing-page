@@ -1,11 +1,12 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useSectionInView } from "@/lib/useSectionInView";
 
 // ─── Tunables ────────────────────────────────────────────────────────────────
 
 // Envelope graphic
-const ENVELOPE_MAX_WIDTH = "clamp(480px, 70vw, 1000px)";
+const ENVELOPE_MAX_WIDTH = "clamp(420px, 62vw, 880px)";
 const ENVELOPE_ASPECT_W = 1;
 const ENVELOPE_ASPECT_H = 1.05;
 const ENVELOPE_ASPECT = `${ENVELOPE_ASPECT_W} / ${ENVELOPE_ASPECT_H}`;
@@ -79,12 +80,12 @@ const Z_ENVELOPE_BACK  = 1;
 const Z_SPILL_STAMPS   = 2;
 const Z_ENVELOPE_FRONT = 3;
 
-// Per-block stamp widths — adjust these to control each illustration's size
-const STAMP_WIDTH_RAMBLE       = "clamp(180px, 22vw, 320px)";
-const STAMP_WIDTH_REASON       = "clamp(200px, 24vw, 360px)";
-const STAMP_WIDTH_72           = "clamp(220px, 28vw, 420px)"; // landscape — wider ceiling
-const STAMP_WIDTH_FRIENDS_LIED = "clamp(200px, 24vw, 360px)";
-const STAMP_WIDTH_SHAPE        = "clamp(200px, 24vw, 360px)";
+// Single stamp width applied to all blocks.
+const STAMP_WIDTH = "clamp(120px, 13vw, 200px)";
+const STAMP_WIDTH_RAMBLE       = STAMP_WIDTH;
+const STAMP_WIDTH_REASON       = STAMP_WIDTH;
+const STAMP_WIDTH_FRIENDS_LIED = STAMP_WIDTH;
+const STAMP_WIDTH_SHAPE        = STAMP_WIDTH;
 
 const BLOCKS = [
   {
@@ -102,14 +103,6 @@ const BLOCKS = [
     heading: "Every pledge comes with a reason.",
     body:
       "Before anyone backs your idea, they answer one question: why do you want this? You get every response in your dashboard, alongside click-through rates, best-performing affiliates, and hour-by-hour conversion.",
-  },
-  {
-    stamp: "/assets/longscroll-stamp-72.png",
-    stampAlt: "Wide horizontal stamp showing a 72:00:00 countdown timer",
-    stampWidth: STAMP_WIDTH_72,
-    heading: "72 hours to know if creators want in",
-    body:
-      "Post your idea. Affiliates in your niche, already trusted by your exact audience, see it within three days.",
   },
   {
     stamp: "/assets/longscroll-stamp-friends-lied.png",
@@ -133,6 +126,42 @@ const BLOCKS = [
 
 export default function LongScroll() {
   const sectionRef = useSectionInView("how-it-works");
+  const blockRefs = useRef([]);
+  const [revealedBlocks, setRevealedBlocks] = useState(() =>
+    BLOCKS.map(() => false)
+  );
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setRevealedBlocks(BLOCKS.map(() => true));
+      return;
+    }
+
+    const observers = blockRefs.current.map((node, i) => {
+      if (!node) return null;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            void node.getBoundingClientRect();
+            requestAnimationFrame(() =>
+              setRevealedBlocks((prev) => {
+                if (prev[i]) return prev;
+                const next = [...prev];
+                next[i] = true;
+                return next;
+              })
+            );
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.25 }
+      );
+      observer.observe(node);
+      return observer;
+    });
+
+    return () => observers.forEach((o) => o?.disconnect());
+  }, []);
 
   return (
     <section
@@ -216,41 +245,83 @@ export default function LongScroll() {
 
         {/* ─── 5 alternating value-prop blocks ─────────────────────────── */}
         <div
-          className="flex flex-col"
-          style={{ gap: "clamp(7rem, 12vw, 12rem)" }}
+          className="flex flex-col mx-auto"
+          style={{
+            gap: "clamp(3.5rem, 6vw, 6rem)",
+            maxWidth: "min(56rem, 100%)",
+          }}
         >
           {BLOCKS.map((block, i) => {
             const stampOnRight = i % 2 === 1;
+            const revealed = revealedBlocks[i];
+
+            // Asymmetric lg columns — stamp column hugs its content, text
+            // column gets the remainder. Keeps the gap tight at any width.
+            // Mobile (<lg) stays single-column / stacked.
+            const lgCols = stampOnRight
+              ? "lg:grid-cols-[minmax(0,1fr)_auto]"
+              : "lg:grid-cols-[auto_minmax(0,1fr)]";
+
+            // Stamps slide in from their own side; text fades up with a
+            // small delay so the eye lands on the stamp first.
+            const stampEnterStyle = {
+              opacity: revealed ? 1 : 0,
+              transform: revealed
+                ? "translateX(0)"
+                : `translateX(${stampOnRight ? "28px" : "-28px"})`,
+              transition:
+                "opacity 750ms ease-out, transform 850ms cubic-bezier(0.22, 1, 0.36, 1)",
+              willChange: "opacity, transform",
+            };
+            const textEnterStyle = {
+              opacity: revealed ? 1 : 0,
+              transform: revealed ? "translateY(0)" : "translateY(18px)",
+              transition:
+                "opacity 750ms ease-out 140ms, transform 850ms cubic-bezier(0.22, 1, 0.36, 1) 140ms",
+              willChange: "opacity, transform",
+            };
 
             return (
               <div
                 key={i}
-                className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center"
+                ref={(el) => {
+                  blockRefs.current[i] = el;
+                }}
+                className={`grid grid-cols-1 ${lgCols} gap-8 lg:gap-10 items-center`}
               >
                 {/* Stamp illustration */}
                 <div
-                  className={`flex justify-center ${stampOnRight ? "lg:order-2" : ""}`}
+                  className={`flex justify-center ${
+                    stampOnRight ? "lg:order-2 lg:justify-end" : "lg:justify-start"
+                  }`}
                 >
-                  <div className="inline-block transition-transform duration-[400ms] ease-out hover:rotate-2">
-                    <img
-                      src={block.stamp}
-                      alt={block.stampAlt}
-                      className="block h-auto select-none"
-                      style={{ width: block.stampWidth }}
-                    />
+                  <div style={stampEnterStyle}>
+                    <div className="inline-block transition-transform duration-[400ms] ease-out hover:rotate-2">
+                      <img
+                        src={block.stamp}
+                        alt={block.stampAlt}
+                        className="block h-auto select-none"
+                        style={{ width: block.stampWidth }}
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* Copy — center-aligned so all 5 text blocks line up
-                    on the same vertical axis even though stamps alternate L/R */}
+                {/* Copy — text aligns to the same side as its block's stamp:
+                    stamp-left blocks left-align, stamp-right blocks right-align. */}
                 <div
-                  className={`flex flex-col items-center text-center ${stampOnRight ? "lg:order-1" : ""}`}
+                  className={`flex flex-col items-center text-center ${
+                    stampOnRight
+                      ? "lg:order-1 lg:items-end lg:text-right"
+                      : "lg:items-start lg:text-left"
+                  }`}
+                  style={textEnterStyle}
                 >
                   <h3
-                    className="font-medium leading-tight mb-5"
+                    className="font-medium leading-tight mb-3"
                     style={{
                       color: "#09110C",
-                      fontSize: "clamp(1.75rem, 3.5vw, 3.625rem)",
+                      fontSize: "clamp(1.375rem, 2.2vw, 2.25rem)",
                     }}
                   >
                     {block.heading}
@@ -259,8 +330,8 @@ export default function LongScroll() {
                     className="leading-relaxed"
                     style={{
                       color: "#1E4D2F",
-                      fontSize: "clamp(1rem, 1.25vw, 1.25rem)",
-                      maxWidth: "50ch",
+                      fontSize: "clamp(0.9375rem, 1vw, 1.0625rem)",
+                      maxWidth: "52ch",
                     }}
                   >
                     {block.body}
