@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { useSectionInView } from "@/lib/useSectionInView";
 import Button from "@/components/ui/Button";
@@ -19,13 +20,27 @@ const ctaUrl = process.env.NEXT_PUBLIC_CTA_SECONDARY_URL || "#";
 
 export default function FeatureMatch() {
   const ref = useSectionInView("features-match");
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([e]) => setInView(e.intersectionRatio >= 0.5),
+      { threshold: [0, 0.5, 1] }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref]);
 
   return (
     <section
       ref={ref}
       id="features-match"
       aria-labelledby="features-match-heading"
-      className="proovd-feature-snap flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0"
+      className={`proovd-feature-snap flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0 ${
+        inView ? "proovd-match-in-view" : ""
+      }`}
     >
       <div
         className="relative w-full md:w-[40%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden"
@@ -48,7 +63,9 @@ export default function FeatureMatch() {
           }}
           aria-hidden="true"
         >
-          <FounderCard />
+          <div className="proovd-match-founder">
+            <FounderCard />
+          </div>
           {/* Invisible spacer matches the stamp footprint so the two cards
               push to the edges and the absolutely-positioned stamp lands
               centered between them. */}
@@ -56,7 +73,9 @@ export default function FeatureMatch() {
             className="proovd-stamp-frame"
             style={{ visibility: "hidden", aspectRatio: `${STAMP_ASPECT}` }}
           />
-          <AffiliateCard />
+          <div className="proovd-match-affiliate">
+            <AffiliateCard />
+          </div>
         </div>
 
         <div
@@ -147,8 +166,8 @@ function FounderCard() {
   };
   const tagPillStyle = {
     ...pillBase,
-    padding: "0.5cqi 1.4cqi",
-    fontSize: "1.7cqi",
+    padding: "0.5cqi 3.6cqi",
+    fontSize: "2.5cqi",
     fontWeight: 500,
   };
   return (

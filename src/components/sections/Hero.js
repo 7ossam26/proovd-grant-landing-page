@@ -71,16 +71,6 @@ const CENTER_STACK = {
 
 const CENTER_CARD_COUNT = CENTER_STACK.cards.length;
 
-// Six side popups — each one independently fades in, lingers, fades out, then re-appears with a new pledge.
-const SIDE_POPUPS = [
-  { position: "bottom-[28%] left-[-2%]", origin: "bottom left", scale: 0.58, rotation: -4 },
-  { position: "bottom-[10%] left-[17%]", origin: "bottom left", scale: 0.56, rotation: 3 },
-  { position: "bottom-[28%] right-[2%]", origin: "bottom right", scale: 0.58, rotation: -3 },
-  { position: "bottom-[15%] right-[20%]", origin: "bottom right", scale: 0.56, rotation: 3 },
-];
-
-const SIDE_COUNT = SIDE_POPUPS.length;
-
 // Mobile — 3 slots stacked at bottom center.
 const MOBILE_SLOTS = [
   { rotation: 1, x: "0cqi", y: "-15cqi" },
@@ -101,19 +91,10 @@ const HEADING_PAD_TOP = "clamp(1rem, 2cqb, 2rem)";
 const HEADING_PAD_BOTTOM_MOBILE = "clamp(0.9rem, 4cqb, 1.6rem)";
 const HEADING_PAD_BOTTOM = "clamp(0.8rem, 2cqb, 2rem)";
 
-const SIDE_VISIBLE_BASE_MS = 2400;
-const SIDE_VISIBLE_JITTER_MS = 1400;
-const SIDE_HIDDEN_BASE_MS = 900;
-const SIDE_HIDDEN_JITTER_MS = 1200;
-const SIDE_INITIAL_STAGGER_MS = 320;
-
 export default function Hero() {
   const ref = useSectionInView("hero");
   const marqueeRef = useRef(null);
   const [centerCards, setCenterCards] = useState(() => Array(CENTER_CARD_COUNT).fill(null));
-  const [sidePopups, setSidePopups] = useState(() =>
-    Array.from({ length: SIDE_COUNT }, () => ({ data: null, version: 0, visible: false }))
-  );
   const [mobileSlots, setMobileSlots] = useState(() => Array(MOBILE_SLOTS.length).fill(null));
 
   // Initial center-stack reveal + mobile reveal (staggered).
@@ -182,65 +163,6 @@ export default function Hero() {
     }, PLEDGE_LOOP_INTERVAL_MS);
 
     return () => window.clearInterval(id);
-  }, []);
-
-  // Independent show/hide lifecycle for each side popup.
-  useEffect(() => {
-    const reduceMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (reduceMotion) {
-      setSidePopups(
-        Array.from({ length: SIDE_COUNT }, () => ({ data: randomPledge(), version: 0, visible: true }))
-      );
-      return;
-    }
-
-    const cancelled = { current: false };
-    const timers = [];
-    const schedule = (fn, ms) => {
-      const id = window.setTimeout(fn, ms);
-      timers.push(id);
-      return id;
-    };
-
-    const showSlot = (slotIdx) => {
-      if (cancelled.current) return;
-      setSidePopups((prev) => {
-        const next = [...prev];
-        const cur = next[slotIdx] ?? { version: 0 };
-        next[slotIdx] = {
-          data: randomPledge(),
-          version: (cur.version ?? 0) + 1,
-          visible: true,
-        };
-        return next;
-      });
-      schedule(() => hideSlot(slotIdx), SIDE_VISIBLE_BASE_MS + Math.random() * SIDE_VISIBLE_JITTER_MS);
-    };
-
-    const hideSlot = (slotIdx) => {
-      if (cancelled.current) return;
-      setSidePopups((prev) => {
-        const next = [...prev];
-        if (next[slotIdx]) {
-          next[slotIdx] = { ...next[slotIdx], visible: false };
-        }
-        return next;
-      });
-      schedule(() => showSlot(slotIdx), SIDE_HIDDEN_BASE_MS + Math.random() * SIDE_HIDDEN_JITTER_MS);
-    };
-
-    for (let i = 0; i < SIDE_COUNT; i++) {
-      schedule(() => showSlot(i), 400 + i * SIDE_INITIAL_STAGGER_MS);
-    }
-
-    return () => {
-      cancelled.current = true;
-      timers.forEach((id) => window.clearTimeout(id));
-    };
   }, []);
 
   useEffect(() => {
@@ -335,20 +257,9 @@ export default function Hero() {
           transform-origin: center;
           will-change: transform;
         }
-        .proovd-pledge-popup {
-          opacity: 0;
-          transform: rotate(calc(var(--rot, 0deg) * 0.6)) translateY(1.4cqi) scale(0.78);
-          transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1), transform 520ms cubic-bezier(0.34, 1.56, 0.64, 1);
-          will-change: opacity, transform;
-        }
-        .proovd-pledge-popup.is-visible {
-          opacity: 1;
-          transform: rotate(var(--rot, 0deg)) translateY(0) scale(1);
-        }
         @media (prefers-reduced-motion: reduce) {
           .proovd-marquee-track { animation-play-state: paused; }
           .proovd-phone-orbit { transform: rotate(var(--phone-rotate, 0deg)) scale(1); }
-          .proovd-pledge-popup { opacity: 1 !important; transform: rotate(var(--rot, 0deg)) !important; transition: none !important; }
         }
         .proovd-hero-heading-bar {
           padding-top: ${HEADING_PAD_TOP_MOBILE};
@@ -467,35 +378,6 @@ export default function Hero() {
             );
           })}
 
-          {/* Side popups — fade in/out independently */}
-          {SIDE_POPUPS.map((slot, i) => {
-            const cell = sidePopups[i];
-            if (!cell || !cell.data) return null;
-            return (
-              <div
-                key={`side-${i}`}
-                className={`absolute ${slot.position}`}
-                style={{
-                  transform: `scale(${slot.scale})`,
-                  transformOrigin: slot.origin,
-                  zIndex: 50 + i,
-                }}
-              >
-                <div
-                  key={cell.version}
-                  className={`proovd-pledge-popup ${cell.visible ? "is-visible" : ""}`}
-                  style={{ "--rot": `${slot.rotation}deg` }}
-                >
-                  <PledgeCard
-                    amount={cell.data.amount}
-                    name={cell.data.name}
-                    handle={cell.data.handle}
-                    rotation={0}
-                  />
-                </div>
-              </div>
-            );
-          })}
         </div>
 
         <div

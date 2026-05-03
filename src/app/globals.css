@@ -83,6 +83,52 @@ body {
   }
 }
 
+/* FeatureProof conveyor lanes — pledges fall into the stamp's top edge,
+   dollars fall out of the stamp's bottom edge. Each lane sets its own
+   --proof-lane-duration; children list is doubled in JSX so the 50%
+   end-point produces a seamless loop. */
+.proof-lane {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  animation: proof-lane-fall var(--proof-lane-duration, 20s) linear infinite;
+}
+@keyframes proof-lane-fall {
+  from { transform: translate(-50%, -50%); }
+  to   { transform: translate(-50%, 0%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .proof-lane { animation: none; }
+}
+
+/* FeatureMatch — entrance stagger when the section becomes ≥50% visible.
+   Section toggles `.proovd-match-in-view`; cards animate from the side they
+   sit on. Stamp is intentionally untouched. */
+.proovd-match-founder,
+.proovd-match-affiliate {
+  opacity: 0;
+}
+.proovd-match-in-view .proovd-match-founder {
+  animation: match-card-in-left 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.proovd-match-in-view .proovd-match-affiliate {
+  animation: match-card-in-right 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
+}
+@keyframes match-card-in-left {
+  from { transform: translateX(-30px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+@keyframes match-card-in-right {
+  from { transform: translateX(30px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .proovd-match-founder,
+  .proovd-match-affiliate { opacity: 1; }
+  .proovd-match-in-view .proovd-match-founder,
+  .proovd-match-in-view .proovd-match-affiliate { animation: none; }
+}
+
 /* In-section nav for feature panels.
    - Hover: underline-grow on text links, color shift on the Sign up button.
      These are always on.
