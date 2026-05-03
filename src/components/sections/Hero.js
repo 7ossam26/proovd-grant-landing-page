@@ -174,6 +174,7 @@ export default function Hero() {
         entries.forEach((entry) => {
           const video = entry.target;
           if (entry.isIntersecting) {
+            if (video.readyState === 0) video.load();
             if (video.paused) video.play().catch(() => { });
           } else {
             if (!video.paused) video.pause();
@@ -321,7 +322,7 @@ export default function Hero() {
                   muted
                   loop
                   playsInline
-                  preload="none"
+                  preload="auto"
                   className="h-full w-full object-cover"
                 >
                   <source
