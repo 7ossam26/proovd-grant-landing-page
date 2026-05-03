@@ -17,7 +17,7 @@ const Z_CARDS = 2;
 const Z_STAMP = 3;
 
 // Mobile-only stamp tunables (viewport < 768px). Adjust freely.
-const MOBILE_STAMP_WIDTH = "145px";   // global mobile default = 219px
+const MOBILE_STAMP_WIDTH = "100px";   // global mobile default = 219px
 const MOBILE_VIDEO_SCALE = 0.88;       // global mobile default = 0.69
 
 // Stamp background — fills the stamp shape around the scaled video.

@@ -17,7 +17,7 @@ const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
 
 // Mobile-only stamp tunables (viewport < 768px). Adjust freely.
-const MOBILE_STAMP_WIDTH = "180px";   // global mobile default = 219px
+const MOBILE_STAMP_WIDTH = "110px";   // global mobile default = 219px
 const MOBILE_VIDEO_SCALE = 0.75;       // global mobile default = 0.69
 
 // Stamp background — fills the stamp shape around the scaled video.

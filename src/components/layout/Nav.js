@@ -13,7 +13,7 @@ export default function Nav() {
     <>
       <nav
         aria-label="Main"
-        className="absolute left-0 right-0 top-5 md:top-[2.6cqi] z-[90] bg-ink py-2.5 md:py-[0.7cqi]"
+        className="absolute left-0 right-0 top-0 md:top-[2.6cqi] z-[90] bg-ink py-4 md:py-[0.7cqi]"
       >
         <div className="px-5 sm:px-8 md:px-[4.6cqi] flex items-center justify-between">
           {/* Logo — brand-primary dot (1 of 2 allowed uses on the page) */}
@@ -21,10 +21,10 @@ export default function Nav() {
             <Image
               src="/logo.svg"
               alt="Proovd"
-              width={30}
-              height={30}
+              width={26}
+              height={26}
               priority
-              className="h-[30px] w-[30px] md:h-[1.7cqi] md:w-[1.7cqi]"
+              className="h-[26px] w-[26px] md:h-[1.7cqi] md:w-[1.7cqi]"
             />
           </a>
 
@@ -87,9 +87,9 @@ export default function Nav() {
         role="dialog"
         aria-label="Navigation menu"
         aria-hidden={!menuOpen}
-        className={`fixed inset-0 z-[100] bg-ink flex-col ${menuOpen ? "flex" : "hidden"}`}
+        className={`fixed inset-0 z-[100] bg-ink flex-col overflow-hidden ${menuOpen ? "flex" : "hidden"}`}
       >
-        <div className="flex justify-end px-5 sm:px-8 md:px-12 lg:px-20 py-9 px-6">
+        <div className="flex justify-end px-5 sm:px-8 py-5">
           <button
             aria-label="Close menu"
             className="text-brand-lime"
