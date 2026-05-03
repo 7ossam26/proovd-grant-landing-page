@@ -16,6 +16,13 @@ import { StampMaskedVideo, STAMP_ASPECT } from "@/components/ui/IconsBgFrame";
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
 
+// Mobile-only stamp tunables (viewport < 768px). Adjust freely.
+const MOBILE_STAMP_WIDTH = "180px";   // global mobile default = 219px
+const MOBILE_VIDEO_SCALE = 0.75;       // global mobile default = 0.69
+
+// Stamp background — fills the stamp shape around the scaled video.
+const STAMP_BG_COLOR = "#09110C";      // ink (default)
+
 // Three vertical lanes clustered tightly inside the stamp's horizontal span
 // (stamp width ≈ 24.13cqi, centered → spans ~38%–62% of the column) so cards
 // visibly cross the stamp's top/bottom edge without bleeding past its sides.
@@ -81,6 +88,7 @@ export default function FeatureProof() {
       id="features-proof"
       aria-labelledby="features-proof-heading"
       className="proovd-feature-snap flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0"
+      style={{ backgroundColor: "#1E4D2F" }}
     >
       <div
         className="relative w-full md:w-[40%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden"
@@ -194,7 +202,9 @@ export default function FeatureProof() {
             transform: "translate(-50%, -50%)",
             zIndex: Z_STAMP,
             aspectRatio: `${STAMP_ASPECT}`,
-            "--video-scale": 0.65,
+            "--video-scale-desktop": 0.65,
+            "--stamp-width-mobile": MOBILE_STAMP_WIDTH,
+            "--video-scale-mobile": MOBILE_VIDEO_SCALE,
           }}
         >
           {mounted && (
@@ -202,6 +212,7 @@ export default function FeatureProof() {
               videoSrc="/assets/videos/feature-proof-trophy.webm"
               videoSrcMp4="/assets/videos/feature-proof-trophy.mp4"
               fit="contain"
+              bgColor={STAMP_BG_COLOR}
               className="w-full h-full"
             />
           )}

@@ -16,6 +16,13 @@ const Z_BG = 1;
 const Z_CARDS = 2;
 const Z_STAMP = 3;
 
+// Mobile-only stamp tunables (viewport < 768px). Adjust freely.
+const MOBILE_STAMP_WIDTH = "145px";   // global mobile default = 219px
+const MOBILE_VIDEO_SCALE = 0.88;       // global mobile default = 0.69
+
+// Stamp background — fills the stamp shape around the scaled video.
+const STAMP_BG_COLOR = "#0D1413";      // ink (default)
+
 const ctaUrl = process.env.NEXT_PUBLIC_CTA_SECONDARY_URL || "#";
 
 export default function FeatureMatch() {
@@ -40,10 +47,14 @@ export default function FeatureMatch() {
       aria-labelledby="features-match-heading"
       className={`proovd-feature-snap flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0 ${inView ? "proovd-match-in-view" : ""
         }`}
+      style={{ backgroundColor: "#FAFAFA" }}
     >
       <div
         className="relative w-full md:w-[40%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden"
-        style={{ containerType: "inline-size" }}
+        style={{
+          containerType: "inline-size",
+          "--stamp-width-mobile": MOBILE_STAMP_WIDTH,
+        }}
       >
         <img
           src="/assets/Feature-match-bg.webp"
@@ -85,12 +96,14 @@ export default function FeatureMatch() {
             transform: "translate(-50%, -50%)",
             zIndex: Z_STAMP,
             aspectRatio: `${STAMP_ASPECT}`,
-            "--video-scale": 0.85,
+            "--video-scale-desktop": 0.85,
+            "--video-scale-mobile": MOBILE_VIDEO_SCALE,
           }}
         >
           <StampMaskedVideo
             videoSrc="/assets/videos/cupid.webm"
             fit="contain"
+            bgColor={STAMP_BG_COLOR}
             className="w-full h-full"
           />
         </div>

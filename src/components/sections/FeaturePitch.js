@@ -75,6 +75,13 @@ const CARD_BLUR_MAX_STD = 2.5;
 const STAMP_LEFT = "50%";
 const STAMP_TOP = "50%";
 
+// Mobile-only stamp tunables (viewport < 768px). Adjust freely.
+const MOBILE_STAMP_WIDTH = "180px";   // global mobile default = 219px
+const MOBILE_VIDEO_SCALE = 0.85;       // global mobile default = 0.69
+
+// Stamp background — fills the stamp shape around the scaled video.
+const STAMP_BG_COLOR = "#0E1211";      // ink (default)
+
 // Z-index stack — cards/text sit BEHIND the stamp so they appear to flow
 // in/out of it.
 const Z_BG = 1;
@@ -114,6 +121,7 @@ export default function FeaturePitch() {
       id="features-pitch"
       aria-labelledby="features-pitch-heading"
       className="proovd-feature-snap flex flex-col md:flex-row md:h-[100svh] min-h-screen md:min-h-0"
+      style={{ backgroundColor: "#BCFCA1" }}
     >
       <div
         className="relative w-full md:w-[40%] aspect-[4/5] md:aspect-auto md:h-full overflow-hidden md:overflow-visible"
@@ -291,11 +299,14 @@ export default function FeaturePitch() {
             zIndex: Z_STAMP,
             transform: "translate(-50%, -50%)",
             aspectRatio: `${STAMP_ASPECT}`,
+            "--stamp-width-mobile": MOBILE_STAMP_WIDTH,
+            "--video-scale-mobile": MOBILE_VIDEO_SCALE,
           }}
         >
           {/* TODO(assets): /public/assets/videos/feature-pitch-mic.webm */}
           <StampMaskedVideo
             videoSrc="/assets/videos/feature-pitch-mic.webm"
+            bgColor={STAMP_BG_COLOR}
             className="w-full h-full"
           />
         </div>
@@ -318,7 +329,7 @@ export default function FeaturePitch() {
           className="text-ink font-bold leading-tight mb-5 md:mb-6"
           style={{ fontSize: "clamp(1.5rem, 2.2vw, 2rem)" }}
         >
-          The messy version works
+          The Messy Version Works
         </h2>
 
         <p

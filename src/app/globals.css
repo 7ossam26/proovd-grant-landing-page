@@ -73,13 +73,13 @@ body {
    Mobile gets a larger stamp + larger video so the icon reads at a glance. */
 .proovd-stamp-frame {
   --stamp-width: clamp(132px, 24.13cqi, 198px);
-  --video-scale: 0.58;
+  --video-scale: var(--video-scale-desktop, 0.58);
   width: var(--stamp-width);
 }
 @media (max-width: 767px) {
   .proovd-stamp-frame {
-    --stamp-width: 219px;
-    --video-scale: 0.69;
+    --stamp-width: var(--stamp-width-mobile, 219px);
+    --video-scale: var(--video-scale-mobile, 0.69);
   }
 }
 
