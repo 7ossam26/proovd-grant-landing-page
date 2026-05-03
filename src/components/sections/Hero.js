@@ -86,9 +86,9 @@ const PLEDGE_LOOP_INTERVAL_MS = 1500;
 // Heading bar — mobile vs desktop knobs. Desktop values match the previous inline styles 1:1.
 const HEADING_FONT_MOBILE = "clamp(2rem, 11cqi, 5rem)";
 const HEADING_FONT = "clamp(1.3rem, 5.7cqi, 3.55rem)";
-const HEADING_PAD_TOP_MOBILE = "clamp(1.1rem, 4cqb, 1.8rem)";
+const HEADING_PAD_TOP_MOBILE = "clamp(0.7rem, 1cqb, 1rem)";
 const HEADING_PAD_TOP = "clamp(1rem, 2cqb, 2rem)";
-const HEADING_PAD_BOTTOM_MOBILE = "clamp(0.9rem, 4cqb, 1.6rem)";
+const HEADING_PAD_BOTTOM_MOBILE = "clamp(0.9rem, 3cqb, 1.6rem)";
 const HEADING_PAD_BOTTOM = "clamp(0.8rem, 2cqb, 2rem)";
 
 export default function Hero() {

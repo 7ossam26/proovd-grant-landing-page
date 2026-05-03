@@ -92,33 +92,33 @@ const BLOCKS = [
     stamp: "/assets/longscroll-stamp-ramble.png",
     stampAlt: "Stamp showing a head silhouette with thoughts spilling out",
     stampWidth: STAMP_WIDTH_RAMBLE,
-    heading: "Ramble at us. We'll handle the pitch.",
+    heading: "Know Why People Backed It.",
     body:
-      "Hit record and describe your idea like you'd explain it to a friend at a bar. Our AI pulls out the problem, the solution, and where you fit against competition.",
+      "Every backer answers one simple question before pledging: why do you want this? You get the actual reason behind the money, not just a conversion rate sitting there looking important.",
   },
   {
     stamp: "/assets/longscroll-stamp-reason.png",
     stampAlt: "Stamp showing a row of stars above a ballot box",
     stampWidth: STAMP_WIDTH_REASON,
-    heading: "Every pledge comes with a reason.",
+    heading: "Making Support Mean Something.",
     body:
-      "Before anyone backs your idea, they answer one question: why do you want this? You get every response in your dashboard, alongside click-through rates, best-performing affiliates, and hour-by-hour conversion.",
+      'Surveys, Twitter replies, and "omg I\'d totally pay for this" are worth nothing. A backer putting $30 down is worth everything.',
   },
   {
     stamp: "/assets/longscroll-stamp-friends-lied.png",
     stampAlt: "Stamp showing scales of justice in green and blue",
     stampWidth: STAMP_WIDTH_FRIENDS_LIED,
-    heading: "Your friends lied. Backers don't.",
+    heading: "See Which Creator Moved The Room.",
     body:
-      'Surveys, Twitter replies, and "omg I\'d totally pay for this" are worth nothing. A backer putting $30 down is worth everything.',
+      'Track which creators drove clicks, pledges, and serious buyers. You’ll know who brought curious traffic, who brought people ready to pay, and who’s worth working with again.',
   },
   {
     stamp: "/assets/longscroll-stamp-shape.png",
     stampAlt: "Stamp showing a padlock in green and blue",
     stampWidth: STAMP_WIDTH_SHAPE,
-    heading: "Show the shape. Keep the secret.",
+    heading: "Keep The Sharp Parts Private.",
     body:
-      "Teaser mode lets you reveal just enough — the problem, the niche, early traction — to get affiliates interested without handing over the full blueprint.",
+      "Teaser Mode lets you show enough for creators to understand the opportunity without handing over the full blueprint. Share the problem, audience, and traction while keeping the sensitive details out of view.",
   },
 ];
 

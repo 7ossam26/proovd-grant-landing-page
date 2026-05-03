@@ -17,7 +17,7 @@ const SIDE_PHOTO_HEIGHT = SIDE_PHOTO_WIDTH;
 const STRIP_MIN_HEIGHT = "clamp(420px, 48vw, 560px)";
 // Negative offset that pulls the top of the left photo above the section
 // and the bottom of the right photo below it, so they "escape" the panel.
-const SIDE_PHOTO_OFFSET = "clamp(-120px, -9vw, -60px)";
+const SIDE_PHOTO_OFFSET = "clamp(-80px, -9vw, -60px)";
 // Horizontal inset from the page edge for each side photo.
 const SIDE_PHOTO_INSET = "clamp(16px, 2.5vw, 48px)";
 

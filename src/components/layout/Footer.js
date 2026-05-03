@@ -2,7 +2,7 @@
 
 // ─── Tunables ────────────────────────────────────────────────────────────────
 
-const LOGOMARK_WIDTH = "clamp(280px, 32vw, 520px)";
+const LOGOMARK_WIDTH = "clamp(180px, 24vw, 520px)";
 
 // Two top-level sections; each renders as a heading over a 2-column grid
 // of links. The split mirrors the reference layout exactly.
@@ -45,7 +45,7 @@ export default function Footer() {
         style={{
           // Top padding clears the CtaStrip right photo, which overflows
           // ~60–120px into the footer via SIDE_PHOTO_OFFSET in CtaStrip.js.
-          paddingTop: "clamp(8rem, 13vw, 11rem)",
+          paddingTop: "clamp(4rem, 6vw, 8rem)",
           paddingBottom: "clamp(2rem, 4vw, 4rem)",
         }}
       >
